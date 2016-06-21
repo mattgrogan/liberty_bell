@@ -50,7 +50,7 @@ class Liberty_Bell_Machine(object):
         # Add the payout table
         self.payout_table = Liberty_Bell_Payout_Table()
 
-    def spin(self):
+    def spin(self, bet):
         """ Spin all three reels """
 
         reels = []
@@ -58,7 +58,7 @@ class Liberty_Bell_Machine(object):
         for reel in self.reels:
             reels.append(reel.spin())
 
-        winner_paid = self.payout_table.calculate_payout(reels)
+        winner_paid = self.payout_table.calculate_payout(reels) * bet
 
         spin_result = Spin_Result(reels, winner_paid)
 

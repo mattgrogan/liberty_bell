@@ -7,7 +7,7 @@ symbols = Liberty_Bell_Symbols()
 class Liberty_Bell_Reel(object):
     """ A slot machine reel based on the original Liberty Bell machine """
 
-    def __init__(self, name, stops):
+    def __init__(self, name):
         """ Initialize the reel """
 
         self.name = name

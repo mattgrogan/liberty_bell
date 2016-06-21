@@ -9,7 +9,7 @@ symbols = liberty_bell.Liberty_Bell_Symbols()
 def test_reel():
 
     # Create the reel
-    r = liberty_bell.Liberty_Bell_Reel(name="Reel 1", stops=[])
+    r = liberty_bell.Liberty_Bell_Reel(name="Reel 1")
 
     stops = r.stops
 
@@ -50,7 +50,7 @@ def test_machine():
 
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(
-        name="Machine 1", stops=stops, randomizer=randomizer)
+        name="Machine 1", randomizer=randomizer)
 
     # Spin
     spin_result = slot.spin()
@@ -94,27 +94,6 @@ def test_sets():
 
 def test_payout():
 
-    symbols = ("Liberty Bell",
-               "Heart",
-               "Diamond",
-               "Spade",
-               "Horseshoe",
-               "Star"
-               )
-
-    # Create the stops
-    stops = ["Liberty Bell",
-             "Heart",
-             "Diamond",
-             "Spade",
-             "Spade",
-             "Spade",
-             "Horseshoe",
-             "Horseshoe",
-             "Horseshoe",
-             "Star"
-             ]
-
     randomizer = liberty_bell.RandomMock(sequence=[0, 0, 0])
 
     # Create payout table
@@ -122,7 +101,7 @@ def test_payout():
 
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(
-        name="Machine 1", stops=stops, randomizer=randomizer)
+        name="Machine 1", randomizer=randomizer)
 
     # Spin
     spin_result = slot.spin()

@@ -30,10 +30,9 @@ class RandomMock(object):
         return result
 
 class Liberty_Bell_Machine(object):
-    """ A slot machine with three reels and identical stops on
-    each reel """
+    """ A slot machine based on the original Liberty Bell machine """
 
-    def __init__(self, name, stops, randomizer=random):
+    def __init__(self, name, randomizer=random):
         """ Initialize the machine """
 
         self.name = name
@@ -41,7 +40,7 @@ class Liberty_Bell_Machine(object):
 
         for i in range(3):
             reel_name = "Reel %i" % i
-            reel = Liberty_Bell_Reel(name=reel_name, stops=stops)
+            reel = Liberty_Bell_Reel(name=reel_name)
             reel.set_randomizer(randomizer)
             self.reels.append(reel)
 

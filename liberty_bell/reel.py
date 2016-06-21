@@ -46,3 +46,29 @@ class Reel(object):
         """ Spin the reel and return a random result """
 
         return self.randomizer.choice(self.stops)
+
+class Simple_Three_Reel_Machine(object):
+    """ A slot machine with three reels and identical stops on
+    each reel """
+
+    def __init__(self, name, stops, randomizer = random):
+        """ Initialize the machine """
+
+        self.name = name
+        self.reels = []
+
+        for i in range(3):
+            reel_name = "Reel %i" % i
+            reel = Reel(name = reel_name, stops = stops)
+            reel.set_randomizer(randomizer)
+            self.reels.append(reel)
+
+    def spin(self):
+        """ Spin all three reels """
+
+        result = []
+
+        for reel in self.reels:
+            result.append(reel.spin())
+
+        return result

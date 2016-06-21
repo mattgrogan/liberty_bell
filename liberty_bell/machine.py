@@ -31,6 +31,7 @@ class RandomMock(object):
         self.index = self.index + 1
         return result
 
+class Machine_Bank(object)
 class Liberty_Bell_Machine(object):
     """ A slot machine based on the original Liberty Bell machine """
 
@@ -39,6 +40,7 @@ class Liberty_Bell_Machine(object):
 
         self.name = name
         self.reels = []
+        self.credits = 100
 
         # Add the three reels
         for i in range(3):
@@ -53,12 +55,20 @@ class Liberty_Bell_Machine(object):
     def spin(self, bet):
         """ Spin all three reels """
 
+        assert self.credits >= bet
+
+        # Take the bet
+        self.credits -= bet
+
         reels = []
 
         for reel in self.reels:
             reels.append(reel.spin())
 
         winner_paid = self.payout_table.calculate_payout(reels) * bet
+
+        # Add the winnings, if any
+        self.credits += winner_paid
 
         spin_result = Spin_Result(reels, winner_paid)
 

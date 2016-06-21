@@ -39,6 +39,8 @@ def test_machine():
     slot = liberty_bell.Liberty_Bell_Machine(
         name="Machine 1", randomizer=randomizer)
 
+    assert slot.credits == 100
+
     # Spin
     spin_result = slot.spin(bet = 1)
 
@@ -46,6 +48,8 @@ def test_machine():
     assert spin_result.reels[1].name == "Heart"
     assert spin_result.reels[2].name == "Diamond"
     assert spin_result.winner_paid == 0
+
+    assert slot.credits == 99
 
 def test_payout():
 
@@ -58,6 +62,8 @@ def test_payout():
     slot = liberty_bell.Liberty_Bell_Machine(
         name="Machine 1", randomizer=randomizer)
 
+    assert slot.credits == 100
+
     # Spin
     spin_result = slot.spin(bet=1)
 
@@ -67,6 +73,8 @@ def test_payout():
 
     # Check payout
     assert spin_result.winner_paid == 20
+
+    assert slot.credits == 119
 
     # Spin
     spin_result = slot.spin(bet=2)
@@ -78,6 +86,7 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 40
 
+    assert slot.credits == 157 # bet 2
 
 def test_payout_table():
 

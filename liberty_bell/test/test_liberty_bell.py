@@ -24,3 +24,15 @@ def test_reel():
     assert(str(r) == "Reel 1")
     assert(r.stops == stops)
     assert len(r.stops) == 10
+
+    # Set a deterministic randomizer
+    randomizer = liberty_bell.RandomMock()
+    r.set_randomizer(randomizer)
+
+    for stop in stops:
+        # Spin the reel
+        result = r.spin()
+        assert result == stop
+
+    result = r.spin()
+    assert result == stops[0]

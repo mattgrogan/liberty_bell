@@ -39,17 +39,17 @@ def test_machine():
     slot = liberty_bell.Liberty_Bell_Machine(
         name="Machine 1", randomizer=randomizer)
 
-    assert slot.credits == 100
+    assert slot.bank.credits == 100
 
     # Spin
-    spin_result = slot.spin(bet = 1)
+    spin_result = slot.spin()
 
     assert spin_result.reels[0].name == "Liberty Bell"
     assert spin_result.reels[1].name == "Heart"
     assert spin_result.reels[2].name == "Diamond"
     assert spin_result.winner_paid == 0
 
-    assert slot.credits == 99
+    assert slot.bank.credits == 99
 
 def test_payout():
 
@@ -62,10 +62,10 @@ def test_payout():
     slot = liberty_bell.Liberty_Bell_Machine(
         name="Machine 1", randomizer=randomizer)
 
-    assert slot.credits == 100
+    assert slot.bank.credits == 100
 
     # Spin
-    spin_result = slot.spin(bet=1)
+    spin_result = slot.spin()
 
     assert spin_result.reels[0].name == "Liberty Bell"
     assert spin_result.reels[1].name == "Liberty Bell"
@@ -74,19 +74,19 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 20
 
-    assert slot.credits == 119
+    assert slot.bank.credits == 119
 
     # Spin
-    spin_result = slot.spin(bet=2)
+    spin_result = slot.spin()
 
     assert spin_result.reels[0].name == "Liberty Bell"
     assert spin_result.reels[1].name == "Liberty Bell"
     assert spin_result.reels[2].name == "Liberty Bell"
 
     # Check payout
-    assert spin_result.winner_paid == 40
+    assert spin_result.winner_paid == 20
 
-    assert slot.credits == 157 # bet 2
+    assert slot.bank.credits == 138
 
 def test_payout_table():
 

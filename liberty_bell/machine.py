@@ -31,7 +31,43 @@ class RandomMock(object):
         self.index = self.index + 1
         return result
 
-class Machine_Bank(object)
+class Machine_Bank(object):
+    """ The bank holds the player's credits """
+
+    def __init__(self):
+        """ Initialize with 100 creedits """
+
+        self.credits = 100
+        self.bet = 1
+
+    def payout(self, amount):
+        """ Add to the credits """
+
+        self.credits += amount
+
+    def place_bet(self):
+        """ Place the bet and remove the amount from the credits """
+
+        assert self.bet <= self.credits
+
+        self.credits -= self.bet
+
+        return self.bet
+
+    def increment_bet(self):
+        """ Increment the bet by one """
+
+        if (self.bet + 1) > self.credits:
+            raise ValueError("Not enough credits")
+
+        self.bet += 1
+
+    def decrement_bet(self):
+        """ Decrement the bet by one """
+
+        if self.bet > 1:
+            self.bet -= 1
+
 class Liberty_Bell_Machine(object):
     """ A slot machine based on the original Liberty Bell machine """
 
@@ -40,7 +76,7 @@ class Liberty_Bell_Machine(object):
 
         self.name = name
         self.reels = []
-        self.credits = 100
+        self.bank = Machine_Bank()
 
         # Add the three reels
         for i in range(3):
@@ -52,13 +88,11 @@ class Liberty_Bell_Machine(object):
         # Add the payout table
         self.payout_table = Liberty_Bell_Payout_Table()
 
-    def spin(self, bet):
+    def spin(self):
         """ Spin all three reels """
 
-        assert self.credits >= bet
-
         # Take the bet
-        self.credits -= bet
+        bet = self.bank.place_bet()
 
         reels = []
 
@@ -68,7 +102,7 @@ class Liberty_Bell_Machine(object):
         winner_paid = self.payout_table.calculate_payout(reels) * bet
 
         # Add the winnings, if any
-        self.credits += winner_paid
+        self.bank.payout(winner_paid)
 
         spin_result = Spin_Result(reels, winner_paid)
 

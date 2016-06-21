@@ -3,6 +3,8 @@ from reel import Liberty_Bell_Reel
 from payout import Liberty_Bell_Payout_Table
 from spin_result import Spin_Result
 
+MAX_BET = 10
+
 class RandomMock(object):
     """ Mock random.choice for testing """
 
@@ -48,8 +50,8 @@ class Machine_Bank(object):
     def place_bet(self):
         """ Place the bet and remove the amount from the credits """
 
+        # You can't bet more than your credits!
         assert self.bet <= self.credits
-
         self.credits -= self.bet
 
         return self.bet
@@ -60,7 +62,8 @@ class Machine_Bank(object):
         if (self.bet + 1) > self.credits:
             raise ValueError("Not enough credits")
 
-        self.bet += 1
+        if self.bet < MAX_BET:
+            self.bet += 1
 
     def decrement_bet(self):
         """ Decrement the bet by one """
@@ -87,6 +90,16 @@ class Liberty_Bell_Machine(object):
 
         # Add the payout table
         self.payout_table = Liberty_Bell_Payout_Table()
+
+    def increment_bet(self):
+        """ Tell the bank to increment the bet by one """
+
+        self.bank.increment_bet()
+
+    def decrement_bet(self):
+        """ Tell the bank to decrement the bet by one """
+
+        self.bank.decrement_bet()
 
     def spin(self):
         """ Spin all three reels """

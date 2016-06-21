@@ -76,6 +76,45 @@ def test_payout():
 
     assert slot.bank.credits == 119
 
+    slot.increment_bet()
+    slot.increment_bet()
+    slot.increment_bet()
+
+    # Spin
+    spin_result = slot.spin()
+
+    assert spin_result.reels[0].name == "Liberty Bell"
+    assert spin_result.reels[1].name == "Liberty Bell"
+    assert spin_result.reels[2].name == "Liberty Bell"
+
+    # Check payout
+    assert spin_result.winner_paid == 80 # Bet 4
+
+    assert slot.bank.credits == 195 # spent 5
+
+    slot.decrement_bet()
+
+    # Spin
+    spin_result = slot.spin()
+
+    assert spin_result.reels[0].name == "Liberty Bell"
+    assert spin_result.reels[1].name == "Liberty Bell"
+    assert spin_result.reels[2].name == "Liberty Bell"
+
+    # Check payout
+    assert spin_result.winner_paid == 60
+
+    assert slot.bank.credits == 252
+
+    # make sure we can't decrement below zero
+    slot.decrement_bet()
+    slot.decrement_bet()
+    slot.decrement_bet()
+    slot.decrement_bet()
+    slot.decrement_bet()
+    slot.decrement_bet()
+    slot.decrement_bet()
+
     # Spin
     spin_result = slot.spin()
 
@@ -86,7 +125,23 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 20
 
-    assert slot.bank.credits == 138
+    assert slot.bank.credits == 271
+
+    # make sure we can't increment past max bet
+    for i in range(40):
+        slot.increment_bet()
+
+    # Spin
+    spin_result = slot.spin()
+
+    assert spin_result.reels[0].name == "Liberty Bell"
+    assert spin_result.reels[1].name == "Liberty Bell"
+    assert spin_result.reels[2].name == "Liberty Bell"
+
+    # Check payout
+    assert spin_result.winner_paid == 200
+
+    assert slot.bank.credits == 461
 
 def test_payout_table():
 

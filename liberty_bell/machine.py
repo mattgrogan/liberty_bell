@@ -1,5 +1,7 @@
 import random
 from reel import Liberty_Bell_Reel
+from payout import Liberty_Bell_Payout_Table
+from spin_result import Spin_Result
 
 class RandomMock(object):
     """ Mock random.choice for testing """
@@ -38,18 +40,26 @@ class Liberty_Bell_Machine(object):
         self.name = name
         self.reels = []
 
+        # Add the three reels
         for i in range(3):
             reel_name = "Reel %i" % i
             reel = Liberty_Bell_Reel(name=reel_name)
             reel.set_randomizer(randomizer)
             self.reels.append(reel)
 
+        # Add the payout table
+        self.payout_table = Liberty_Bell_Payout_Table()
+
     def spin(self):
         """ Spin all three reels """
 
-        result = []
+        reels = []
 
         for reel in self.reels:
-            result.append(reel.spin())
+            reels.append(reel.spin())
 
-        return result
+        winner_paid = self.payout_table.calculate_payout(reels)
+
+        spin_result = Spin_Result(reels, winner_paid)
+
+        return spin_result

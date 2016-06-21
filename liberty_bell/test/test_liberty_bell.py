@@ -33,19 +33,6 @@ def test_reel():
 
 def test_machine():
 
-    # Create the stops
-    stops = ["Liberty Bell",
-             "Heart",
-             "Diamond",
-             "Spade",
-             "Spade",
-             "Spade",
-             "Horseshoe",
-             "Horseshoe",
-             "Horseshoe",
-             "Star"
-             ]
-
     randomizer = liberty_bell.RandomMock()
 
     # Create the machine
@@ -55,42 +42,9 @@ def test_machine():
     # Spin
     spin_result = slot.spin()
 
-    assert spin_result[0].name == "Liberty Bell"
-    assert spin_result[1].name == "Heart"
-    assert spin_result[2].name == "Diamond"
-
-
-def test_sets():
-
-    symbols = ("Liberty Bell",
-               "Heart",
-               "Diamond",
-               "Spade",
-               "Horseshoe",
-               "Star"
-               )
-
-    ORDER_LOOKUP = dict(zip(symbols, range(len(symbols))))
-
-    print(ORDER_LOOKUP)
-
-    # a = ["Liberty Bell", "Liberty Bell", "Liberty Bell"]
-    # b = ["Liberty Bell", "Liberty Bell", "Liberty Bell"]
-    #
-    # print(cmp(ORDER_LOOKUP[a],ORDER_LOOKUP[b]))
-    #
-    a = ["Horseshoe", "Star", "Horseshoe"]
-    b = ["Star", "Horseshoe", "Horseshoe"]
-
-    x = sorted(a, key=ORDER_LOOKUP.get)
-    print(x)
-
-    z = sorted(b, key=ORDER_LOOKUP.get)
-
-    assert x == z
-    #
-    # print(cmp(ORDER_LOOKUP[a],ORDER_LOOKUP[b]))
-
+    assert spin_result.reels[0].name == "Liberty Bell"
+    assert spin_result.reels[1].name == "Heart"
+    assert spin_result.reels[2].name == "Diamond"
 
 def test_payout():
 
@@ -106,12 +60,12 @@ def test_payout():
     # Spin
     spin_result = slot.spin()
 
-    assert spin_result[0].name == "Liberty Bell"
-    assert spin_result[1].name == "Liberty Bell"
-    assert spin_result[2].name == "Liberty Bell"
+    assert spin_result.reels[0].name == "Liberty Bell"
+    assert spin_result.reels[1].name == "Liberty Bell"
+    assert spin_result.reels[2].name == "Liberty Bell"
 
     # Check payout
-    #assert spin_result.winner_paid == 20
+    assert spin_result.winner_paid == 20
 
 
 def test_payout_table():

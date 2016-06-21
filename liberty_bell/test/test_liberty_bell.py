@@ -132,3 +132,15 @@ def test_payout():
 
     # Check payout
     #assert spin_result.winner_paid == 20
+
+def test_payout_table():
+
+    payout_table = liberty_bell.Liberty_Bell_Payout_Table()
+
+    spin_result = [symbols.LIBERTY_BELL,
+                    symbols.LIBERTY_BELL,
+                    symbols.LIBERTY_BELL]
+
+    result = payout_table.calculate_payout(spin_result)
+
+    assert result == 20

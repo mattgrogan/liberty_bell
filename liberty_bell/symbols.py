@@ -5,11 +5,18 @@ class Symbol(object):
         """ Initialize the symbol """
 
         self.name = ""
+        self.value = 0
 
     def __str__(self):
         """ Convert to string """
 
         return self.name
+
+    def __eq__(self, other):
+        """ Check for equality """
+
+        return self.value == other.value
+
 
 class Liberty_Bell_Symbol(Symbol):
     """ Symbol to represent a Liberty Bell """

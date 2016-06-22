@@ -18,8 +18,8 @@ class Slot_Game_Controller(object):
         self.ui.register(Events.DECREMENT_BET, self, self.slot_machine.decrement_bet)
 
         # Register for model changes
-        self.slot_machine.register("CREDITS_CHANGED", self, self.ui.update_credits)
-        self.slot_machine.register("BET_CHANGED", self, self.ui.update_bet)
+        self.slot_machine.register(Events.CREDITS_CHANGED, self, self.ui.update_credits)
+        self.slot_machine.register(Events.BET_CHANGED, self, self.ui.update_bet)
 
         # Set up the initial credits and bet
         self.slot_machine.initialize(credits=100, bet=1)

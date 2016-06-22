@@ -70,16 +70,6 @@ class Slot_GUI(tk.Tk):
 
         self.notify(Events.DECREMENT_BET)
 
-    def update_winner_paid(self, winner_paid):
-        """ Print the amount paid """
-
-        self.winner_paid_label.configure(text = "Winner paid: %i" % winner_paid)
-
-    def update_reel(self, reel, symbol):
-        """ Update reel with the result """
-
-        self.reel_labels[reel].configure(text = "Reel %i: %s" % (reel, symbol))
-
     def update_credits(self, credits):
         """ Update the credits box """
 
@@ -89,3 +79,13 @@ class Slot_GUI(tk.Tk):
         """ Update the bet """
 
         self.bet_label.configure(text = "Bet: %i" % bet)
+
+    def update_winner_paid(self, winner_paid):
+        """ Print the amount paid """
+
+        self.winner_paid_label.configure(text = "Winner paid: %i" % winner_paid)
+
+    def update_reel(self, reel, symbol):
+        """ Update reel with the result """
+
+        self.reel_labels[reel].configure(text = "Reel %i: %s" % (reel, symbol))

@@ -2,6 +2,7 @@ import random
 from reel import Liberty_Bell_Reel
 from payout import Liberty_Bell_Payout_Table
 from spin_result import Spin_Result
+from events import Events
 
 MAX_BET = 10
 
@@ -46,7 +47,7 @@ class Slot_Machine(object):
         self.randomizer = randomizer
 
         # Set up events
-        events = ["CREDITS_CHANGED", "PAYOUT", "PLACE_BET", "BET_CHANGED"]
+        events = [Events.CREDITS_CHANGED, Events.PAYOUT, Events.PLACE_BET, Events.BET_CHANGED]
 
         self.events = {event: dict() for event in events}
 
@@ -55,11 +56,11 @@ class Slot_Machine(object):
 
         if credits is not None:
             self.credits = credits
-            self.notify("CREDITS_CHANGED", self.credits)
+            self.notify(Events.CREDITS_CHANGED, self.credits)
 
         if bet is not None:
             self.bet = bet
-            self.notify("BET_CHANGED", bet)
+            self.notify(Events.BET_CHANGED, bet)
 
     def register(self, event, who, callback=None):
         """ Register for updates """
@@ -80,8 +81,8 @@ class Slot_Machine(object):
 
         self.credits += amount
 
-        self.notify("PAYOUT", amount)
-        self.notify("CREDITS_CHANGED", self.credits)
+        self.notify(Events.PAYOUT, amount)
+        self.notify(Events.CREDITS_CHANGED, self.credits)
 
     def place_bet(self):
         """ Place the bet and remove the amount from the credits """
@@ -90,8 +91,8 @@ class Slot_Machine(object):
         assert self.bet <= self.credits
         self.credits -= self.bet
 
-        self.notify("PLACE_BET", self.bet)
-        self.notify("CREDITS_CHANGED", self.credits)
+        self.notify(Events.PLACE_BET, self.bet)
+        self.notify(Events.CREDITS_CHANGED, self.credits)
 
         return self.bet
 
@@ -103,14 +104,14 @@ class Slot_Machine(object):
 
         if self.bet < MAX_BET:
             self.bet += 1
-            self.notify("BET_CHANGED", self.bet)
+            self.notify(Events.BET_CHANGED, self.bet)
 
     def decrement_bet(self, message=None):
         """ Decrement the bet by one """
 
         if self.bet > 1:
             self.bet -= 1
-            self.notify("BET_CHANGED", self.bet)
+            self.notify(Events.BET_CHANGED, self.bet)
 
     def spin(self):
         """ Spin the reels """

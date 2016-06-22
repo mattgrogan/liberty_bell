@@ -9,6 +9,7 @@ symbols = Liberty_Bell_Symbols()
 
 MAX_BET = 10
 
+
 class Slot_Machine(object):
     """ A superclass for slot machines """
 
@@ -23,7 +24,8 @@ class Slot_Machine(object):
         self.payout_table = Payout_Table()
 
         # Set up events
-        events = [Events.CREDITS_CHANGED, Events.PAYOUT, Events.PLACE_BET, Events.BET_CHANGED]
+        events = [Events.CREDITS_CHANGED, Events.PAYOUT,
+                  Events.PLACE_BET, Events.BET_CHANGED]
 
         self.events = {event: dict() for event in events}
 
@@ -108,6 +110,7 @@ class Slot_Machine(object):
 
         return spin_result
 
+
 class Liberty_Bell_Machine(Slot_Machine):
     """ A slot machine based on the original Liberty Bell machine """
 
@@ -130,5 +133,6 @@ class Liberty_Bell_Machine(Slot_Machine):
         self.payout_table.append(Payline({symbols.HEART: 3}, 16))
         self.payout_table.append(Payline({symbols.DIAMOND: 3}, 12))
         self.payout_table.append(Payline({symbols.SPADE: 3}, 8))
-        self.payout_table.append(Payline({symbols.HORSESHOE: 2, symbols.STAR: 1}, 4))
+        self.payout_table.append(
+            Payline({symbols.HORSESHOE: 2, symbols.STAR: 1}, 4))
         self.payout_table.append(Payline({symbols.HORSESHOE: 2}, 2))

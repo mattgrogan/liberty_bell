@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 class Payline(object):
     """ A winning combination! """
 
@@ -10,7 +11,7 @@ class Payline(object):
         self.winner_paid = winner_paid
 
         for symbol, minimum_occurrence in rule.iteritems():
-            self.rule[str(symbol)] = minimum_occurrence # index by string only
+            self.rule[str(symbol)] = minimum_occurrence  # index by string only
 
     def is_match(self, candidate):
         """ Candidate is a list of symbols. Check if they match this payout rule """
@@ -27,6 +28,7 @@ class Payline(object):
                 break
 
         return match
+
 
 class Payout_Table(object):
     """ Class to hold the payout table """

@@ -1,6 +1,7 @@
 import Tkinter as tk
 from events import Events
 
+
 class Slot_GUI(tk.Tk):
     """ Prototype GUI for the slot machine """
 
@@ -13,10 +14,12 @@ class Slot_GUI(tk.Tk):
         self.button = tk.Button(self, text="SPIN", command=self.on_spin_press)
         self.button.pack(side=tk.RIGHT)
 
-        self.increment_bet_button = tk.Button(self, text="+1", command=self.on_increment_bet_press)
+        self.increment_bet_button = tk.Button(
+            self, text="+1", command=self.on_increment_bet_press)
         self.increment_bet_button.pack(side=tk.RIGHT)
 
-        self.decrement_bet_button = tk.Button(self, text="-1", command=self.on_decrement_bet_press)
+        self.decrement_bet_button = tk.Button(
+            self, text="-1", command=self.on_decrement_bet_press)
         self.decrement_bet_button.pack(side=tk.RIGHT)
 
         # Add the text boxes
@@ -30,7 +33,7 @@ class Slot_GUI(tk.Tk):
         self.bet_label.pack()
 
         # Add the reels
-        nbr_reels = 3 #TODO: Communicate this info from the machine
+        nbr_reels = 3  # TODO: Communicate this info from the machine
         self.reel_labels = []
         for i in range(nbr_reels):
             reel_label = tk.Label(self, text="Reel %i: " % i)
@@ -73,19 +76,19 @@ class Slot_GUI(tk.Tk):
     def update_credits(self, credits):
         """ Update the credits box """
 
-        self.credits_label.configure(text = "Credits: %i" % credits)
+        self.credits_label.configure(text="Credits: %i" % credits)
 
     def update_bet(self, bet):
         """ Update the bet """
 
-        self.bet_label.configure(text = "Bet: %i" % bet)
+        self.bet_label.configure(text="Bet: %i" % bet)
 
     def update_winner_paid(self, winner_paid):
         """ Print the amount paid """
 
-        self.winner_paid_label.configure(text = "Winner paid: %i" % winner_paid)
+        self.winner_paid_label.configure(text="Winner paid: %i" % winner_paid)
 
     def update_reel(self, reel, symbol):
         """ Update reel with the result """
 
-        self.reel_labels[reel].configure(text = "Reel %i: %s" % (reel, symbol))
+        self.reel_labels[reel].configure(text="Reel %i: %s" % (reel, symbol))

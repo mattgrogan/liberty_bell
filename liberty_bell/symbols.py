@@ -16,6 +16,7 @@ class Symbol(object):
 
         return self.name == other.name
 
+
 class Liberty_Bell_Symbols(object):
     """ An enumerator class to hold all the symbol references """
 

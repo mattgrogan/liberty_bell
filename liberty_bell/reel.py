@@ -4,6 +4,7 @@ from spin_result import Spin_Result
 
 symbols = Liberty_Bell_Symbols()
 
+
 class Liberty_Bell_Reel(object):
     """ A slot machine reel based on the original Liberty Bell machine """
 

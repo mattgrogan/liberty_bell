@@ -1,5 +1,6 @@
 from machine import Liberty_Bell_Machine
 from gui import Slot_GUI
+from events import Events
 
 
 class Slot_Game_Controller(object):
@@ -11,14 +12,17 @@ class Slot_Game_Controller(object):
         self.slot_machine = Liberty_Bell_Machine()
         self.ui = Slot_GUI()
 
-        # Register for events
-        self.ui.register("SPIN_BUTTON_PRESSED", self, self.spin)
-        self.slot_machine.register("CREDITS_CHANGED", self, self.credits_changed)
-        self.slot_machine.register("BET_CHANGED", self, self.bet_changed)
+        # Register for UI events
+        self.ui.register(Events.SPIN, self, self.spin)
+        self.ui.register(Events.INCREMENT_BET, self, self.slot_machine.increment_bet)
+        self.ui.register(Events.DECREMENT_BET, self, self.slot_machine.decrement_bet)
+
+        # Register for model changes
+        self.slot_machine.register("CREDITS_CHANGED", self, self.ui.update_credits)
+        self.slot_machine.register("BET_CHANGED", self, self.ui.update_bet)
 
         # Set up the initial credits and bet
-        self.slot_machine.set_credits(100)
-        self.slot_machine.set_bet(1)
+        self.slot_machine.initialize(credits=100, bet=1)
 
         # Run the main loop
         self.ui.mainloop()
@@ -32,13 +36,3 @@ class Slot_Game_Controller(object):
 
         for i, symbol in enumerate(result.reels):
             self.ui.update_reel(i, symbol)
-
-    def credits_changed(self, credits):
-        """ Callback for change in credits """
-
-        self.ui.update_credits(credits)
-
-    def bet_changed(self, bet):
-        """ Update the bet on the UI """
-
-        self.ui.update_bet(bet)

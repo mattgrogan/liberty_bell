@@ -50,6 +50,17 @@ class Slot_Machine(object):
 
         self.events = {event: dict() for event in events}
 
+    def initialize(self, credits=None, bet=None):
+        """ Initialize credit and/or bet values """
+
+        if credits is not None:
+            self.credits = credits
+            self.notify("CREDITS_CHANGED", self.credits)
+
+        if bet is not None:
+            self.bet = bet
+            self.notify("BET_CHANGED", bet)
+
     def register(self, event, who, callback=None):
         """ Register for updates """
 
@@ -72,18 +83,6 @@ class Slot_Machine(object):
         self.notify("PAYOUT", amount)
         self.notify("CREDITS_CHANGED", self.credits)
 
-    def set_credits(self, credits):
-        """ Set the credits to a specific amount """
-
-        self.credits = credits
-        self.notify("CREDITS_CHANGED", self.credits)
-
-    def set_bet(self, bet):
-        """ Set the bet to an arbitrary amount """
-
-        self.bet = bet
-        self.notify("BET_CHANGED", bet)
-
     def place_bet(self):
         """ Place the bet and remove the amount from the credits """
 
@@ -96,7 +95,7 @@ class Slot_Machine(object):
 
         return self.bet
 
-    def increment_bet(self):
+    def increment_bet(self, message=None):
         """ Increment the bet by one """
 
         if (self.bet + 1) > self.credits:
@@ -106,7 +105,7 @@ class Slot_Machine(object):
             self.bet += 1
             self.notify("BET_CHANGED", self.bet)
 
-    def decrement_bet(self):
+    def decrement_bet(self, message=None):
         """ Decrement the bet by one """
 
         if self.bet > 1:
@@ -114,13 +113,12 @@ class Slot_Machine(object):
             self.notify("BET_CHANGED", self.bet)
 
     def spin(self):
-        """ Spin all three reels """
+        """ Spin the reels """
 
         # Take the bet
         bet = self.place_bet()
 
         reels = []
-
         for reel in self.reels:
             reels.append(reel.spin())
 
@@ -142,7 +140,6 @@ class Liberty_Bell_Machine(Slot_Machine):
         super(Liberty_Bell_Machine, self).__init__(*args, **kwargs)
 
         self.name = "Liberty Bell"
-        self.reels = []
 
         # Add the three reels
         for i in range(3):

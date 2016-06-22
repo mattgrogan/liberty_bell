@@ -38,6 +38,9 @@ def test_machine():
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
 
+    # Set up the initial credits and bet
+    slot.initialize(100, 1)
+
     assert slot.credits == 100
 
     # Spin
@@ -60,6 +63,8 @@ def test_payout():
 
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
+    # Set up the initial credits and bet
+    slot.initialize(100, 1)
 
     assert slot.credits == 100
 

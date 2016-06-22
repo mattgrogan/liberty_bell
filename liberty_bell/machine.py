@@ -40,20 +40,15 @@ class Slot_Machine(object):
         """ Initialize the machine """
 
         self.name = "Slot Machine"
-        self.credits = 100
-        self.bet = 1
+        self.credits = None
+        self.bet = None
         self.reels = []
         self.randomizer = randomizer
 
         # Set up events
-        events = ["PAYOUT", "PLACE_BET"]
+        events = ["CREDITS_CHANGED", "PAYOUT", "PLACE_BET", "BET_CHANGED"]
 
         self.events = {event: dict() for event in events}
-
-    def _get_subscribers(self, event):
-        """ Get the subscribers for a particular event """
-
-        return self.events[event]
 
     def register(self, event, who, callback=None):
         """ Register for updates """
@@ -61,18 +56,33 @@ class Slot_Machine(object):
         if callback is None:
             callback = getattr(who, 'update')
 
-        self._get_subscribers(event)[who] = callback
+        self.events[event][who] = callback
+
+    def notify(self, event, message=None):
+        """ Notify the subscribers for a particular event """
+
+        for subscriber, callback in self.events[event].iteritems():
+            callback(message)
 
     def payout(self, amount):
         """ Add to the credits """
 
         self.credits += amount
 
-        message = None
-        subscribers = self._get_subscribers("PAYOUT")
+        self.notify("PAYOUT", amount)
+        self.notify("CREDITS_CHANGED", self.credits)
 
-        for subscriber, callback in subscribers.iteritems():
-            callback(self.credits)
+    def set_credits(self, credits):
+        """ Set the credits to a specific amount """
+
+        self.credits = credits
+        self.notify("CREDITS_CHANGED", self.credits)
+
+    def set_bet(self, bet):
+        """ Set the bet to an arbitrary amount """
+
+        self.bet = bet
+        self.notify("BET_CHANGED", bet)
 
     def place_bet(self):
         """ Place the bet and remove the amount from the credits """
@@ -81,10 +91,8 @@ class Slot_Machine(object):
         assert self.bet <= self.credits
         self.credits -= self.bet
 
-        subscribers = self._get_subscribers("PLACE_BET")
-
-        for subscriber, callback in subscribers.iteritems():
-            callback(self.credits)
+        self.notify("PLACE_BET", self.bet)
+        self.notify("CREDITS_CHANGED", self.credits)
 
         return self.bet
 
@@ -96,12 +104,14 @@ class Slot_Machine(object):
 
         if self.bet < MAX_BET:
             self.bet += 1
+            self.notify("BET_CHANGED", self.bet)
 
     def decrement_bet(self):
         """ Decrement the bet by one """
 
         if self.bet > 1:
             self.bet -= 1
+            self.notify("BET_CHANGED", self.bet)
 
     def spin(self):
         """ Spin all three reels """

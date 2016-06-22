@@ -13,9 +13,12 @@ class Slot_Game_Controller(object):
 
         # Register for events
         self.ui.register("SPIN_BUTTON_PRESSED", self, self.spin)
-        self.slot_machine.register("PAYOUT", self, self.credits_changed)
-        self.slot_machine.register("PLACE_BET", self, self.credits_changed)
+        self.slot_machine.register("CREDITS_CHANGED", self, self.credits_changed)
+        self.slot_machine.register("BET_CHANGED", self, self.bet_changed)
 
+        # Set up the initial credits and bet
+        self.slot_machine.set_credits(100)
+        self.slot_machine.set_bet(1)
 
         # Run the main loop
         self.ui.mainloop()
@@ -34,3 +37,8 @@ class Slot_Game_Controller(object):
         """ Callback for change in credits """
 
         self.ui.update_credits(credits)
+
+    def bet_changed(self, bet):
+        """ Update the bet on the UI """
+
+        self.ui.update_bet(bet)

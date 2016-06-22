@@ -19,6 +19,9 @@ class Slot_GUI(tk.Tk):
         self.credits_label = tk.Label(self, text="Credits: 0")
         self.credits_label.pack()
 
+        self.bet_label = tk.Label(self, text="Bet: 0")
+        self.bet_label.pack()
+
         nbr_reels = 3
         self.reel_labels = []
         for i in range(nbr_reels):
@@ -67,3 +70,8 @@ class Slot_GUI(tk.Tk):
         """ Update the credits box """
 
         self.credits_label.configure(text = "Credits: %i" % credits)
+
+    def update_bet(self, bet):
+        """ Update the bet """
+
+        self.bet_label.configure(text = "Bet: %i" % bet)

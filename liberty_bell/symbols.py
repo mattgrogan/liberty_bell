@@ -27,6 +27,7 @@ class Liberty_Bell_Symbol(Symbol):
         self.name = "Liberty Bell"
         self.value = 1
 
+
 class Heart_Symbol(Symbol):
     """ Symbol to represent a heart symbol """
 
@@ -35,6 +36,7 @@ class Heart_Symbol(Symbol):
 
         self.name = "Heart"
         self.value = 2
+
 
 class Diamond_Symbol(Symbol):
     """ Symbol to represent a diamond """
@@ -45,6 +47,7 @@ class Diamond_Symbol(Symbol):
         self.name = "Diamond"
         self.value = 3
 
+
 class Spade_Symbol(Symbol):
     """ Symbol to represent a spade """
 
@@ -53,6 +56,7 @@ class Spade_Symbol(Symbol):
 
         self.name = "Spade"
         self.value = 4
+
 
 class Horseshoe_Symbol(Symbol):
     """ Symbol to represent a Horseshoe """
@@ -63,6 +67,7 @@ class Horseshoe_Symbol(Symbol):
         self.name = "Horseshoe"
         self.value = 5
 
+
 class Star_Symbol(Symbol):
     """ Symbol to represent a star """
 
@@ -71,6 +76,7 @@ class Star_Symbol(Symbol):
 
         self.name = "Star"
         self.value = 6
+
 
 class Liberty_Bell_Symbols(object):
     """ An enumerator class to hold all the symbol references """

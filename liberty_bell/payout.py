@@ -87,6 +87,7 @@ class Horseshoe_Star_Payout(object):
 
         return all(sorted(self.symbols)[i] == sorted(candidate)[i] for i in range(len(candidate)))
 
+
 class Horseshoe_Payout(object):
     """ Two horseshoes """
 
@@ -107,6 +108,7 @@ class Horseshoe_Payout(object):
 
         return count >= 2
 
+
 class Liberty_Bell_Payout_Table(object):
     """ Class to hold the payout table """
 
@@ -115,8 +117,8 @@ class Liberty_Bell_Payout_Table(object):
 
         self.name = "Liberty Bell Payout Table"
         self.payouts = [Liberty_Bell_Payout(), Heart_Payout(),
-            Diamond_Payout(), Spade_Payout(), Horseshoe_Star_Payout(),
-            Horseshoe_Payout()]
+                        Diamond_Payout(), Spade_Payout(), Horseshoe_Star_Payout(),
+                        Horseshoe_Payout()]
 
     def calculate_payout(self, symbols):
         """ Check if symbols is a winner! """

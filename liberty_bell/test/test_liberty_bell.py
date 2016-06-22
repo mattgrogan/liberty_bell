@@ -50,6 +50,7 @@ def test_machine():
 
     assert slot.bank.credits == 99
 
+
 def test_payout():
 
     randomizer = liberty_bell.RandomMock(sequence=[0, 0, 0])
@@ -86,9 +87,9 @@ def test_payout():
     assert spin_result.reels[2].name == "Liberty Bell"
 
     # Check payout
-    assert spin_result.winner_paid == 80 # Bet 4
+    assert spin_result.winner_paid == 80  # Bet 4
 
-    assert slot.bank.credits == 195 # spent 5
+    assert slot.bank.credits == 195  # spent 5
 
     slot.decrement_bet()
 
@@ -140,6 +141,7 @@ def test_payout():
     assert spin_result.winner_paid == 200
 
     assert slot.bank.credits == 461
+
 
 def test_payout_table():
 
@@ -231,6 +233,7 @@ def test_payout_table():
     result = payout_table.calculate_payout(spin_result)
 
     assert result == 2
+
 
 def test_controller():
 

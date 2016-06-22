@@ -32,8 +32,7 @@ class Slot_Machine(object):
     def add_reel(self, name, stops):
         """ Add a reel to the machine """
 
-        reel = Reel(name, stops)
-        reel.set_randomizer(self.randomizer)
+        reel = Reel(name, stops, self.randomizer)
         self.reels.append(reel)
 
     def initialize(self, credits=None, bet=None):

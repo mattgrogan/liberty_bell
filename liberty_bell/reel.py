@@ -8,23 +8,18 @@ symbols = Liberty_Bell_Symbols()
 class Reel(object):
     """ A slot machine reel  """
 
-    def __init__(self, name, stops):
+    def __init__(self, name, stops, randomizer=random):
         """ Initialize the reel """
 
         self.name = name
         self.stops = stops
 
-        self.randomizer = random
+        self.randomizer = randomizer
 
     def __str__(self):
         """ Print details """
 
         return str(self.name)
-
-    def set_randomizer(self, randomizer):
-        """ Set a deterministic randomizer for testing """
-
-        self.randomizer = randomizer
 
     def spin(self):
         """ Spin the reel and return a random result """

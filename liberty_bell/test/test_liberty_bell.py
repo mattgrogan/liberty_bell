@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import pytest
 import liberty_bell
+from liberty_bell.mock import MockRandom
 
 symbols = liberty_bell.Liberty_Bell_Symbols()
 
@@ -18,7 +19,7 @@ def test_reel():
     assert len(r.stops) == 10
 
     # Set a deterministic randomizer
-    randomizer = liberty_bell.RandomMock()
+    randomizer = MockRandom()
     r.set_randomizer(randomizer)
 
     for stop in stops:
@@ -33,7 +34,7 @@ def test_reel():
 
 def test_machine():
 
-    randomizer = liberty_bell.RandomMock()
+    randomizer = MockRandom()
 
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
@@ -56,7 +57,7 @@ def test_machine():
 
 def test_payout():
 
-    randomizer = liberty_bell.RandomMock(sequence=[0, 0, 0])
+    randomizer = MockRandom(sequence=[0, 0, 0])
 
     # Create payout table
     payout_table = liberty_bell.Liberty_Bell_Payout()

@@ -133,7 +133,7 @@ class Liberty_Bell_Machine(Slot_Machine):
                  symbols.HORSESHOE, symbols.HORSESHOE, symbols.HORSESHOE,
                  symbols.STAR]
 
-        # Add the three reels
+        # Add three reels with identical stops
         for i in range(3):
             self.add_reel(name="Reel %i" % (i + 1), stops=stops)
 

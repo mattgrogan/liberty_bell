@@ -6,7 +6,6 @@ from liberty_bell.mock import MockRandom
 
 symbols = liberty_bell.Liberty_Bell_Symbols()
 
-
 def test_reel():
 
     # Create the reel
@@ -60,7 +59,7 @@ def test_payout():
     randomizer = MockRandom(sequence=[0, 0, 0])
 
     # Create payout table
-    payout_table = liberty_bell.Liberty_Bell_Payout()
+    payout_table = liberty_bell.Payline({symbols.LIBERTY_BELL: 3}, 20)
 
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
@@ -151,7 +150,10 @@ def test_payout():
 
 def test_payout_table():
 
-    payout_table = liberty_bell.Liberty_Bell_Payout_Table()
+    # Create the machine
+    slot = liberty_bell.Liberty_Bell_Machine()
+
+    payout_table = slot.payout_table
 
     # Jackpot
     spin_result = [symbols.LIBERTY_BELL,

@@ -1,124 +1,46 @@
-from symbols import Liberty_Bell_Symbols
+from collections import defaultdict
 
-symbols = Liberty_Bell_Symbols()
+class Payline(object):
+    """ A winning combination! """
 
+    def __init__(self, rule, winner_paid):
+        """ Pass rule as a dict with the symbol and required number of occurrences """
 
-class Liberty_Bell_Payout(object):
-    """ Three Liberty Bells """
+        self.rule = {}
+        self.winner_paid = winner_paid
 
-    def __init__(self):
-        """ Initialize the payout """
-
-        self.symbols = [symbols.LIBERTY_BELL,
-                        symbols.LIBERTY_BELL,
-                        symbols.LIBERTY_BELL]
-        self.winner_paid = 20
+        for symbol, minimum_occurrence in rule.iteritems():
+            self.rule[str(symbol)] = minimum_occurrence # index by string only
 
     def is_match(self, candidate):
-        """ Check if symbols is a match """
+        """ Candidate is a list of symbols. Check if they match this payout rule """
 
-        return all(self.symbols[i] == candidate[i] for i in range(len(candidate)))
+        candidate_dict = defaultdict(int)
+        for symbol in candidate:
+            candidate_dict[str(symbol)] += 1
 
+        match = True
 
-class Heart_Payout(object):
-    """ Three Hearts """
+        for symbol in self.rule:
+            if candidate_dict[symbol] < self.rule[symbol]:
+                match = False
+                break
 
-    def __init__(self):
-        """ Initialize the payout """
+        return match
 
-        self.symbols = [symbols.HEART,
-                        symbols.HEART,
-                        symbols.HEART]
-        self.winner_paid = 16
-
-    def is_match(self, candidate):
-        """ Check if symbols is a match """
-
-        return all(self.symbols[i] == candidate[i] for i in range(len(candidate)))
-
-
-class Diamond_Payout(object):
-    """ Three Diamonds """
-
-    def __init__(self):
-        """ Initialize the payout """
-
-        self.symbols = [symbols.DIAMOND,
-                        symbols.DIAMOND,
-                        symbols.DIAMOND]
-        self.winner_paid = 12
-
-    def is_match(self, candidate):
-        """ Check if symbols is a match """
-
-        return all(self.symbols[i] == candidate[i] for i in range(len(candidate)))
-
-
-class Spade_Payout(object):
-    """ Three Spades """
-
-    def __init__(self):
-        """ Initialize the payout """
-
-        self.symbols = [symbols.SPADE,
-                        symbols.SPADE,
-                        symbols.SPADE]
-        self.winner_paid = 8
-
-    def is_match(self, candidate):
-        """ Check if symbols is a match """
-
-        return all(self.symbols[i] == candidate[i] for i in range(len(candidate)))
-
-
-class Horseshoe_Star_Payout(object):
-    """ Two horseshoes and one star """
-
-    def __init__(self):
-        """ Initialize the payout """
-
-        self.symbols = [symbols.HORSESHOE,
-                        symbols.HORSESHOE,
-                        symbols.STAR]
-        self.winner_paid = 4
-
-    def is_match(self, candidate):
-        """ Check if symbols is a match """
-
-        return all(sorted(self.symbols)[i] == sorted(candidate)[i] for i in range(len(candidate)))
-
-
-class Horseshoe_Payout(object):
-    """ Two horseshoes """
-
-    def __init__(self):
-        """ Initialize the payout """
-
-        self.symbol = symbols.HORSESHOE
-        self.winner_paid = 2
-
-    def is_match(self, candidate):
-        """ Check if symbols is a match """
-
-        count = 0
-
-        for i in range(len(candidate)):
-            if candidate[i] == self.symbol:
-                count = count + 1
-
-        return count >= 2
-
-
-class Liberty_Bell_Payout_Table(object):
+class Payout_Table(object):
     """ Class to hold the payout table """
 
-    def __init__(self):
+    def __init__(self, name="Payout Table"):
         """ Initialize the payout table """
 
-        self.name = "Liberty Bell Payout Table"
-        self.payouts = [Liberty_Bell_Payout(), Heart_Payout(),
-                        Diamond_Payout(), Spade_Payout(), Horseshoe_Star_Payout(),
-                        Horseshoe_Payout()]
+        self.name = name
+        self.payouts = []
+
+    def append(self, payline):
+        """ Add a payline to the table. Pass a dictionary with the symbols. Must be ordered. """
+
+        self.payouts.append(payline)
 
     def calculate_payout(self, symbols):
         """ Check if symbols is a winner! """

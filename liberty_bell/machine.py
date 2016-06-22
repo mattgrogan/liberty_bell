@@ -1,8 +1,11 @@
 import random
 from reel import Liberty_Bell_Reel
-from payout import Liberty_Bell_Payout_Table
+from payout import Payout_Table, Payline
 from spin_result import Spin_Result
 from events import Events
+from symbols import Liberty_Bell_Symbols
+
+symbols = Liberty_Bell_Symbols()
 
 MAX_BET = 10
 
@@ -17,6 +20,7 @@ class Slot_Machine(object):
         self.bet = None
         self.reels = []
         self.randomizer = randomizer
+        self.payout_table = Payout_Table()
 
         # Set up events
         events = [Events.CREDITS_CHANGED, Events.PAYOUT, Events.PLACE_BET, Events.BET_CHANGED]
@@ -121,5 +125,10 @@ class Liberty_Bell_Machine(Slot_Machine):
             reel.set_randomizer(self.randomizer)
             self.reels.append(reel)
 
-        # Add the payout table
-        self.payout_table = Liberty_Bell_Payout_Table()
+        # Add the paylines to the payout table
+        self.payout_table.append(Payline({symbols.LIBERTY_BELL: 3}, 20))
+        self.payout_table.append(Payline({symbols.HEART: 3}, 16))
+        self.payout_table.append(Payline({symbols.DIAMOND: 3}, 12))
+        self.payout_table.append(Payline({symbols.SPADE: 3}, 8))
+        self.payout_table.append(Payline({symbols.HORSESHOE: 2, symbols.STAR: 1}, 4))
+        self.payout_table.append(Payline({symbols.HORSESHOE: 2}, 2))

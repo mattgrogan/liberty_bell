@@ -9,18 +9,17 @@ symbols = liberty_bell.Liberty_Bell_Symbols()
 
 def test_reel():
 
+    randomizer = MockRandom()
+
     # Create the reel
-    r = liberty_bell.Liberty_Bell_Reel(name="Reel 1")
+    slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
+    r = slot.reels[0]
 
     stops = r.stops
 
     assert(str(r) == "Reel 1")
     assert(r.stops == stops)
     assert len(r.stops) == 10
-
-    # Set a deterministic randomizer
-    randomizer = MockRandom()
-    r.set_randomizer(randomizer)
 
     for stop in stops:
         # Spin the reel

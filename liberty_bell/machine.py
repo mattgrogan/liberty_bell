@@ -1,5 +1,5 @@
 import random
-from reel import Liberty_Bell_Reel
+from reel import Reel
 from payout import Payout_Table, Payline
 from spin_result import Spin_Result
 from events import Events
@@ -28,6 +28,13 @@ class Slot_Machine(object):
                   Events.PLACE_BET, Events.BET_CHANGED]
 
         self.events = {event: dict() for event in events}
+
+    def add_reel(self, name, stops):
+        """ Add a reel to the machine """
+
+        reel = Reel(name, stops)
+        reel.set_randomizer(self.randomizer)
+        self.reels.append(reel)
 
     def initialize(self, credits=None, bet=None):
         """ Initialize credit and/or bet values """
@@ -121,12 +128,14 @@ class Liberty_Bell_Machine(Slot_Machine):
 
         self.name = "Liberty Bell"
 
+        stops = [symbols.LIBERTY_BELL, symbols.HEART, symbols.DIAMOND,
+                 symbols.SPADE, symbols.SPADE, symbols.SPADE,
+                 symbols.HORSESHOE, symbols.HORSESHOE, symbols.HORSESHOE,
+                 symbols.STAR]
+
         # Add the three reels
         for i in range(3):
-            reel_name = "Reel %i" % i
-            reel = Liberty_Bell_Reel(name=reel_name)
-            reel.set_randomizer(self.randomizer)
-            self.reels.append(reel)
+            self.add_reel(name="Reel %i" % (i + 1), stops=stops)
 
         # Add the paylines to the payout table
         self.payout_table.append(Payline({symbols.LIBERTY_BELL: 3}, 20))

@@ -5,17 +5,14 @@ from spin_result import Spin_Result
 symbols = Liberty_Bell_Symbols()
 
 
-class Liberty_Bell_Reel(object):
-    """ A slot machine reel based on the original Liberty Bell machine """
+class Reel(object):
+    """ A slot machine reel  """
 
-    def __init__(self, name):
+    def __init__(self, name, stops):
         """ Initialize the reel """
 
         self.name = name
-        self.stops = [symbols.LIBERTY_BELL, symbols.HEART, symbols.DIAMOND,
-                      symbols.SPADE, symbols.SPADE, symbols.SPADE,
-                      symbols.HORSESHOE, symbols.HORSESHOE, symbols.HORSESHOE,
-                      symbols.STAR]
+        self.stops = stops
 
         self.randomizer = random
 

@@ -33,19 +33,46 @@ class RandomMock(object):
         self.index = self.index + 1
         return result
 
-class Machine_Bank(object):
-    """ The bank holds the player's credits """
+class Slot_Machine(object):
+    """ A superclass for slot machines """
 
-    def __init__(self):
-        """ Initialize with 100 creedits """
+    def __init__(self, randomizer=random):
+        """ Initialize the machine """
 
+        self.name = "Slot Machine"
         self.credits = 100
         self.bet = 1
+        self.reels = []
+        self.randomizer = randomizer
+
+        # Set up events
+        events = ["PAYOUT", "PLACE_BET"]
+
+        self.events = {event: dict() for event in events}
+
+    def _get_subscribers(self, event):
+        """ Get the subscribers for a particular event """
+
+        return self.events[event]
+
+    def register(self, event, who, callback=None):
+        """ Register for updates """
+
+        if callback is None:
+            callback = getattr(who, 'update')
+
+        self._get_subscribers(event)[who] = callback
 
     def payout(self, amount):
         """ Add to the credits """
 
         self.credits += amount
+
+        message = None
+        subscribers = self._get_subscribers("PAYOUT")
+
+        for subscriber, callback in subscribers.iteritems():
+            callback(self.credits)
 
     def place_bet(self):
         """ Place the bet and remove the amount from the credits """
@@ -53,6 +80,11 @@ class Machine_Bank(object):
         # You can't bet more than your credits!
         assert self.bet <= self.credits
         self.credits -= self.bet
+
+        subscribers = self._get_subscribers("PLACE_BET")
+
+        for subscriber, callback in subscribers.iteritems():
+            callback(self.credits)
 
         return self.bet
 
@@ -71,41 +103,11 @@ class Machine_Bank(object):
         if self.bet > 1:
             self.bet -= 1
 
-class Liberty_Bell_Machine(object):
-    """ A slot machine based on the original Liberty Bell machine """
-
-    def __init__(self, randomizer=random):
-        """ Initialize the machine """
-
-        self.name = "Liberty Bell"
-        self.reels = []
-        self.bank = Machine_Bank()
-
-        # Add the three reels
-        for i in range(3):
-            reel_name = "Reel %i" % i
-            reel = Liberty_Bell_Reel(name=reel_name)
-            reel.set_randomizer(randomizer)
-            self.reels.append(reel)
-
-        # Add the payout table
-        self.payout_table = Liberty_Bell_Payout_Table()
-
-    def increment_bet(self):
-        """ Tell the bank to increment the bet by one """
-
-        self.bank.increment_bet()
-
-    def decrement_bet(self):
-        """ Tell the bank to decrement the bet by one """
-
-        self.bank.decrement_bet()
-
     def spin(self):
         """ Spin all three reels """
 
         # Take the bet
-        bet = self.bank.place_bet()
+        bet = self.place_bet()
 
         reels = []
 
@@ -115,8 +117,29 @@ class Liberty_Bell_Machine(object):
         winner_paid = self.payout_table.calculate_payout(reels) * bet
 
         # Add the winnings, if any
-        self.bank.payout(winner_paid)
+        self.payout(winner_paid)
 
         spin_result = Spin_Result(reels, winner_paid)
 
         return spin_result
+
+class Liberty_Bell_Machine(Slot_Machine):
+    """ A slot machine based on the original Liberty Bell machine """
+
+    def __init__(self, *args, **kwargs):
+        """ Initialize the Liberty Bell slot Machine """
+
+        super(Liberty_Bell_Machine, self).__init__(*args, **kwargs)
+
+        self.name = "Liberty Bell"
+        self.reels = []
+
+        # Add the three reels
+        for i in range(3):
+            reel_name = "Reel %i" % i
+            reel = Liberty_Bell_Reel(name=reel_name)
+            reel.set_randomizer(self.randomizer)
+            self.reels.append(reel)
+
+        # Add the payout table
+        self.payout_table = Liberty_Bell_Payout_Table()

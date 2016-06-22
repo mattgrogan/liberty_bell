@@ -38,7 +38,7 @@ def test_machine():
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
 
-    assert slot.bank.credits == 100
+    assert slot.credits == 100
 
     # Spin
     spin_result = slot.spin()
@@ -48,7 +48,7 @@ def test_machine():
     assert spin_result.reels[2].name == "Diamond"
     assert spin_result.winner_paid == 0
 
-    assert slot.bank.credits == 99
+    assert slot.credits == 99
 
 
 def test_payout():
@@ -61,7 +61,7 @@ def test_payout():
     # Create the machine
     slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
 
-    assert slot.bank.credits == 100
+    assert slot.credits == 100
 
     # Spin
     spin_result = slot.spin()
@@ -73,7 +73,7 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 20
 
-    assert slot.bank.credits == 119
+    assert slot.credits == 119
 
     slot.increment_bet()
     slot.increment_bet()
@@ -89,7 +89,7 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 80  # Bet 4
 
-    assert slot.bank.credits == 195  # spent 5
+    assert slot.credits == 195  # spent 5
 
     slot.decrement_bet()
 
@@ -103,7 +103,7 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 60
 
-    assert slot.bank.credits == 252
+    assert slot.credits == 252
 
     # make sure we can't decrement below zero
     slot.decrement_bet()
@@ -124,7 +124,7 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 20
 
-    assert slot.bank.credits == 271
+    assert slot.credits == 271
 
     # make sure we can't increment past max bet
     for i in range(40):
@@ -140,7 +140,7 @@ def test_payout():
     # Check payout
     assert spin_result.winner_paid == 200
 
-    assert slot.bank.credits == 461
+    assert slot.credits == 461
 
 
 def test_payout_table():
@@ -233,10 +233,3 @@ def test_payout_table():
     result = payout_table.calculate_payout(spin_result)
 
     assert result == 2
-
-
-def test_controller():
-
-    game = liberty_bell.Slot_Game_Controller()
-
-    game.spin()

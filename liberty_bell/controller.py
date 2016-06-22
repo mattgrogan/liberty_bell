@@ -20,4 +20,9 @@ class Slot_Game_Controller(object):
     def spin(self, message):
         """ Spin the slot machine """
 
-        self.slot_machine.spin()
+        result = self.slot_machine.spin()
+
+        self.ui.update_winner_paid(result.winner_paid)
+
+        for i, symbol in enumerate(result.reels):
+            self.ui.update_reel(i, symbol)

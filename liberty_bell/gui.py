@@ -13,6 +13,16 @@ class Slot_GUI(tk.Tk):
         self.button = tk.Button(self, text="SPIN", command=self.spin_pressed)
         self.button.pack(side=tk.RIGHT)
 
+        self.winner_paid_label = tk.Label(self, text="Winner paid: 0")
+        self.winner_paid_label.pack()
+
+        nbr_reels = 3
+        self.reel_labels = []
+        for i in range(nbr_reels):
+            reel_label = tk.Label(self, text="Reel %i: " % i)
+            reel_label.pack()
+            self.reel_labels.append(reel_label)
+
         # Set up events
         events = ["SPIN_BUTTON_PRESSED"]
 
@@ -39,3 +49,13 @@ class Slot_GUI(tk.Tk):
 
         for subscriber, callback in subscribers.iteritems():
             callback(message)
+
+    def update_winner_paid(self, winner_paid):
+        """ Print the amount paid """
+
+        self.winner_paid_label.configure(text = "Winner paid: %i" % winner_paid)
+
+    def update_reel(self, reel, symbol):
+        """ Update reel with the result """
+
+        self.reel_labels[reel].configure(text = "Reel %i: %s" % (reel, symbol))

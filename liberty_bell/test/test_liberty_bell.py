@@ -36,8 +36,7 @@ def test_machine():
     randomizer = liberty_bell.RandomMock()
 
     # Create the machine
-    slot = liberty_bell.Liberty_Bell_Machine(
-        name="Machine 1", randomizer=randomizer)
+    slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
 
     assert slot.bank.credits == 100
 
@@ -59,8 +58,7 @@ def test_payout():
     payout_table = liberty_bell.Liberty_Bell_Payout()
 
     # Create the machine
-    slot = liberty_bell.Liberty_Bell_Machine(
-        name="Machine 1", randomizer=randomizer)
+    slot = liberty_bell.Liberty_Bell_Machine(randomizer=randomizer)
 
     assert slot.bank.credits == 100
 
@@ -233,3 +231,9 @@ def test_payout_table():
     result = payout_table.calculate_payout(spin_result)
 
     assert result == 2
+
+def test_controller():
+
+    game = liberty_bell.Slot_Game_Controller()
+
+    game.spin()

@@ -74,10 +74,10 @@ class Machine_Bank(object):
 class Liberty_Bell_Machine(object):
     """ A slot machine based on the original Liberty Bell machine """
 
-    def __init__(self, name, randomizer=random):
+    def __init__(self, randomizer=random):
         """ Initialize the machine """
 
-        self.name = name
+        self.name = "Liberty Bell"
         self.reels = []
         self.bank = Machine_Bank()
 

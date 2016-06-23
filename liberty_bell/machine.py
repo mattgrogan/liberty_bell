@@ -3,9 +3,6 @@ from reel import Reel
 from payout import Payout_Table, Payline
 from spin_result import Spin_Result
 from events import Events
-from liberty_bell_machine import Liberty_Bell_Symbols
-
-symbols = Liberty_Bell_Symbols()
 
 MAX_BET = 10
 
@@ -19,6 +16,7 @@ class Slot_Machine(object):
         self.name = "Slot Machine"
         self.credits = None
         self.bet = None
+        self.symbols = []
         self.reels = []
         self.randomizer = randomizer
         self.payout_table = Payout_Table()
@@ -115,32 +113,3 @@ class Slot_Machine(object):
         spin_result = Spin_Result(reels, winner_paid)
 
         return spin_result
-
-
-class Liberty_Bell_Machine(Slot_Machine):
-    """ A slot machine based on the original Liberty Bell machine """
-
-    def __init__(self, *args, **kwargs):
-        """ Initialize the Liberty Bell slot Machine """
-
-        super(Liberty_Bell_Machine, self).__init__(*args, **kwargs)
-
-        self.name = "Liberty Bell"
-
-        stops = [symbols.LIBERTY_BELL, symbols.HEART, symbols.DIAMOND,
-                 symbols.SPADE, symbols.SPADE, symbols.SPADE,
-                 symbols.HORSESHOE, symbols.HORSESHOE, symbols.HORSESHOE,
-                 symbols.STAR]
-
-        # Add three reels with identical stops
-        for i in range(3):
-            self.add_reel(name="Reel %i" % (i + 1), stops=stops)
-
-        # Add the paylines to the payout table
-        self.payout_table.append(Payline({symbols.LIBERTY_BELL: 3}, 20))
-        self.payout_table.append(Payline({symbols.HEART: 3}, 16))
-        self.payout_table.append(Payline({symbols.DIAMOND: 3}, 12))
-        self.payout_table.append(Payline({symbols.SPADE: 3}, 8))
-        self.payout_table.append(
-            Payline({symbols.HORSESHOE: 2, symbols.STAR: 1}, 4))
-        self.payout_table.append(Payline({symbols.HORSESHOE: 2}, 2))

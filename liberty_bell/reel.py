@@ -1,9 +1,4 @@
 import random
-from symbols import Liberty_Bell_Symbols
-from spin_result import Spin_Result
-
-symbols = Liberty_Bell_Symbols()
-
 
 class Reel(object):
     """ A slot machine reel  """

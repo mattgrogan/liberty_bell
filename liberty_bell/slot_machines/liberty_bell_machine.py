@@ -1,4 +1,4 @@
-from symbols import Symbol
+from symbol import Symbol
 from machine import Slot_Machine
 from payout import Payline
 

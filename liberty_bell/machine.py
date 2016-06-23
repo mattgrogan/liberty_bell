@@ -71,6 +71,9 @@ class Slot_Machine(object):
         """ Place the bet and remove the amount from the credits """
 
         # You can't bet more than your credits!
+        assert self.bet is not None
+        assert self.bet > 0
+        assert self.credits is not None
         assert self.bet <= self.credits
         self.credits -= self.bet
 
@@ -111,7 +114,8 @@ class Slot_Machine(object):
         winner_paid = self.payout_table.calculate_payout(reels) * bet
 
         # Add the winnings, if any
-        self.payout(winner_paid)
+        if winner_paid > 0:
+            self.payout(winner_paid)
 
         spin_result = Spin_Result(reels, winner_paid)
 

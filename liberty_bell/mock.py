@@ -1,4 +1,4 @@
-class MockRandom(object):
+class Mock_Random(object):
     """ Mock random.choice for testing """
 
     def __init__(self, sequence=None):
@@ -40,3 +40,7 @@ class Mock_Observer(object):
 
         self.fired = True
         self.message = message
+
+    def reset(self):
+        """ Reset to defaults """
+        self.__init__()

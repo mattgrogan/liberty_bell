@@ -2,13 +2,57 @@ from __future__ import print_function
 
 import pytest
 import liberty_bell
-from liberty_bell.mock import MockRandom
+from liberty_bell.mock import MockRandom, Mock_Observer
 
 symbols = liberty_bell.Liberty_Bell_Symbols()
 
 
+def test_slot_machine():
 
+    slot_machine = liberty_bell.Slot_Machine()
 
+    assert slot_machine.name == "Slot Machine"
+
+    # Test initialization
+    slot_machine.initialize(credits=15, bet=1)
+    assert slot_machine.credits == 15
+    assert slot_machine.bet == 1
+
+    # Test spin with no reels
+    with pytest.raises(Exception):
+        result = slot_machine.spin()
+
+    # Test the betting functions
+    slot_machine.increment_bet()
+    assert slot_machine.bet == 2
+    slot_machine.decrement_bet()
+    assert slot_machine.bet == 1
+
+    # Test max and min bets
+    for i in range(slot_machine.max_bet + 1):
+        slot_machine.increment_bet()
+    assert slot_machine.bet == 10
+
+    for i in range(slot_machine.bet + 1):
+        slot_machine.decrement_bet()
+    assert slot_machine.bet == 1
+
+    # Test that you cannot bet more than your credits
+    slot_machine.initialize(credits=2)
+    slot_machine.increment_bet()
+    with pytest.raises(ValueError):
+        slot_machine.increment_bet()
+
+    # Test that the bet change event is fired
+    mock_increment = liberty_bell.mock.Mock_Observer()
+    slot_machine.initialize(credits=100, bet=1)
+    slot_machine.register(liberty_bell.Events.BET_CHANGED,
+                          mock_increment, mock_increment.observe)
+
+    assert mock_increment.fired == False
+    slot_machine.increment_bet()
+    assert mock_increment.fired == True
+    assert mock_increment.message == 2
 
 
 def test_reel():

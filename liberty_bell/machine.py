@@ -16,6 +16,7 @@ class Slot_Machine(object):
         self.name = "Slot Machine"
         self.credits = None
         self.bet = None
+        self.max_bet = MAX_BET
         self.symbols = []
         self.reels = []
         self.randomizer = randomizer
@@ -84,7 +85,7 @@ class Slot_Machine(object):
         if (self.bet + 1) > self.credits:
             raise ValueError("Not enough credits")
 
-        if self.bet < MAX_BET:
+        if self.bet < self.max_bet:
             self.bet += 1
             self.notify(Events.BET_CHANGED, self.bet)
 
@@ -97,6 +98,8 @@ class Slot_Machine(object):
 
     def spin(self):
         """ Spin the reels """
+
+        assert len(self.reels) > 0
 
         # Take the bet
         bet = self.place_bet()

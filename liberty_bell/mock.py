@@ -25,3 +25,18 @@ class MockRandom(object):
 
         self.index = self.index + 1
         return result
+
+class Mock_Observer(object):
+    """ Mock for testing events """
+
+    def __init__(self):
+        """ Initialize the event """
+
+        self.fired = False
+        self.message = None
+
+    def observe(self, message):
+        """ Called by the subject """
+
+        self.fired = True
+        self.message = message

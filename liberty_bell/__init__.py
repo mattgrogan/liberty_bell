@@ -1,5 +1,9 @@
 """ Package liberty bell into a single namespace """
 
+from liberty_bell.machine import Slot_Machine
+from liberty_bell.events import Events
+
+
 from liberty_bell.reel import Reel
 from liberty_bell.liberty_bell_machine import Liberty_Bell_Symbols
 from liberty_bell.liberty_bell_machine import Liberty_Bell_Machine

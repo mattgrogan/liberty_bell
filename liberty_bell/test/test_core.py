@@ -4,6 +4,7 @@ import pytest
 import liberty_bell
 from liberty_bell.mock import Mock_Random, Mock_Observer
 
+
 def test_slot_machine():
 
     slot_machine = liberty_bell.Slot_Machine()
@@ -75,11 +76,14 @@ def test_machine_betting():
 
     # Set up the observers
     observe_credits = liberty_bell.mock.Mock_Observer()
-    slot_machine.register(liberty_bell.Events.CREDITS_CHANGED, observe_credits, observe_credits.observe)
+    slot_machine.register(liberty_bell.Events.CREDITS_CHANGED,
+                          observe_credits, observe_credits.observe)
     observe_payout = liberty_bell.mock.Mock_Observer()
-    slot_machine.register(liberty_bell.Events.PAYOUT, observe_payout, observe_payout.observe)
+    slot_machine.register(liberty_bell.Events.PAYOUT,
+                          observe_payout, observe_payout.observe)
     observe_place_bet = liberty_bell.mock.Mock_Observer()
-    slot_machine.register(liberty_bell.Events.PLACE_BET, observe_place_bet, observe_place_bet.observe)
+    slot_machine.register(liberty_bell.Events.PLACE_BET,
+                          observe_place_bet, observe_place_bet.observe)
 
     slot_machine.initialize(credits=100, bet=1)
     assert observe_credits.fired == True
@@ -101,7 +105,6 @@ def test_machine_betting():
     observe_credits.reset()
     observe_payout.reset()
     observe_place_bet.reset()
-
 
     slot_machine.increment_bet()
     spin_result == slot_machine.spin()
@@ -164,8 +167,18 @@ def test_payout():
     for j in range(3):
         slot_machine.add_reel("Reel %i" % j, symbols)
 
-    # Add paylines
+    # Set up the observers
+    observe_credits = liberty_bell.mock.Mock_Observer()
+    slot_machine.register(liberty_bell.Events.CREDITS_CHANGED,
+                          observe_credits, observe_credits.observe)
+    observe_payout = liberty_bell.mock.Mock_Observer()
+    slot_machine.register(liberty_bell.Events.PAYOUT,
+                          observe_payout, observe_payout.observe)
+    observe_place_bet = liberty_bell.mock.Mock_Observer()
+    slot_machine.register(liberty_bell.Events.PLACE_BET,
+                          observe_place_bet, observe_place_bet.observe)
 
+    # Add paylines
     # First symbol, three times, pays three
     slot_machine.payout_table.append(liberty_bell.Payline({symbols[0]: 3}, 3))
 
@@ -182,19 +195,23 @@ def test_payout():
         spin_result = slot_machine.spin()
         assert spin_result.winner_paid == result
         expected_credits = expected_credits - 1 + result
+        # Check events
         assert slot_machine.credits == expected_credits
+        assert observe_payout.fired == True
+        assert observe_payout.message == result
+        observe_payout.reset()
 
 
 def test_losing_paylines():
     # The reels will move through this sequence of stops
 
     losing_seq = [1, 0, 0,
-                   1, 0, 1,
-                   0, 2, 1,
-                   2, 1, 0,
-                   0, 0, 2,
-                   2, 1, 1,
-                   ]
+                  1, 0, 1,
+                  0, 2, 1,
+                  2, 1, 0,
+                  0, 0, 2,
+                  2, 1, 1,
+                  ]
 
     mock_random = liberty_bell.mock.Mock_Random(sequence=losing_seq)
     slot_machine = liberty_bell.Slot_Machine(randomizer=mock_random)
@@ -208,8 +225,18 @@ def test_losing_paylines():
     for j in range(3):
         slot_machine.add_reel("Reel %i" % j, symbols)
 
-    # Add paylines
+    # Set up the observers
+    observe_credits = liberty_bell.mock.Mock_Observer()
+    slot_machine.register(liberty_bell.Events.CREDITS_CHANGED,
+                          observe_credits, observe_credits.observe)
+    observe_payout = liberty_bell.mock.Mock_Observer()
+    slot_machine.register(liberty_bell.Events.PAYOUT,
+                          observe_payout, observe_payout.observe)
+    observe_place_bet = liberty_bell.mock.Mock_Observer()
+    slot_machine.register(liberty_bell.Events.PLACE_BET,
+                          observe_place_bet, observe_place_bet.observe)
 
+    # Add paylines
     # First symbol, three times, pays three
     slot_machine.payout_table.append(liberty_bell.Payline({symbols[0]: 3}, 3))
 
@@ -222,7 +249,15 @@ def test_losing_paylines():
     expected_credits = 100
 
     for i in range(len(losing_seq) / 3):
-        spin_result=slot_machine.spin()
+        spin_result = slot_machine.spin()
         assert spin_result.winner_paid == 0
-        expected_credits=expected_credits - 1
+        expected_credits = expected_credits - 1
         assert slot_machine.credits == expected_credits
+
+        # Check events
+        assert observe_payout.fired == False
+        assert observe_credits.fired == True
+        assert observe_place_bet.fired == True
+        observe_payout.reset()
+        observe_credits.reset()
+        observe_place_bet.reset()

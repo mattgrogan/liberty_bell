@@ -3,6 +3,7 @@
 from liberty_bell.machine import Slot_Machine
 from liberty_bell.events import Events
 from liberty_bell.symbol import Symbol
+from liberty_bell.ui import Slot_UI
 
 
 from liberty_bell.reel import Reel

@@ -261,3 +261,49 @@ def test_losing_paylines():
         observe_payout.reset()
         observe_credits.reset()
         observe_place_bet.reset()
+
+def test_ui():
+
+    ui = liberty_bell.Slot_UI()
+
+    observe_spin = liberty_bell.mock.Mock_Observer()
+    ui.register(liberty_bell.Events.SPIN,
+                          observe_spin, observe_spin.observe)
+
+    observe_increment_bet = liberty_bell.mock.Mock_Observer()
+    ui.register(liberty_bell.Events.INCREMENT_BET,
+                          observe_increment_bet, observe_increment_bet.observe)
+
+    observe_decrement_bet = liberty_bell.mock.Mock_Observer()
+    ui.register(liberty_bell.Events.DECREMENT_BET,
+                          observe_decrement_bet, observe_decrement_bet.observe)
+
+    ui.on_spin_press()
+
+    assert observe_spin.fired == True
+    assert observe_increment_bet.fired == False
+    assert observe_decrement_bet.fired == False
+
+    observe_spin.reset()
+    observe_increment_bet.reset()
+    observe_decrement_bet.reset()
+
+    ui.on_decrement_bet_press()
+
+    assert observe_spin.fired == False
+    assert observe_increment_bet.fired == False
+    assert observe_decrement_bet.fired == True
+
+    observe_spin.reset()
+    observe_increment_bet.reset()
+    observe_decrement_bet.reset()
+
+    ui.on_increment_bet_press()
+
+    assert observe_spin.fired == False
+    assert observe_increment_bet.fired == True
+    assert observe_decrement_bet.fired == False
+
+    observe_spin.reset()
+    observe_increment_bet.reset()
+    observe_decrement_bet.reset()

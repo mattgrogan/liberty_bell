@@ -3,7 +3,7 @@ from reel import Reel
 from payout import Payout_Table, Payline
 from spin_result import Spin_Result
 from events import Events
-from symbols import Liberty_Bell_Symbols
+from liberty_bell_machine import Liberty_Bell_Symbols
 
 symbols = Liberty_Bell_Symbols()
 

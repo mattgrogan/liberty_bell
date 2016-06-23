@@ -1,16 +1,23 @@
 from liberty_bell_machine import Liberty_Bell_Machine
 from gui import Slot_GUI
+from user_interfaces.text_ui import Slot_Text_UI
 from events import Events
 
 
 class Slot_Game_Controller(object):
     """ Control the flow of play for the slot machine """
 
-    def __init__(self):
+    def __init__(self, ui):
         """ Initialize the game """
 
         self.slot_machine = Liberty_Bell_Machine()
-        self.ui = Slot_GUI()
+
+        if ui == "TEXT_UI":
+            self.ui = Slot_Text_UI()
+        elif ui == "GUI_UI":
+            self.ui = Slot_GUI()
+        else:
+            raise Exception("Invalid UI: " % ui)
 
         # Register for UI events
         self.ui.register(Events.SPIN, self, self.spin)

@@ -10,6 +10,8 @@ class Slot_UI(object):
 
     You must call these functions in the event of a ui event:
     on_increment_bet_press(), on_decrement_bet_press(), on_spin_press()
+
+    We're also expecting a mainloop()
     """
 
     def __init__(self, *args, **kwargs):

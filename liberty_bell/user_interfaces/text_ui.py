@@ -1,6 +1,10 @@
 from __future__ import print_function
-from events import Events
-from ui import Slot_UI
+
+import sys
+sys.path.append("..")
+
+from liberty_bell.events import Events
+from liberty_bell.ui import Slot_UI
 
 
 class Slot_Text_UI(Slot_UI):

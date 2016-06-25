@@ -1,5 +1,5 @@
-from liberty_bell_machine import Liberty_Bell_Machine
-from gui import Slot_GUI
+from slot_machines import Liberty_Bell_Machine
+from ui import Slot_UI
 from user_interfaces.text_ui import Slot_Text_UI
 from events import Events
 

@@ -1,6 +1,7 @@
 from slot_machines import Liberty_Bell_Machine
 from ui import Slot_UI
 from user_interfaces.text_ui import Slot_Text_UI
+from user_interfaces.rpi_ui import Slot_RPI_UI
 from events import Events
 
 
@@ -16,6 +17,8 @@ class Slot_Game_Controller(object):
             self.ui = Slot_Text_UI()
         elif ui == "GUI_UI":
             self.ui = Slot_GUI()
+	elif ui == "RPI_UI":
+	    self.ui = Slot_RPI_UI()
         else:
             raise Exception("Invalid UI: " % ui)
 

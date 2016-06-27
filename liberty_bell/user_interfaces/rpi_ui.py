@@ -8,6 +8,11 @@ from liberty_bell.ui import Slot_UI
 
 from Adafruit_LED_Backpack import SevenSegment
 
+WINNER_PAID_LED = 0x70
+CREDITS_LED = 0x71
+AMOUNT_BET_LED = 0x72
+
+
 class Slot_RPI_UI(Slot_UI):
     """ Raspberry PI UI for the slot machine """
 
@@ -16,10 +21,17 @@ class Slot_RPI_UI(Slot_UI):
 
         super(Slot_RPI_UI, self).__init__(*args, **kwargs)
 
-	self.winner_paid_led = SevenSegment.SevenSegment()
+	# Set up the winner paid LED
+	self.winner_paid_led = SevenSegment.SevenSegment(address=WINNER_PAID_LED)
 	self.winner_paid_led.begin()
 	self.winner_paid_led.clear()
 	self.winner_paid_led.write_display()
+
+	# Set up the credits LED
+	self.credits_led = SevenSegment.SevenSegment(address=CREDITS_LED)
+	self.credits_led.begin()
+	self.credits_led.clear()
+	self.credits_led.write_display()
 
         self.credits = 0
         self.bet = 0
@@ -60,6 +72,8 @@ class Slot_RPI_UI(Slot_UI):
 
         self.credits = credits
         self.print_status()
+	self.credits_led.print_float(credits, decimal_digits=0)
+	self.credits_led.write_display()
 
     def update_bet(self, bet):
         """ Update the bet """
@@ -71,7 +85,7 @@ class Slot_RPI_UI(Slot_UI):
         """ Print the amount paid """
 
         self.winner_paid = winner_paid
-        self.print_status
+        self.print_status()
 	self.winner_paid_led.print_float(winner_paid, decimal_digits=0)
 	self.winner_paid_led.write_display()
 

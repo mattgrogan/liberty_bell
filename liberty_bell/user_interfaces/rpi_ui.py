@@ -1,4 +1,5 @@
 from __future__ import print_function
+from datetime import datetime
 
 import sys
 sys.path.append("..")
@@ -7,11 +8,17 @@ from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
 
 from Adafruit_LED_Backpack import SevenSegment
+import RPi.GPIO as GPIO
 
 WINNER_PAID_LED = 0x70
 CREDITS_LED = 0x71
 AMOUNT_BET_LED = 0x72
 
+SPIN_BUTTON_GPIO = 18
+
+# Set up the GPIO pins
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(SPIN_BUTTON_GPIO, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 class Slot_RPI_UI(Slot_UI):
     """ Raspberry PI UI for the slot machine """
@@ -33,6 +40,17 @@ class Slot_RPI_UI(Slot_UI):
 	self.credits_led.clear()
 	self.credits_led.write_display()
 
+	# Set up the amount bet LED
+	self.amount_bet_led = SevenSegment.SevenSegment(address=AMOUNT_BET_LED)
+	self.amount_bet_led.begin()
+	self.amount_bet_led.clear()
+	self.amount_bet_led.write_display()
+
+	# Set up the GPIO buttons
+	GPIO.add_event_detect(SPIN_BUTTON_GPIO, GPIO.RISING, callback=self.on_gpio_spin_press, bouncetime=1000)
+	#	GPIO.add_event_detect(SPIN_BUTTON_GPIO, self.on_gpio_spin_button, bouncetime=200)
+	self.last_spin_interrupt = False
+
         self.credits = 0
         self.bet = 0
         self.winner_paid = 0
@@ -46,12 +64,12 @@ class Slot_RPI_UI(Slot_UI):
             text = "Choose an option: S: Spin | I: increase bet | D: decrease bet | Q: quit [S] "
             option = raw_input(text)
 
-            if option == ["S", "s"]:
+            if option in ["S", "s"]:
 		# Reset the winnings
 		self.winner_paid_led.clear()
 		self.winner_paid_led.write_display()
                 self.on_spin_press()
-            elif option == ["I", "i"]:
+            elif option in ["I", "i"]:
                 self.on_increment_bet_press()
             elif option in ["D", "d"]:
                 self.on_decrement_bet_press()
@@ -72,6 +90,7 @@ class Slot_RPI_UI(Slot_UI):
 
         self.credits = credits
         self.print_status()
+	self.credits_led.clear()
 	self.credits_led.print_float(credits, decimal_digits=0)
 	self.credits_led.write_display()
 
@@ -80,12 +99,16 @@ class Slot_RPI_UI(Slot_UI):
 
         self.bet = bet
         self.print_status
+	self.amount_bet_led.clear()
+	self.amount_bet_led.print_float(bet, decimal_digits=0)
+	self.amount_bet_led.write_display()
 
     def update_winner_paid(self, winner_paid):
         """ Print the amount paid """
 
         self.winner_paid = winner_paid
         self.print_status()
+	self.winner_paid_led.clear()
 	self.winner_paid_led.print_float(winner_paid, decimal_digits=0)
 	self.winner_paid_led.write_display()
 
@@ -93,3 +116,8 @@ class Slot_RPI_UI(Slot_UI):
         """ Update reel with the result """
 
         print("Reel %i: %s" % (reel, symbol))
+
+    def on_gpio_spin_press(self, e):
+	""" Debounce and then call on_spin_press """
+
+	self.on_spin_press()

@@ -7,13 +7,14 @@ from ui import Slot_UI
 class Slot_GUI(Slot_UI, tk.Tk):
     """ Prototype GUI for the slot machine """
 
-    def __init__(self, symbols=None, **kwargs):
+    def __init__(self, reels=None, **kwargs):
         """ Initialize the GUI """
 
         super(Slot_GUI, self).__init__(None, **kwargs)
         tk.Tk.__init__(self, None, **kwargs)
 
-        self.symbols = symbols
+        self.reels = reels
+        self.current_stops = [0] * len(self.reels)
 
         # Add the buttons
         self.button = tk.Button(self, text="SPIN", command=self.on_spin_press)
@@ -37,14 +38,11 @@ class Slot_GUI(Slot_UI, tk.Tk):
         self.bet_label = tk.Label(self, text="Bet: 0")
         self.bet_label.pack()
 
-        # Load the Image
-        img = ImageTk.PhotoImage(self.symbols.LIBERTY_BELL.image)
-
         # Add the reels
-        nbr_reels = 3  # TODO: Communicate this info from the machine
         self.reel_labels = []
-        for i in range(nbr_reels):
-            reel_label = tk.Label(self, text="Reel %i: " % i, image=img)
+        for i in range(len(self.reels)):
+            img = ImageTk.PhotoImage(self.reels[i].stops[self.current_stops[i]].image)
+            reel_label = tk.Label(self, image=img)
             reel_label.image = img
             reel_label.pack()
             self.reel_labels.append(reel_label)
@@ -71,3 +69,8 @@ class Slot_GUI(Slot_UI, tk.Tk):
 
         self.reel_labels[reel].configure(image=im)
         self.reel_labels[reel].image = im
+
+    def show_reel_spin(self, result):
+        """ Animate the spin """
+
+        pass

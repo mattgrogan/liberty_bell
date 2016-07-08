@@ -6,6 +6,7 @@ sys.path.append("..")
 
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
+from ssd1351 import Adafruit_SSD1351
 
 from Adafruit_LED_Backpack import SevenSegment
 import RPi.GPIO as GPIO
@@ -15,6 +16,14 @@ CREDITS_LED = 0x71
 AMOUNT_BET_LED = 0x72
 
 SPIN_BUTTON_GPIO = 18
+
+# OLED
+SSD1351_WIDTH = 128
+SSD1351_HEIGHT = 128
+RST = 24
+DC = 23
+SPI_PORT = 0
+SPI_DEVICE = 0
 
 # Set up the GPIO pins
 GPIO.setmode(GPIO.BCM)
@@ -54,6 +63,18 @@ class Slot_RPI_UI(Slot_UI):
         self.credits = 0
         self.bet = 0
         self.winner_paid = 0
+
+        # Set up the OLED screens
+        oled1 = Adafruit_SSD1351(SSD1351_WIDTH,
+                                 SSD1351_HEIGHT,
+                                 rst=RST,
+                                 dc=DC,
+                                 spi_port=SPI_PORT,
+                                 spi_device=SPI_DEVICE)
+
+        oled1.begin()
+	oled1.clear_buffer()
+	oled1.display()
 
     def mainloop(self):
         """ The main loop for the game """

@@ -166,4 +166,7 @@ class Slot_RPI_UI(Slot_UI):
     def on_gpio_spin_press(self, e):
 	""" Debounce and then call on_spin_press """
 
+	self.winner_paid_led.clear()
+	self.winner_paid_led.write_display()
+
 	self.on_spin_press()

@@ -13,13 +13,13 @@ class Slot_Game_Controller(object):
 
         if ui == "TEXT_UI":
             from user_interfaces.text_ui import Slot_Text_UI
-            self.ui = Slot_Text_UI()
+            self.ui = Slot_Text_UI(symbols=self.slot_machine.symbols)
         elif ui == "GUI_UI":
             from user_interfaces.gui import Slot_GUI
-            self.ui = Slot_GUI()
+            self.ui = Slot_GUI(symbols=self.slot_machine.symbols)
         elif ui == "RPI_UI":
             from user_interfaces.rpi_ui import Slot_RPI_UI
-            self.ui = Slot_RPI_UI()
+            self.ui = Slot_RPI_UI(symbols=self.slot_machine.symbols)
         else:
             raise Exception("Invalid UI: " % ui)
 

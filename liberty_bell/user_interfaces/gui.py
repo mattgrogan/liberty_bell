@@ -1,4 +1,5 @@
 import Tkinter as tk
+from PIL import ImageTk
 from events import Events
 from ui import Slot_UI
 
@@ -6,11 +7,13 @@ from ui import Slot_UI
 class Slot_GUI(Slot_UI, tk.Tk):
     """ Prototype GUI for the slot machine """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, symbols=None, **kwargs):
         """ Initialize the GUI """
 
-        super(Slot_GUI, self).__init__(*args, **kwargs)
-        tk.Tk.__init__(self, *args, **kwargs)
+        super(Slot_GUI, self).__init__(None, **kwargs)
+        tk.Tk.__init__(self, None, **kwargs)
+
+        self.symbols = symbols
 
         # Add the buttons
         self.button = tk.Button(self, text="SPIN", command=self.on_spin_press)
@@ -34,11 +37,15 @@ class Slot_GUI(Slot_UI, tk.Tk):
         self.bet_label = tk.Label(self, text="Bet: 0")
         self.bet_label.pack()
 
+        # Load the Image
+        img = ImageTk.PhotoImage(self.symbols.LIBERTY_BELL.image)
+
         # Add the reels
         nbr_reels = 3  # TODO: Communicate this info from the machine
         self.reel_labels = []
         for i in range(nbr_reels):
-            reel_label = tk.Label(self, text="Reel %i: " % i)
+            reel_label = tk.Label(self, text="Reel %i: " % i, image=img)
+            reel_label.image = img
             reel_label.pack()
             self.reel_labels.append(reel_label)
 
@@ -60,4 +67,7 @@ class Slot_GUI(Slot_UI, tk.Tk):
     def update_reel(self, reel, symbol):
         """ Update reel with the result """
 
-        self.reel_labels[reel].configure(text="Reel %i: %s" % (reel, symbol))
+        im = ImageTk.PhotoImage(symbol.image)
+
+        self.reel_labels[reel].configure(image=im)
+        self.reel_labels[reel].image = im

@@ -1,4 +1,3 @@
-import Tkinter as tk
 from events import Events
 
 

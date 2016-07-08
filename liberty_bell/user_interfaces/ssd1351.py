@@ -8,14 +8,6 @@ from PIL import ImageDraw
 from PIL import ImageFont
 from PIL import ImageOps
 
-SSD1351_WIDTH = 128
-SSD1351_HEIGHT = 128
-
-RST = 24
-DC = 23
-SPI_PORT = 0
-SPI_DEVICE = 0
-
 # SSD1351 Commands
 SSD1351_CMD_SETCOLUMN =		0x15
 SSD1351_CMD_SETROW =   		0x75
@@ -328,8 +320,8 @@ class Adafruit_SSD1351(object):
 		# Add each pixel to the buffer
 		i = 0
 		w, h = image.size
-		for col in xrange(0, w):
-			for row in xrange(0, h):
+		for row in xrange(0, h):
+			for col in xrange(0, w):
 				r,g,b = pix[col, row]
 				color = color565(r, g, b)
 				self._buffer[i] = color

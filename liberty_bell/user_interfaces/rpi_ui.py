@@ -7,6 +7,7 @@ sys.path.append("..")
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
 from ssd1351 import Adafruit_SSD1351
+from PIL import ImageOps
 
 from Adafruit_LED_Backpack import SevenSegment
 import RPi.GPIO as GPIO
@@ -65,16 +66,17 @@ class Slot_RPI_UI(Slot_UI):
         self.winner_paid = 0
 
         # Set up the OLED screens
-        oled1 = Adafruit_SSD1351(SSD1351_WIDTH,
+        self.oleds = []
+        self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
                                  SSD1351_HEIGHT,
                                  rst=RST,
                                  dc=DC,
                                  spi_port=SPI_PORT,
-                                 spi_device=SPI_DEVICE)
+                                 spi_device=SPI_DEVICE))
 
-        oled1.begin()
-	oled1.clear_buffer()
-	oled1.display()
+        self.oleds[0].begin()
+	self.oleds[0].clear_buffer()
+	self.oleds[0].display()
 
     def mainloop(self):
         """ The main loop for the game """
@@ -137,6 +139,29 @@ class Slot_RPI_UI(Slot_UI):
         """ Update reel with the result """
 
         print("Reel %i: %s" % (reel, symbol))
+        im = symbol.image
+
+        if len(self.oleds) > reel:
+
+            # Resize for the screen
+            # TODO: make sure the width and height and border tuples are in the correct order
+            # it might work only because we're dealing with squares
+            if im.size != (SSD1351_WIDTH, SSD1351_HEIGHT):
+                width_diff = SSD1351_WIDTH - im.size[0]
+                height_diff = SSD1351_HEIGHT - im.size[1]
+                border_size = (width_diff / 2, width_diff / 2, height_diff / 2, height_diff / 2)
+                im = ImageOps.expand(im, border = border_size)
+
+            # Make sure it's RGB
+            im = im.convert("RGB")
+
+            # Load and display
+            self.oleds[reel].load_image(im)
+            self.oleds[reel].display()
+
+        
+        
+        
 
     def on_gpio_spin_press(self, e):
 	""" Debounce and then call on_spin_press """

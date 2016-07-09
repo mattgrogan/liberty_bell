@@ -159,14 +159,15 @@ class Slot_RPI_UI(Slot_UI):
             self.oleds[reel].load_image(im)
             self.oleds[reel].display()
 
-        
-        
-        
+    def clear_winner_paid(self):
+        """ Blank out the winner paid amount """
+
+
+	    self.winner_paid_led.clear()
+	    self.winner_paid_led.write_display()
+
 
     def on_gpio_spin_press(self, e):
-	""" Debounce and then call on_spin_press """
-
-	self.winner_paid_led.clear()
-	self.winner_paid_led.write_display()
+	""" Call on_spin_press """
 
 	self.on_spin_press()

@@ -35,6 +35,8 @@ class Slot_Game_Controller(object):
             Events.CREDITS_CHANGED, self, self.ui.update_credits)
         self.slot_machine.register(
             Events.BET_CHANGED, self, self.ui.update_bet)
+        self.slot_machine.register(
+            Events.SPIN_EVAL, self, self.eval_spin)
 
         # Set up the initial credits and bet
         self.slot_machine.initialize(credits=100, bet=1)
@@ -45,7 +47,16 @@ class Slot_Game_Controller(object):
     def spin(self, message):
         """ Spin the slot machine """
 
+        self.ui.clear_winner_paid()
+
+        # Find the result and do the animation
         result = self.slot_machine.spin()
         self.ui.show_reel_spin(result)
 
-        self.ui.update_winner_paid(result.winner_paid)
+        # Evaluate the results
+        self.slot_machine.eval_spin(result)
+
+    def eval_spin(self, result):
+        """ Evaluate the spin """
+
+        self.ui.update_winner_paid(result)

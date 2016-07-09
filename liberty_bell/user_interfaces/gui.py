@@ -63,27 +63,23 @@ class Slot_GUI(Slot_UI, tk.Tk):
 
         self.winner_paid_label.configure(text="Winner paid: %i" % winner_paid)
 
-    def update_reel(self, reel, symbol):
-        """ Update reel with the result """
+    def clear_winner_paid(self):
+        """ Blank out the winner paid box """
 
-        im = ImageTk.PhotoImage(symbol.image)
-
-        self.reel_labels[reel].configure(image=im)
-        self.reel_labels[reel].image = im
+        self.winner_paid_label.configure(text="Winner paid: ")
 
     def show_reel_spin(self, result):
         """ Animate the spin """
 
-        REEL = 0
+        for reel in range(len(self.reels)):
+            winning_symbol = result.reels[reel]
 
-        winning_symbol = result.reels[REEL]
+            # Must go around once
+            self.reels[reel].reset(required_spins=1)
 
-        # Must go around once
-        self.reels[REEL].reset(required_spins=1)
-
-        while self.reels[REEL].has_next(winning_symbol):
-            im = ImageTk.PhotoImage(self.reels[REEL].get_current_symbol().image)
-            self.reel_labels[REEL].configure(image=im)
-            self.reel_labels[REEL].image = im
-            time.sleep(0.25)
-            self.update()
+            while self.reels[reel].has_next(winning_symbol):
+                im = ImageTk.PhotoImage(self.reels[reel].get_current_symbol().image)
+                self.reel_labels[reel].configure(image=im)
+                self.reel_labels[reel].image = im
+                time.sleep(0.05)
+                self.update()

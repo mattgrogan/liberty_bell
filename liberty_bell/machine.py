@@ -24,7 +24,8 @@ class Slot_Machine(object):
 
         # Set up events
         events = [Events.CREDITS_CHANGED, Events.PAYOUT,
-                  Events.PLACE_BET, Events.BET_CHANGED]
+                  Events.PLACE_BET, Events.BET_CHANGED,
+                  Events.SPIN_EVAL]
 
         self.events = {event: dict() for event in events}
 
@@ -111,12 +112,17 @@ class Slot_Machine(object):
         for reel in self.reels:
             reels.append(reel.spin())
 
-        winner_paid = self.payout_table.calculate_payout(reels) * bet
+        spin_result = Spin_Result(reels, winner_paid=None)
+
+        return spin_result
+
+    def eval_spin(self, spin):
+        """ Evaluate the spin """
+
+        winner_paid = self.payout_table.calculate_payout(spin.reels) * self.bet
 
         # Add the winnings, if any
         if winner_paid > 0:
             self.payout(winner_paid)
 
-        spin_result = Spin_Result(reels, winner_paid)
-
-        return spin_result
+        self.notify(Events.SPIN_EVAL, winner_paid)

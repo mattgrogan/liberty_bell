@@ -4,6 +4,7 @@ class Events:
     UI Events
     -------------
     SPIN: The UI spin button was pressed
+    SPIN_EVAL: The model has evaluated the spin payout
     INCREMENT_BET: The UI increment bet button was pressed
     DECREMENT_BET: The UI decrement bet button was pressed
 
@@ -14,4 +15,4 @@ class Events:
     PLACE_BET: The player has spun the reels and must pay!
     BET_CHANGED: The amount bet has changed
     """
-    SPIN, INCREMENT_BET, DECREMENT_BET,  CREDITS_CHANGED, PAYOUT, PLACE_BET, BET_CHANGED = range(7)
+    SPIN, SPIN_EVAL, INCREMENT_BET, DECREMENT_BET,  CREDITS_CHANGED, PAYOUT, PLACE_BET, BET_CHANGED = range(8)

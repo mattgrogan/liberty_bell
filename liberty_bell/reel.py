@@ -55,3 +55,36 @@ class Reel(object):
         """ Spin the reel and return a random result """
 
         return self.randomizer.choice(self.stops)
+
+class Slot_Reel_Scroller(object):
+    """ This iterator will loop through each line of the images """
+
+    def __init__(self, slot_reel, nbr_symbols, max_rows):
+        """ Initalize the iterator """
+
+        self.slot_reel = slot_reel
+        self.nbr_symbols = nbr_symbols
+        self.max_rows = max_rows
+
+        self.current_symbol = 0
+        self.current_row = 0
+
+    def __iter__(self):
+        """ Return self as an iterator """
+        return self
+
+    def next(self):
+        """ Return the next item in the iteration """
+
+        self.current_row = self.current_row + 1
+                
+        if self.current_row >= self.max_rows:
+            # Reached the end of the current symbol
+            self.current_symbol = self.current_symbol + 1
+            self.current_row = 0
+
+        if self.current_symbol >= self.nbr_symbols:
+            self.current_symbol = 0
+
+        # Return the details for the current row
+        return self.slot_reel.get_row(self.current_symbol, self.current_row)

@@ -33,38 +33,3 @@ class Slot_UI(object):
             callback = getattr(who, 'update')
 
         self.events[event][who] = callback
-
-    def on_spin_press(self):
-        """ Raise a notification to respond to the spin button pressed event """
-
-        self.notify(Events.SPIN)
-
-    def on_increment_bet_press(self):
-        """ Fire event for incrementing bet """
-
-        self.notify(Events.INCREMENT_BET)
-
-    def on_decrement_bet_press(self):
-        """ Fire event for decrementing bet """
-
-        self.notify(Events.DECREMENT_BET)
-
-    def update_credits(self, credits):
-        """ Update the credits box """
-
-        raise(NotImplementedError)
-
-    def update_bet(self, bet):
-        """ Update the bet """
-
-        raise(NotImplementedError)
-
-    def update_winner_paid(self, winner_paid):
-        """ Print the amount paid """
-
-        raise(NotImplementedError)
-
-    def update_reel(self, reel, symbol):
-        """ Update reel with the result """
-
-        raise(NotImplementedError)

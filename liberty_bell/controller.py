@@ -42,6 +42,7 @@ class Slot_Game_Controller(object):
         self.slot_machine.initialize(credits=100, bet=1)
 
         # Run the main loop
+        self.ui.ready_for_spin()
         self.ui.mainloop()
 
     def spin(self, message):

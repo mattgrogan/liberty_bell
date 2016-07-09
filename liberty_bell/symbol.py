@@ -1,4 +1,7 @@
-from PIL import Image
+from PIL import Image, ImageOps
+
+SSD1351_WIDTH = 128
+SSD1351_HEIGHT = 128
 
 class Symbol(object):
     """ Superclass for symbols on the slot machine """
@@ -13,6 +16,19 @@ class Symbol(object):
         if self.img_path is not None:
             # Load the image
             self.image = Image.open(self.img_path)
+
+            #TODO: Move this out of here!
+            # Resize for the screen
+            # TODO: make sure the width and height and border tuples are in the correct order
+            # it might work only because we're dealing with squares
+            if self.image.size != (SSD1351_WIDTH, SSD1351_HEIGHT):
+                width_diff = SSD1351_WIDTH - self.image.size[0]
+                height_diff = SSD1351_HEIGHT - self.image.size[1]
+                border_size = (width_diff / 2, width_diff / 2, height_diff / 2, height_diff / 2)
+                self.image = ImageOps.expand(self.image, border = border_size)
+
+        # Make sure it's RGB
+        self.image = self.image.convert("RGB")
 
     def __str__(self):
         """ Convert to string """

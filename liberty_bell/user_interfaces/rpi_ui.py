@@ -63,16 +63,6 @@ class Slot_RPI_UI(Slot_UI):
         self.amount_bet_led.clear()
         self.amount_bet_led.write_display()
 
-        # Set up the GPIO buttons
-        GPIO.add_event_detect(SPIN_BUTTON_GPIO, GPIO.RISING, 
-                              callback=self.on_spin_press, bouncetime=1000)
-        #	GPIO.add_event_detect(SPIN_BUTTON_GPIO, self.on_gpio_spin_button, bouncetime=200)
-        self.last_spin_interrupt = False
-
-        self.credits = 0
-        self.bet = 0
-        self.winner_paid = 0
-
         # Set up the OLED screens
         self.oleds = []
         self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
@@ -86,47 +76,27 @@ class Slot_RPI_UI(Slot_UI):
         self.oleds[0].clear_buffer()
         self.oleds[0].display()
 
-    def mainloop(self):
-        """ The main loop for the game """
+    def ready_state(self):
+        """ Wait for next button press """
 
-        continue_playing = True
+        GPIO.add_event_detect(SPIN_BUTTON_GPIO, GPIO.RISING)
 
-        while (continue_playing):
-            text = "Choose an option: S: Spin | I: increase bet | D: decrease bet | Q: quit [S] "
-            option = raw_input(text)
-
-            self._ready_for_spin = True
-
-            if option in ["S", "s"]:
+        while True:
+            if GPIO.event_detected(SPIN_BUTTON_GPIO):
                 self.on_spin_press()
-            elif option in ["I", "i"]:
-                self.notify(Events.INCREMENT_BET)
-            elif option in ["D", "d"]:
-                self.notify(Events.DECREMENT_BET)
-            elif option in ["Q", "q"]:
-                continue_playing = False
-            else:
-                self.on_spin_press(None)
-
-            print("\n")
+            time.sleep(0.01)
 
     def on_spin_press(self, e=None):
         """ Call on_spin_press """
 
-        if self._ready_for_spin:
-            self._ready_for_spin = False
-            self.notify(Events.SPIN)
-
-    def _print_status(self):
-        """ Print the status on one line """
-        print("Credits: %i | Bet: %i | Winner paid: %i " %
-              (self.credits, self.bet, self.winner_paid))
+        # Stop listening to the spin button and notify observers
+        GPIO.remove_event_detect(SPIN_BUTTON_GPIO)
+        self.notify(Events.SPIN)
 
     def update_credits(self, credits):
         """ Update the credits box """
 
-        self.credits = credits
-        self._print_status()
+        print("Credits: %i" % credits)
         self.credits_led.clear()
         self.credits_led.print_float(credits, decimal_digits=0)
         self.credits_led.write_display()
@@ -134,8 +104,7 @@ class Slot_RPI_UI(Slot_UI):
     def update_bet(self, bet):
         """ Update the bet """
 
-        self.bet = bet
-        self._print_status
+        print("Bet: %i" % bet)
         self.amount_bet_led.clear()
         self.amount_bet_led.print_float(bet, decimal_digits=0)
         self.amount_bet_led.write_display()
@@ -143,8 +112,7 @@ class Slot_RPI_UI(Slot_UI):
     def update_winner_paid(self, winner_paid):
         """ Print the amount paid """
 
-        self.winner_paid = winner_paid
-        self._print_status()
+        print("Winner paid: %i" % winner_paid)
         self.winner_paid_led.clear()
         self.winner_paid_led.print_float(winner_paid, decimal_digits=0)
         self.winner_paid_led.write_display()
@@ -155,14 +123,10 @@ class Slot_RPI_UI(Slot_UI):
         self.winner_paid_led.clear()
         self.winner_paid_led.write_display()
 
-    def ready_for_spin(self):
-        """ Set the ready for spin flag """
-
-        self._ready_for_spin = True
-
     def show_reel_spin(self, result):
         """ Animate the spin """
 
+        # Print the reels to the screen
         for i, reel in enumerate(result.reels):
             print("Reel %i: %s" % (i, reel))
 

@@ -42,8 +42,7 @@ class Slot_Game_Controller(object):
         self.slot_machine.initialize(credits=100, bet=1)
 
         # Run the main loop
-        self.ui.ready_for_spin()
-        self.ui.mainloop()
+        self.ui.ready_state()
 
     def spin(self, message):
         """ Spin the slot machine """
@@ -61,3 +60,6 @@ class Slot_Game_Controller(object):
         """ Evaluate the spin """
 
         self.ui.update_winner_paid(result)
+
+        # Now we can set the ui to ready again
+        self.ui.ready_state()

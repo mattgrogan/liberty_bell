@@ -38,28 +38,28 @@ class Slot_RPI_UI(Slot_UI):
 
         super(Slot_RPI_UI, self).__init__(*args, **kwargs)
 
-	# Set up the winner paid LED
-	self.winner_paid_led = SevenSegment.SevenSegment(address=WINNER_PAID_LED)
-	self.winner_paid_led.begin()
-	self.winner_paid_led.clear()
-	self.winner_paid_led.write_display()
+    	# Set up the winner paid LED
+    	self.winner_paid_led = SevenSegment.SevenSegment(address=WINNER_PAID_LED)
+    	self.winner_paid_led.begin()
+    	self.winner_paid_led.clear()
+    	self.winner_paid_led.write_display()
 
-	# Set up the credits LED
-	self.credits_led = SevenSegment.SevenSegment(address=CREDITS_LED)
-	self.credits_led.begin()
-	self.credits_led.clear()
-	self.credits_led.write_display()
+    	# Set up the credits LED
+    	self.credits_led = SevenSegment.SevenSegment(address=CREDITS_LED)
+    	self.credits_led.begin()
+    	self.credits_led.clear()
+    	self.credits_led.write_display()
 
-	# Set up the amount bet LED
-	self.amount_bet_led = SevenSegment.SevenSegment(address=AMOUNT_BET_LED)
-	self.amount_bet_led.begin()
-	self.amount_bet_led.clear()
-	self.amount_bet_led.write_display()
+    	# Set up the amount bet LED
+    	self.amount_bet_led = SevenSegment.SevenSegment(address=AMOUNT_BET_LED)
+    	self.amount_bet_led.begin()
+    	self.amount_bet_led.clear()
+    	self.amount_bet_led.write_display()
 
-	# Set up the GPIO buttons
-	GPIO.add_event_detect(SPIN_BUTTON_GPIO, GPIO.RISING, callback=self.on_gpio_spin_press, bouncetime=1000)
-	#	GPIO.add_event_detect(SPIN_BUTTON_GPIO, self.on_gpio_spin_button, bouncetime=200)
-	self.last_spin_interrupt = False
+    	# Set up the GPIO buttons
+    	GPIO.add_event_detect(SPIN_BUTTON_GPIO, GPIO.RISING, callback=self.on_gpio_spin_press, bouncetime=1000)
+    	#	GPIO.add_event_detect(SPIN_BUTTON_GPIO, self.on_gpio_spin_button, bouncetime=200)
+    	self.last_spin_interrupt = False
 
         self.credits = 0
         self.bet = 0
@@ -75,8 +75,8 @@ class Slot_RPI_UI(Slot_UI):
                                  spi_device=SPI_DEVICE))
 
         self.oleds[0].begin()
-	self.oleds[0].clear_buffer()
-	self.oleds[0].display()
+    	self.oleds[0].clear_buffer()
+    	self.oleds[0].display()
 
     def mainloop(self):
         """ The main loop for the game """
@@ -88,9 +88,9 @@ class Slot_RPI_UI(Slot_UI):
             option = raw_input(text)
 
             if option in ["S", "s"]:
-		# Reset the winnings
-		self.winner_paid_led.clear()
-		self.winner_paid_led.write_display()
+    		# Reset the winnings
+    		self.winner_paid_led.clear()
+    		self.winner_paid_led.write_display()
                 self.on_spin_press()
             elif option in ["I", "i"]:
                 self.on_increment_bet_press()
@@ -113,51 +113,27 @@ class Slot_RPI_UI(Slot_UI):
 
         self.credits = credits
         self.print_status()
-	self.credits_led.clear()
-	self.credits_led.print_float(credits, decimal_digits=0)
-	self.credits_led.write_display()
+    	self.credits_led.clear()
+    	self.credits_led.print_float(credits, decimal_digits=0)
+    	self.credits_led.write_display()
 
     def update_bet(self, bet):
         """ Update the bet """
 
         self.bet = bet
         self.print_status
-	self.amount_bet_led.clear()
-	self.amount_bet_led.print_float(bet, decimal_digits=0)
-	self.amount_bet_led.write_display()
+    	self.amount_bet_led.clear()
+    	self.amount_bet_led.print_float(bet, decimal_digits=0)
+    	self.amount_bet_led.write_display()
 
     def update_winner_paid(self, winner_paid):
         """ Print the amount paid """
 
         self.winner_paid = winner_paid
         self.print_status()
-	self.winner_paid_led.clear()
-	self.winner_paid_led.print_float(winner_paid, decimal_digits=0)
-	self.winner_paid_led.write_display()
-
-    def update_reel(self, reel, symbol):
-        """ Update reel with the result """
-
-        print("Reel %i: %s" % (reel, symbol))
-        im = symbol.image
-
-        if len(self.oleds) > reel:
-
-            # Resize for the screen
-            # TODO: make sure the width and height and border tuples are in the correct order
-            # it might work only because we're dealing with squares
-            if im.size != (SSD1351_WIDTH, SSD1351_HEIGHT):
-                width_diff = SSD1351_WIDTH - im.size[0]
-                height_diff = SSD1351_HEIGHT - im.size[1]
-                border_size = (width_diff / 2, width_diff / 2, height_diff / 2, height_diff / 2)
-                im = ImageOps.expand(im, border = border_size)
-
-            # Make sure it's RGB
-            im = im.convert("RGB")
-
-            # Load and display
-            self.oleds[reel].load_image(im)
-            self.oleds[reel].display()
+    	self.winner_paid_led.clear()
+    	self.winner_paid_led.print_float(winner_paid, decimal_digits=0)
+    	self.winner_paid_led.write_display()
 
     def clear_winner_paid(self):
         """ Blank out the winner paid amount """
@@ -170,4 +146,43 @@ class Slot_RPI_UI(Slot_UI):
     def on_gpio_spin_press(self, e):
 	""" Call on_spin_press """
 
-	self.on_spin_press()
+	   self.on_spin_press()
+
+    def show_reel_spin(self, result):
+        """ Animate the spin """
+
+        # Reset the reels
+        for reel in range(len(self.reels)):
+            self.reels[reel].reset(required_spins=((reel + 1) ** 2))
+
+        # Which reels are still spinning?
+        spinning_reels = range(len(self.reels))
+
+        while len(spinning_reels) >= 1:
+            for reel in spinning_reels:
+
+                winning_symbol = result.reels[reel]
+
+                im = self.reels[reel].get_current_symbol().image
+
+                # Resize for the screen
+                # TODO: make sure the width and height and border tuples are in the correct order
+                # it might work only because we're dealing with squares
+                if im.size != (SSD1351_WIDTH, SSD1351_HEIGHT):
+                    width_diff = SSD1351_WIDTH - im.size[0]
+                    height_diff = SSD1351_HEIGHT - im.size[1]
+                    border_size = (width_diff / 2, width_diff / 2, height_diff / 2, height_diff / 2)
+                    im = ImageOps.expand(im, border = border_size)
+
+                # Make sure it's RGB
+                im = im.convert("RGB")
+
+                # Load and display
+                self.oleds[reel].load_image(im)
+                self.oleds[reel].display()
+
+                time.sleep(0.005)
+
+                # Remove the reel from the list if it has stopped
+                if not self.reels[reel].has_next(winning_symbol):
+                    spinning_reels.remove(reel)

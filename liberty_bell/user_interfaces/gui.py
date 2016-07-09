@@ -3,6 +3,7 @@ from PIL import ImageTk
 from events import Events
 from ui import Slot_UI
 import time
+import random
 
 
 class Slot_GUI(Slot_UI, tk.Tk):
@@ -71,15 +72,23 @@ class Slot_GUI(Slot_UI, tk.Tk):
     def show_reel_spin(self, result):
         """ Animate the spin """
 
+        # Reset the reels
         for reel in range(len(self.reels)):
-            winning_symbol = result.reels[reel]
+            self.reels[reel].reset(required_spins=((reel + 1) ** 2))
 
-            # Must go around once
-            self.reels[reel].reset(required_spins=1)
+        # Which reels are still spinning?
+        spinning_reels = range(len(self.reels))
 
-            while self.reels[reel].has_next(winning_symbol):
+        while len(spinning_reels) >= 1:
+            for reel in spinning_reels:
+
+                winning_symbol = result.reels[reel]
+
                 im = ImageTk.PhotoImage(self.reels[reel].get_current_symbol().image)
                 self.reel_labels[reel].configure(image=im)
                 self.reel_labels[reel].image = im
-                time.sleep(0.05)
+                time.sleep(0.005)
                 self.update()
+                if not self.reels[reel].has_next(winning_symbol):
+                    # Remove from the list
+                    spinning_reels.remove(reel)

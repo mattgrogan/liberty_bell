@@ -36,30 +36,33 @@ class Slot_Game_Controller(object):
         self.slot_machine.register(
             Events.BET_CHANGED, self, self.ui.update_bet)
         self.slot_machine.register(
-            Events.SPIN_EVAL, self, self.eval_spin)
+            Events.SPIN_EVAL, self, self.on_evaluate_spin)
 
         # Set up the initial credits and bet
         self.slot_machine.initialize(credits=100, bet=1)
 
         # Run the main loop
-        self.ui.ready_state()
+        self.ui.enable_spin_button()
+        self.ui.listen_for_input()
 
     def spin(self, message):
         """ Spin the slot machine """
 
         self.ui.clear_winner_paid()
+        self.ui.disable_spin_button()
 
         # Find the result and do the animation
         result = self.slot_machine.spin()
-        self.ui.show_reel_spin(result)
+        self.ui.show_spin(result)
 
         # Evaluate the results
         self.slot_machine.eval_spin(result)
 
-    def eval_spin(self, result):
+    def on_evaluate_spin(self, result):
         """ Evaluate the spin """
 
         self.ui.update_winner_paid(result)
 
         # Now we can set the ui to ready again
-        self.ui.ready_state()
+        self.ui.enable_spin_button()
+        self.ui.listen_for_input()

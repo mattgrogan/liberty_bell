@@ -76,10 +76,18 @@ class Slot_RPI_UI(Slot_UI):
         self.oleds[0].clear_buffer()
         self.oleds[0].display()
 
-    def ready_state(self):
-        """ Wait for next button press """
+    def enable_spin_button(self):
+        """ Enable the spin button """
 
         GPIO.add_event_detect(SPIN_BUTTON_GPIO, GPIO.RISING)
+
+    def disable_spin_button(self):
+        """ Disable the spin button """
+
+        GPIO.remove_event_detect(SPIN_BUTTON_GPIO)
+
+    def listen_for_input(self):
+        """ Wait for next button press """
 
         while True:
             if GPIO.event_detected(SPIN_BUTTON_GPIO):
@@ -87,10 +95,8 @@ class Slot_RPI_UI(Slot_UI):
             time.sleep(0.01)
 
     def on_spin_press(self, e=None):
-        """ Call on_spin_press """
+        """ Notify observers that the button was pressed """
 
-        # Stop listening to the spin button and notify observers
-        GPIO.remove_event_detect(SPIN_BUTTON_GPIO)
         self.notify(Events.SPIN)
 
     def update_credits(self, credits):
@@ -123,7 +129,7 @@ class Slot_RPI_UI(Slot_UI):
         self.winner_paid_led.clear()
         self.winner_paid_led.write_display()
 
-    def show_reel_spin(self, result):
+    def show_spin(self, result):
         """ Animate the spin """
 
         # Print the reels to the screen

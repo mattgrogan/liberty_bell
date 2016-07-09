@@ -1,6 +1,8 @@
 from __future__ import print_function
 from datetime import datetime
 
+import time
+import random
 import sys
 sys.path.append("..")
 
@@ -33,10 +35,13 @@ GPIO.setup(SPIN_BUTTON_GPIO, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 class Slot_RPI_UI(Slot_UI):
     """ Raspberry PI UI for the slot machine """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, reels=None, **kwargs):
         """ Initialize the UI """
 
-        super(Slot_RPI_UI, self).__init__(*args, **kwargs)
+        super(Slot_RPI_UI, self).__init__(None, **kwargs)
+
+        self.reels = reels
+        self.current_stops = [0] * len(self.reels)
 
     	# Set up the winner paid LED
     	self.winner_paid_led = SevenSegment.SevenSegment(address=WINNER_PAID_LED)
@@ -139,17 +144,20 @@ class Slot_RPI_UI(Slot_UI):
         """ Blank out the winner paid amount """
 
 
-	    self.winner_paid_led.clear()
-	    self.winner_paid_led.write_display()
+        self.winner_paid_led.clear()
+        self.winner_paid_led.write_display()
 
 
     def on_gpio_spin_press(self, e):
 	""" Call on_spin_press """
 
-	   self.on_spin_press()
+        self.on_spin_press()
 
     def show_reel_spin(self, result):
         """ Animate the spin """
+
+        for i, reel in enumerate(result.reels):
+            print("Reel %i: %s" % (i, reel))
 
         # Reset the reels
         for reel in range(len(self.reels)):
@@ -157,6 +165,9 @@ class Slot_RPI_UI(Slot_UI):
 
         # Which reels are still spinning?
         spinning_reels = range(len(self.reels))
+
+        # TODO: Remove this once we've added the other reels
+        spinning_reels = [0]
 
         while len(spinning_reels) >= 1:
             for reel in spinning_reels:

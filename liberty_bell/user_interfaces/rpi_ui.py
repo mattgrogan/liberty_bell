@@ -140,24 +140,22 @@ class Slot_RPI_UI(Slot_UI):
             self.reels[reel].reset(required_spins=((reel + 1) ** 2))
 
         # Which reels are still spinning?
-        spinning_reels = range(len(self.reels))
+        reel_iterators = []
+
+        for i, reel in enumerate(self.reels):
+            # Get an iterator
+            reel_iterator = reel.get_scroller(result.reels[i])
+            reel_iterators.append(reel_iterator)
 
         # TODO: Remove this once we've added the other reels
-        spinning_reels = [0]
+        reel_iterators = [reel_iterators[0]]
 
-        while len(spinning_reels) >= 1:
-            for reel in spinning_reels:
+        while len(reel_iterators) >= 1:
+            for i, reel in enumerate(reel_iterators):
 
-                winning_symbol = result.reels[reel]
-
-                im = self.reels[reel].get_current_symbol().image
-
-                # Load and display
-                self.oleds[reel].load_image(im)
-                self.oleds[reel].display()
-
-                time.sleep(0.005)
-
-                # Remove the reel from the list if it has stopped
-                if not self.reels[reel].has_next(winning_symbol):
-                    spinning_reels.remove(reel)
+                try:
+                    line = reel.next()
+                    self.oleds[i].display_scroll(line)
+                    #time.sleep(0.005)
+                except StopIteration:
+                    reel_iterators.remove(reel)

@@ -84,8 +84,6 @@ class Slot_Reel_Scroller(object):
 
         self.current_row = self.current_row + 1
 
-        print "Checking %i against %i" % (self.current_row, self.current_symbol.height)
-
         if self.current_row >= self.current_symbol.height:
             # Reached the end of the current symbol
             if self.slot_reel.has_next(self.winning_symbol):
@@ -96,5 +94,4 @@ class Slot_Reel_Scroller(object):
                 raise StopIteration()
 
         # Return the details for the current row
-        print "Row %i " % self.current_row
         return self.current_symbol.get_row(self.current_row)

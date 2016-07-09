@@ -1,6 +1,6 @@
-from liberty_bell.symbol import Symbol
-from liberty_bell.machine import Slot_Machine
-from liberty_bell.payout import Payline
+from symbol import Symbol
+from machine import Slot_Machine
+from payout import Payline
 
 
 class Liberty_Bell_Symbols(object):

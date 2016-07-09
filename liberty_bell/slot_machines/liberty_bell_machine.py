@@ -1,6 +1,6 @@
-from symbol import Symbol
-from machine import Slot_Machine
-from payout import Payline
+from liberty_bell.symbol import Symbol
+from liberty_bell.machine import Slot_Machine
+from liberty_bell.payout import Payline
 
 
 class Liberty_Bell_Symbols(object):
@@ -30,7 +30,7 @@ class Liberty_Bell_Machine(Slot_Machine):
 
         stops = [self.symbols.LIBERTY_BELL, self.symbols.HORSESHOE,
                  self.symbols.HEART, self.symbols.HORSESHOE,
-                 self.symbols.DIAMOND, self.symbols.SPADE, 
+                 self.symbols.DIAMOND, self.symbols.SPADE,
                  self.symbols.HORSESHOE, self.symbols.SPADE,
                  self.symbols.STAR, self.symbols.SPADE]
 

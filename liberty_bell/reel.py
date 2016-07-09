@@ -56,18 +56,24 @@ class Reel(object):
 
         return self.randomizer.choice(self.stops)
 
-class Slot_Reel_Scroller(object):
-    """ This iterator will loop through each line of the images """
+    def get_scroller(self, winning_symbol):
+        """ Return a scroller """
 
-    def __init__(self, slot_reel, nbr_symbols, max_rows):
+        scroller = Slot_Reel_Scroller(self, winning_symbol)
+        return scroller
+
+
+
+class Slot_Reel_Scroller(object):
+    """ This iterator will loop through each row of the images """
+
+    def __init__(self, slot_reel, winning_symbol):
         """ Initalize the iterator """
 
         self.slot_reel = slot_reel
-        self.nbr_symbols = nbr_symbols
-        self.max_rows = max_rows
-
-        self.current_symbol = 0
         self.current_row = 0
+        self.current_symbol = self.slot_reel.get_current_symbol()
+        self.winning_symbol = winning_symbol
 
     def __iter__(self):
         """ Return self as an iterator """
@@ -77,14 +83,18 @@ class Slot_Reel_Scroller(object):
         """ Return the next item in the iteration """
 
         self.current_row = self.current_row + 1
-                
-        if self.current_row >= self.max_rows:
-            # Reached the end of the current symbol
-            self.current_symbol = self.current_symbol + 1
-            self.current_row = 0
 
-        if self.current_symbol >= self.nbr_symbols:
-            self.current_symbol = 0
+        print "Checking %i against %i" % (self.current_row, self.current_symbol.height)
+
+        if self.current_row >= self.current_symbol.height:
+            # Reached the end of the current symbol
+            if self.slot_reel.has_next(self.winning_symbol):
+                self.current_symbol = self.slot_reel.get_current_symbol()
+                self.current_row = 0
+            else:
+                # No more symbols
+                raise StopIteration()
 
         # Return the details for the current row
-        return self.slot_reel.get_row(self.current_symbol, self.current_row)
+        print "Row %i " % self.current_row
+        return self.current_symbol.get_row(self.current_row)

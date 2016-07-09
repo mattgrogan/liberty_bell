@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import pytest
 import liberty_bell
+import liberty_bell.slot_machines.liberty_bell_machine
 from liberty_bell.mock import Mock_Random, Mock_Observer
 
 
@@ -307,3 +308,17 @@ def test_ui():
     observe_spin.reset()
     observe_increment_bet.reset()
     observe_decrement_bet.reset()
+
+def test_line_scroller():
+    slot_machine = liberty_bell.slot_machines.Liberty_Bell_Machine()
+    winning_symbol = slot_machine.symbols.LIBERTY_BELL
+
+    for reel in range(len(slot_machine.reels)):
+        slot_machine.reels[reel].reset(required_spins=((reel + 1) ** 2))
+
+    scroller = slot_machine.reels[0].get_scroller(winning_symbol)
+
+    for scroll in scroller:
+        print(scroller.slot_reel.get_current_symbol())
+
+    assert False

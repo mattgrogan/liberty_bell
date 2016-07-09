@@ -42,7 +42,6 @@ class Slot_RPI_UI(Slot_UI):
 
         self.reels = reels
         self.current_stops = [0] * len(self.reels)
-        self._ready_for_spin = False
 
         # Set up the winner paid LED
         self.winner_paid_led = SevenSegment.SevenSegment(

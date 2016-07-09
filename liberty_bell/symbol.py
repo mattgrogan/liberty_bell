@@ -12,6 +12,8 @@ class Symbol(object):
         self.name = name
         self.img_path = img_path
         self.image = None
+        self.width = SSD1351_WIDTH
+        self.height = SSD1351_HEIGHT
 
         if self.img_path is not None:
             # Load the image
@@ -39,3 +41,54 @@ class Symbol(object):
         """ Check for equality """
 
         return self.name == other.name
+
+    def get_row(self, row_number):
+        """ Get a single row from the image """
+
+        pix = self.image.load()
+        w, h = self.image.size
+
+        row = []
+
+        for col in xrange(0, w):
+            r,g,b = pix[col, row_number]
+            color = color565(r, g, b)
+            row.append(color)
+
+        return row
+
+def color565(red, green=None, blue=None):
+        """ Define color in 16-bit RGB565. Red and blue
+        have five bits each and green has 6 (since the
+        eye is more sensitive to green).
+
+        Bit Format: RRRR RGGG GGGB BBBB
+
+        Usage:
+        color565(red=[0,255], green=[0,255], blue=[0,255)
+        color565(0xFFE92)
+        """
+
+        if green is None and blue is None:
+                # We were passed the full value in the first argument
+                hexcolor = red
+                red = (hexcolor >> 16) & 0xFF
+                green = (hexcolor >> 8) & 0xFF
+                blue = hexcolor & 0xFF
+
+        # We have 8 bits coming in 0-255
+        # So we truncate the least significant bits
+        # until there's 5 bits for red and blue
+        # and six for green
+        red >>= 3
+        green >>= 2
+        blue >>= 3
+
+        # Now move them to the correct locations
+        red <<= 11
+        green <<= 5
+
+        # Then "or" them together
+        result = red | green | blue
+
+        return result

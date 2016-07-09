@@ -28,10 +28,11 @@ class Liberty_Bell_Machine(Slot_Machine):
         self.name = "Liberty Bell"
         self.symbols = Liberty_Bell_Symbols()
 
-        stops = [self.symbols.LIBERTY_BELL, self.symbols.HEART, self.symbols.DIAMOND,
-                 self.symbols.SPADE, self.symbols.SPADE, self.symbols.SPADE,
-                 self.symbols.HORSESHOE, self.symbols.HORSESHOE, self.symbols.HORSESHOE,
-                 self.symbols.STAR]
+        stops = [self.symbols.LIBERTY_BELL, self.symbols.HORSESHOE,
+                 self.symbols.HEART, self.symbols.HORSESHOE,
+                 self.symbols.DIAMOND, self.symbols.SPADE, 
+                 self.symbols.HORSESHOE, self.symbols.SPADE,
+                 self.symbols.STAR, self.symbols.SPADE]
 
         # Add three reels with identical stops
         for i in range(3):

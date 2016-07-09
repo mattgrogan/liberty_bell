@@ -2,6 +2,7 @@ import Tkinter as tk
 from PIL import ImageTk
 from events import Events
 from ui import Slot_UI
+import time
 
 
 class Slot_GUI(Slot_UI, tk.Tk):
@@ -73,4 +74,16 @@ class Slot_GUI(Slot_UI, tk.Tk):
     def show_reel_spin(self, result):
         """ Animate the spin """
 
-        pass
+        REEL = 0
+
+        winning_symbol = result.reels[REEL]
+
+        # Must go around once
+        self.reels[REEL].reset(required_spins=1)
+
+        while self.reels[REEL].has_next(winning_symbol):
+            im = ImageTk.PhotoImage(self.reels[REEL].get_current_symbol().image)
+            self.reel_labels[REEL].configure(image=im)
+            self.reel_labels[REEL].image = im
+            time.sleep(0.25)
+            self.update()

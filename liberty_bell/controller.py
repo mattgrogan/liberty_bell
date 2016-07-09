@@ -46,8 +46,6 @@ class Slot_Game_Controller(object):
         """ Spin the slot machine """
 
         result = self.slot_machine.spin()
+        self.ui.show_reel_spin(result)
 
         self.ui.update_winner_paid(result.winner_paid)
-
-        for i, symbol in enumerate(result.reels):
-            self.ui.update_reel(i, symbol)

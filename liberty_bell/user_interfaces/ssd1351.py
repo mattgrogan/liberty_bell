@@ -86,9 +86,9 @@ class Adafruit_SSD1351(object):
                 raise ValueError(
                     "spi_port and spi_dev must be set if no spi object is passed")
             self._spi = SPI.SpiDev(
-                spi_port, spi_device, max_speed_hz=22000000)
+                spi_port, spi_device, max_speed_hz=8000000)
 
-        #self._spi.set_clock_hz(8000000)
+        self._spi.set_clock_hz(8000000)
 
         # Create buffer for images
         self._buffer = [0] * (self.width * self.height)
@@ -104,8 +104,8 @@ class Adafruit_SSD1351(object):
         """ Send data byte to display """
 
         self._gpio.set_high(self._dc)
-        #self._spi.write([c])
-        self._spi._device.xfer2([c], 22000000, 0)
+        self._spi.write([c])
+        #self._spi._device.xfer2([c], 22000000, 0)
 
     def initialize(self):
         """ Initialize the display """
@@ -126,7 +126,7 @@ class Adafruit_SSD1351(object):
         self.command(SSD1351_CMD_CLOCKDIV)     # 0xB3
         # 7:4 = Oscillator Frequency, 3:0 = CLK Div Ratio (A[3:0]+1 = 1..16)
         #self.command(0xF1)
-        self.command(0xFF)
+        self.command(0xD1)
 
         # Set the multiplex ratio.
         self.command(SSD1351_CMD_MUXRATIO)
@@ -283,13 +283,15 @@ class Adafruit_SSD1351(object):
         self.data(self._current_row - 1)
 
         # Write buffer data
-        self._gpio.set_high(self._dc)
         self.command(SSD1351_CMD_WRITERAM)
+        buf = []
         for i in xrange(len(new_row)):
-            self.data(new_row[i] >> 8)
-            self.data(new_row[i])
+            buf.append(new_row[i] >> 8)
+            buf.append(new_row[i])
 
-        #time.sleep(0.0001)
+        # Write the array directly to output
+        self._gpio.set_high(self._dc)
+        self._spi.write(buf)
 
     def rawfill(self, x, y, w, h, color):
         if (x >= self.width) or (y >= self.height):
@@ -309,10 +311,15 @@ class Adafruit_SSD1351(object):
         self.data(y)
         self.data(y + h - 1)
 
+        buf = []
         self.command(SSD1351_CMD_WRITERAM)
         for num in range(0, w * h):
-            self.data(color >> 8)
-            self.data(color)
+            buf.append(color >> 8)
+            buf.append(color)
+
+        # Write the array directly to output
+        self._gpio.set_high(self._dc)
+        self._spi.write(buf)
 
     def load_image(self, image):
         """ Set buffer to PIL image """

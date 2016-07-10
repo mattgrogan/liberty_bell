@@ -86,9 +86,9 @@ class Adafruit_SSD1351(object):
                 raise ValueError(
                     "spi_port and spi_dev must be set if no spi object is passed")
             self._spi = SPI.SpiDev(
-                spi_port, spi_device, max_speed_hz=8000000)
+                spi_port, spi_device, max_speed_hz=22000000)
 
-        self._spi.set_clock_hz(8000000)
+        #self._spi.set_clock_hz(8000000)
 
         # Create buffer for images
         self._buffer = [0] * (self.width * self.height)
@@ -104,15 +104,16 @@ class Adafruit_SSD1351(object):
         """ Send data byte to display """
 
         self._gpio.set_high(self._dc)
-        self._spi.write([c])
+        #self._spi.write([c])
+        self._spi._device.xfer2([c], 22000000, 0)
 
     def initialize(self):
         """ Initialize the display """
 
         # Sending 0x12 unlocks the OLED drive IC and the driver will respond
         # to command and memory access
-        self.command(SSD1351_CMD_COMMANDLOCK)  # set command lock
-        self.data(0x12)
+        #self.command(SSD1351_CMD_COMMANDLOCK)  # set command lock
+        #self.data(0x12)
 
         # Not sure of the purpose of sending 0xB1 (if any)
         self.command(SSD1351_CMD_COMMANDLOCK)  # set command lock
@@ -124,7 +125,8 @@ class Adafruit_SSD1351(object):
         # Set front clock divider and oscillator frequency
         self.command(SSD1351_CMD_CLOCKDIV)     # 0xB3
         # 7:4 = Oscillator Frequency, 3:0 = CLK Div Ratio (A[3:0]+1 = 1..16)
-        self.command(0xF1)
+        #self.command(0xF1)
+        self.command(0xFF)
 
         # Set the multiplex ratio.
         self.command(SSD1351_CMD_MUXRATIO)
@@ -142,14 +144,14 @@ class Adafruit_SSD1351(object):
         self.data(0x74)
 
         # Column selection
-        self.command(SSD1351_CMD_SETCOLUMN)
-        self.data(0x00)
-        self.data(0x7F)  # 127 in decimal
+        #self.command(SSD1351_CMD_SETCOLUMN)
+        #self.data(0x00)
+        #self.data(0x7F)  # 127 in decimal
 
         # Row selection
-        self.command(SSD1351_CMD_SETROW)
-        self.data(0x00)
-        self.data(0x7F)  # 127 in decimal
+        #self.command(SSD1351_CMD_SETROW)
+        #self.data(0x00)
+        #self.data(0x7F)  # 127 in decimal
 
         # Set display start line. We like to start at the top (zero)
         self.command(SSD1351_CMD_STARTLINE)
@@ -170,6 +172,7 @@ class Adafruit_SSD1351(object):
         # Set the phase length of the OLED
         self.command(SSD1351_CMD_PRECHARGE)
         self.command(0x32)
+        #self.command(0x01)
 
         # Set voltage
         self.command(SSD1351_CMD_VCOMH)
@@ -286,7 +289,7 @@ class Adafruit_SSD1351(object):
             self.data(new_row[i] >> 8)
             self.data(new_row[i])
 
-        time.sleep(0.005)
+        #time.sleep(0.0001)
 
     def rawfill(self, x, y, w, h, color):
         if (x >= self.width) or (y >= self.height):

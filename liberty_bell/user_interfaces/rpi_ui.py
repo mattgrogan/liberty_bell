@@ -73,10 +73,17 @@ class Slot_RPI_UI(Slot_UI):
 
         self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
                                            SSD1351_HEIGHT,
-                                           rst=20,
-                                           dc=21,
+                                           rst=14,
+                                           dc=15,
                                            spi_port=SPI_PORT,
                                            spi_device=1))
+
+        self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
+                                           SSD1351_HEIGHT,
+                                           rst=25,
+                                           dc=26,
+                                           spi_port=1,
+                                           spi_device=0))
         self.oleds[0].begin()
         self.oleds[0].clear_buffer()
         self.oleds[0].display()
@@ -84,6 +91,10 @@ class Slot_RPI_UI(Slot_UI):
         self.oleds[1].begin()
         self.oleds[1].clear_buffer()
         self.oleds[1].display()
+
+        self.oleds[2].begin()
+        self.oleds[2].clear_buffer()
+        self.oleds[2].display()
 
     def enable_spin_button(self):
         """ Enable the spin button """
@@ -160,6 +171,7 @@ class Slot_RPI_UI(Slot_UI):
         # TODO: Remove this once we've added the other reels
         reel_iterators.append(self.reels[0].get_scroller(result.reels[0]))
         reel_iterators.append(self.reels[1].get_scroller(result.reels[1]))
+        reel_iterators.append(self.reels[2].get_scroller(result.reels[2]))
 
 
         print("found %i reel iterators" % len(reel_iterators))

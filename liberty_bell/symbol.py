@@ -32,6 +32,17 @@ class Symbol(object):
         # Make sure it's RGB
         self.image = self.image.convert("RGB")
 
+        # Stash the pixels
+        pix = self.image.load()
+        w, h = self.image.size
+        self.pix565 = [[0 for x in range(w)] for y in range(h)]
+
+        for y in range(h):
+            for x in range(w):
+                r, g, b = pix[x, y]
+                self.pix565[x][y] = color565(r, g, b)
+
+
     def __str__(self):
         """ Convert to string """
 
@@ -45,17 +56,7 @@ class Symbol(object):
     def get_row(self, row_number):
         """ Get a single row from the image """
 
-        pix = self.image.load()
-        w, h = self.image.size
-
-        row = []
-
-        for col in xrange(0, w):
-            r,g,b = pix[col, row_number]
-            color = color565(r, g, b)
-            row.append(color)
-
-        return row
+        return self.pix565[row_number][:]
 
 def color565(red, green=None, blue=None):
         """ Define color in 16-bit RGB565. Red and blue

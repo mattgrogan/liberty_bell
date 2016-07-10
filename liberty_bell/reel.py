@@ -3,10 +3,11 @@ import random
 class Reel(object):
     """ A slot machine reel  """
 
-    def __init__(self, name, stops, randomizer=random):
+    def __init__(self, index, stops, randomizer=random):
         """ Initialize the reel """
 
-        self.name = name
+        self.index = index
+        self.name = "Reel %i" % index
         self.stops = stops
 
         self.current_stop = 0

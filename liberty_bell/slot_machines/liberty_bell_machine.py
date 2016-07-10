@@ -36,7 +36,7 @@ class Liberty_Bell_Machine(Slot_Machine):
 
         # Add three reels with identical stops
         for i in range(3):
-            self.add_reel(name="Reel %i" % (i + 1), stops=stops)
+            self.add_reel(stops=stops)
 
         # Add the paylines to the payout table
         self.payout_table.append(Payline({self.symbols.LIBERTY_BELL: 3}, 20))

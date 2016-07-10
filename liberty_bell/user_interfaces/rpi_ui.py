@@ -64,12 +64,13 @@ class Slot_RPI_UI(Slot_UI):
 
         # Set up the OLED screens
         self.oleds = []
+
         self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
                                            SSD1351_HEIGHT,
-                                           rst=RST,
-                                           dc=DC,
-                                           spi_port=SPI_PORT,
-                                           spi_device=SPI_DEVICE))
+                                           rst=25,
+                                           dc=26,
+                                           spi_port=1,
+                                           spi_device=0))
 
         self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
                                            SSD1351_HEIGHT,
@@ -80,10 +81,11 @@ class Slot_RPI_UI(Slot_UI):
 
         self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
                                            SSD1351_HEIGHT,
-                                           rst=25,
-                                           dc=26,
-                                           spi_port=1,
-                                           spi_device=0))
+                                           rst=RST,
+                                           dc=DC,
+                                           spi_port=SPI_PORT,
+                                           spi_device=SPI_DEVICE))
+
         self.oleds[0].begin()
         self.oleds[0].clear_buffer()
         self.oleds[0].display()
@@ -163,25 +165,16 @@ class Slot_RPI_UI(Slot_UI):
         # Which reels are still spinning?
         reel_iterators = []
 
-        #for i, reel in enumerate(self.reels):
-        #    # Get an iterator
-        #    reel_iterator = reel.get_scroller(result.reels[i])
-        #    reel_iterators.append(reel_iterator)
-
-        # TODO: Remove this once we've added the other reels
-        reel_iterators.append(self.reels[0].get_scroller(result.reels[0]))
-        reel_iterators.append(self.reels[1].get_scroller(result.reels[1]))
-        reel_iterators.append(self.reels[2].get_scroller(result.reels[2]))
-
-
-        print("found %i reel iterators" % len(reel_iterators))
+        for i, reel in enumerate(self.reels):
+            # Get an iterator
+            reel_iterator = reel.get_scroller(result.reels[i])
+            reel_iterators.append(reel_iterator)
 
         while len(reel_iterators) >= 1:
             for i, reel in enumerate(reel_iterators):
 
                 try:
                     line = reel.next()
-                    self.oleds[i].display_scroll(line)
-                    #time.sleep(0.005)
+                    self.oleds[reel.slot_reel.index].display_scroll(line)
                 except StopIteration:
                     reel_iterators.remove(reel)

@@ -19,7 +19,7 @@ class Symbol(object):
             # Load the image
             self.image = Image.open(self.img_path)
 
-            #TODO: Move this out of here!
+            #TODO: Move this out of here! Symbol should know nothing about screen size.
             # Resize for the screen
             # TODO: make sure the width and height and border tuples are in the correct order
             # it might work only because we're dealing with squares
@@ -39,8 +39,8 @@ class Symbol(object):
 
         for y in range(h):
             for x in range(w):
-                r, g, b = pix[x, y]
-                self.pix565[x][y] = color565(r, g, b)
+                r, g, b = pix[y, x]
+                self.pix565[x][y] = color565(r, g, b) #This is rotating the image
 
 
     def __str__(self):
@@ -56,7 +56,7 @@ class Symbol(object):
     def get_row(self, row_number):
         """ Get a single row from the image """
 
-        return self.pix565[row_number][:]
+        return self.pix565[:][row_number]
 
 def color565(red, green=None, blue=None):
         """ Define color in 16-bit RGB565. Red and blue

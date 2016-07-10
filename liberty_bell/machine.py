@@ -29,10 +29,10 @@ class Slot_Machine(object):
 
         self.events = {event: dict() for event in events}
 
-    def add_reel(self, name, stops):
+    def add_reel(self, stops):
         """ Add a reel to the machine """
 
-        reel = Reel(name, stops, self.randomizer)
+        reel = Reel(index=len(self.reels), stops=stops, randomizer=self.randomizer)
         self.reels.append(reel)
 
     def initialize(self, credits=None, bet=None):

@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import random
-import sys
 import time
 from datetime import datetime
 
@@ -10,9 +9,6 @@ from Adafruit_LED_Backpack import SevenSegment
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
 from ssd1351 import Adafruit_SSD1351
-
-sys.path.append("..")
-
 
 WINNER_PAID_LED = 0x70
 CREDITS_LED = 0x71

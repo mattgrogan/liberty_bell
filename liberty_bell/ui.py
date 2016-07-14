@@ -19,6 +19,7 @@ class Slot_UI(object):
     # Set up events
     events = [Events.SPIN, Events.INCREMENT_BET, Events.DECREMENT_BET]
     self.events = {event: dict() for event in events}
+    self.buttons = {}
 
   def notify(self, event, message=None):
     """ Notify the subscribers for a particular event """
@@ -33,3 +34,23 @@ class Slot_UI(object):
       callback = getattr(who, 'update')
 
     self.events[event][who] = callback
+
+  def add_button(self, button):
+    """ Add a button to the UI """
+
+    self.buttons[button.name] = button
+
+  def enable_button(self, name):
+    """ Enable the button """
+
+    self.buttons[name].enable()
+
+  def disable_button(self, name):
+    """ Disable the button """
+
+    self.buttons[name].disable()
+
+  def button_pressed(self, name):
+    """ Return true if the button was pressed """
+
+    return self.buttons[name].event_detected

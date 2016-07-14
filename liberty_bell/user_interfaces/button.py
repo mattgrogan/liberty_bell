@@ -18,7 +18,7 @@ class Button(object):
   def enable(self):
     """ Begin listening to events """
 
-    gpio.add_event_detect(self.gpio_pin, gpio.RISING)
+    gpio.add_event_detect(self.gpio_pin, gpio.RISING, bouncetime=500)
 
   def disable(self):
     """ Stop listening to events """

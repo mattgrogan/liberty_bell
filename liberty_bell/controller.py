@@ -42,14 +42,20 @@ class Slot_Game_Controller(object):
     self.slot_machine.initialize(credits=100, bet=1)
 
     # Run the main loop
-    self.ui.enable_spin_button()
+    self.ui.enable_button("Spin")
+    self.ui.enable_button("Up")
+    self.ui.enable_button("Down")
+
     self.ui.listen_for_input()
 
   def spin(self, message):
     """ Spin the slot machine """
 
     self.ui.clear_winner_paid()
-    self.ui.disable_spin_button()
+
+    self.ui.disable_button("Spin")
+    self.ui.disable_button("Up")
+    self.ui.disable_button("Down")
 
     # Find the result and do the animation
     result = self.slot_machine.spin()
@@ -64,5 +70,8 @@ class Slot_Game_Controller(object):
     self.ui.update_winner_paid(result)
 
     # Now we can set the ui to ready again
-    self.ui.enable_spin_button()
+    self.ui.enable_button("Spin")
+    self.ui.enable_button("Up")
+    self.ui.enable_button("Down")
+
     self.ui.listen_for_input()

@@ -16,6 +16,8 @@ CREDITS_LED = 0x71
 AMOUNT_BET_LED = 0x72
 
 SPIN_BUTTON_GPIO = 18
+UP_BUTTON_GPIO = 6
+DOWN_BUTTON_GPIO = 5
 
 # OLED
 SSD1351_WIDTH = 128
@@ -92,30 +94,37 @@ class Slot_RPI_UI(Slot_UI):
     self.oleds[2].clear_buffer()
     self.oleds[2].display()
 
-    self.spin_button = Button("Spin", SPIN_BUTTON_GPIO)
-
-  def enable_spin_button(self):
-    """ Enable the spin button """
-
-    self.spin_button.enable()
-
-  def disable_spin_button(self):
-    """ Disable the spin button """
-
-    self.spin_button.disable()
+    self.add_button(Button("Spin", SPIN_BUTTON_GPIO))
+    self.add_button(Button("Up", UP_BUTTON_GPIO))
+    self.add_button(Button("Down", DOWN_BUTTON_GPIO))
 
   def listen_for_input(self):
     """ Wait for next button press """
 
     while True:
-      if self.spin_button.event_detected:
+      if self.button_pressed("Spin"):
         self.on_spin_press()
+      elif self.button_pressed("Up"):
+        self.on_up_press()
+      elif self.button_pressed("Down"):
+        self.on_down_press()
+
       time.sleep(0.01)
 
   def on_spin_press(self, e=None):
     """ Notify observers that the button was pressed """
 
     self.notify(Events.SPIN)
+
+  def on_up_press(self, e=None):
+    """ Notify observers that the button was pressed """
+
+    self.notify(Events.INCREMENT_BET)
+
+  def on_down_press(self, e=None):
+    """ Notify observers that the button was pressed """
+
+    self.notify(Events.DECREMENT_BET)
 
   def update_credits(self, credits):
     """ Update the credits box """

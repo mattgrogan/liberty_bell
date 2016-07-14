@@ -6,6 +6,7 @@ from datetime import datetime
 
 import RPi.GPIO as GPIO
 from Adafruit_LED_Backpack import SevenSegment
+from button import Button
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
 from ssd1351 import Adafruit_SSD1351
@@ -23,10 +24,6 @@ RST = 24
 DC = 23
 SPI_PORT = 0
 SPI_DEVICE = 0
-
-# Set up the GPIO pins
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(SPIN_BUTTON_GPIO, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 class Slot_RPI_UI(Slot_UI):
@@ -95,21 +92,23 @@ class Slot_RPI_UI(Slot_UI):
     self.oleds[2].clear_buffer()
     self.oleds[2].display()
 
+    self.spin_button = Button("Spin", SPIN_BUTTON_GPIO)
+
   def enable_spin_button(self):
     """ Enable the spin button """
 
-    GPIO.add_event_detect(SPIN_BUTTON_GPIO, GPIO.RISING)
+    self.spin_button.enable()
 
   def disable_spin_button(self):
     """ Disable the spin button """
 
-    GPIO.remove_event_detect(SPIN_BUTTON_GPIO)
+    self.spin_button.disable()
 
   def listen_for_input(self):
     """ Wait for next button press """
 
     while True:
-      if GPIO.event_detected(SPIN_BUTTON_GPIO):
+      if self.spin_button.event_detected:
         self.on_spin_press()
       time.sleep(0.01)
 

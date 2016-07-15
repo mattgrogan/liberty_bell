@@ -34,6 +34,8 @@ class Slot_Game_Controller(object):
     self.slot_machine.register(
         Events.CREDITS_CHANGED, self, self.ui.update_credits)
     self.slot_machine.register(
+        Events.PAYOUT, self, self.ui.update_winner_paid)
+    self.slot_machine.register(
         Events.BET_CHANGED, self, self.ui.update_bet)
     self.slot_machine.register(
         Events.SPIN_EVAL, self, self.on_evaluate_spin)
@@ -67,7 +69,7 @@ class Slot_Game_Controller(object):
   def on_evaluate_spin(self, result):
     """ Evaluate the spin """
 
-    self.ui.update_winner_paid(result)
+    # self.ui.update_winner_paid(result)
 
     # Now we can set the ui to ready again
     self.ui.enable_button("Spin")

@@ -1,4 +1,5 @@
 import random
+import time
 
 from events import Events
 from payout import Payline, Payout_Table
@@ -6,6 +7,7 @@ from reel import Reel
 from spin_result import Spin_Result
 
 MAX_BET = 10
+PAYOUT_DELAY_SECS = 0.20
 
 
 class Slot_Machine(object):
@@ -64,10 +66,11 @@ class Slot_Machine(object):
   def payout(self, amount):
     """ Add to the credits """
 
-    self.credits += amount
-
-    self.notify(Events.PAYOUT, amount)
-    self.notify(Events.CREDITS_CHANGED, self.credits)
+    for i in range(amount):
+      self.credits = self.credits + 1
+      self.notify(Events.PAYOUT, i + 1)
+      self.notify(Events.CREDITS_CHANGED, self.credits)
+      time.sleep(PAYOUT_DELAY_SECS)
 
   def place_bet(self):
     """ Place the bet and remove the amount from the credits """

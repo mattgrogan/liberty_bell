@@ -11,13 +11,13 @@ from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
 from ssd1351 import Adafruit_SSD1351
 
-WINNER_PAID_LED = 0x70
+WINNER_PAID_LED = 0x72
 CREDITS_LED = 0x71
-AMOUNT_BET_LED = 0x72
+AMOUNT_BET_LED = 0x70
 
-SPIN_BUTTON_GPIO = 18
-UP_BUTTON_GPIO = 6
-DOWN_BUTTON_GPIO = 5
+SPIN_BUTTON_GPIO = 5
+UP_BUTTON_GPIO = 14
+DOWN_BUTTON_GPIO = 22
 
 # OLED
 SSD1351_WIDTH = 128
@@ -42,19 +42,31 @@ class Slot_RPI_UI(Slot_UI):
     # Set up the winner paid LED
     self.winner_paid_led = SevenSegment.SevenSegment(
         address=WINNER_PAID_LED)
-    self.winner_paid_led.begin()
+    try:
+      self.winner_paid_led.begin()
+    except IOError:
+      raise IOError("Could not connect to winner paid LED")
+
     self.winner_paid_led.clear()
     self.winner_paid_led.write_display()
 
     # Set up the credits LED
     self.credits_led = SevenSegment.SevenSegment(address=CREDITS_LED)
-    self.credits_led.begin()
+    try:
+      self.credits_led.begin()
+    except IOError:
+      raise IOError("Could not connect to credits LED")
+
     self.credits_led.clear()
     self.credits_led.write_display()
 
     # Set up the amount bet LED
     self.amount_bet_led = SevenSegment.SevenSegment(address=AMOUNT_BET_LED)
-    self.amount_bet_led.begin()
+    try:
+      self.amount_bet_led.begin()
+    except IOError:
+      raise IOError("Could not connect to amount bet LED")
+
     self.amount_bet_led.clear()
     self.amount_bet_led.write_display()
 
@@ -64,23 +76,23 @@ class Slot_RPI_UI(Slot_UI):
     self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
                                        SSD1351_HEIGHT,
                                        rst=25,
-                                       dc=26,
+                                       dc=15,
+                                       spi_port=1,
+                                       spi_device=2))
+
+    self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
+                                       SSD1351_HEIGHT,
+                                       rst=24,
+                                       dc=23,
                                        spi_port=1,
                                        spi_device=0))
 
     self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
                                        SSD1351_HEIGHT,
-                                       rst=14,
-                                       dc=15,
-                                       spi_port=SPI_PORT,
+                                       rst=6,
+                                       dc=26,
+                                       spi_port=1,
                                        spi_device=1))
-
-    self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
-                                       SSD1351_HEIGHT,
-                                       rst=RST,
-                                       dc=DC,
-                                       spi_port=SPI_PORT,
-                                       spi_device=SPI_DEVICE))
 
     self.oleds[0].begin()
     self.oleds[0].clear_buffer()

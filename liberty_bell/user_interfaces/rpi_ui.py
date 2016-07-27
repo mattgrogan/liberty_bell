@@ -8,7 +8,8 @@ import RPi.GPIO as GPIO
 from button import Button
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
-from numeric_display import SevenSegment_Display
+from numeric_display import SevenSegment_Display, Text_Numeric_Display
+from slot_machines import Liberty_Bell_Machine
 from ssd1351 import Adafruit_SSD1351
 
 WINNER_PAID_LED = 0x72
@@ -40,12 +41,25 @@ class Slot_RPI_UI(Slot_UI):
     self.current_stops = [0] * len(self.reels)
 
     # Set up the LEDs
-    self.winner_paid_led = SevenSegment_Display(name="Winner Paid",
+
+    winner_paid_led = SevenSegment_Display(name="Winner Paid",
                                                 address=WINNER_PAID_LED)
-    self.credits_led = SevenSegment_Display(
+    winner_paid_text = Text_Numeric_Display(name="Winner Paid")
+
+    self.add_numeric_display("Winner Paid", winner_paid_led)
+    self.add_numeric_display("Winner Paid", winner_paid_text)
+
+    credits_led = SevenSegment_Display(
         name="Credits", address=CREDITS_LED)
-    self.amount_bet_led = SevenSegment_Display(
+    credits_text = Text_Numeric_Display(name="Credits")
+    self.add_numeric_display("Credits", credits_led)
+    self.add_numeric_display("Credits", credits_text)
+
+    amount_bet_led = SevenSegment_Display(
         name="Amount Bet", address=AMOUNT_BET_LED)
+    amount_bet_text = Text_Numeric_Display(name="Amount Bet")
+    self.add_numeric_display("Amount Bet", amount_bet_led)
+    self.add_numeric_display("Amount Bet", amount_bet_text)
 
     # Set up the OLED screens
     self.oleds = []
@@ -118,25 +132,30 @@ class Slot_RPI_UI(Slot_UI):
   def update_credits(self, credits):
     """ Update the credits box """
 
-    print("Credits: %i" % credits)
-    self.credits_led.display(credits)
+    self.update_numeric_display("Credits", credits)
 
   def update_bet(self, bet):
     """ Update the bet """
 
-    print("Bet: %i" % bet)
-    self.amount_bet_led.display(bet)
+    self.update_numeric_display("Amount Bet", bet)
 
   def update_winner_paid(self, winner_paid):
     """ Print the amount paid """
 
-    print("Winner paid: %i" % winner_paid)
-    self.winner_paid_led.display(winner_paid)
+    self.update_numeric_display("Winner Paid", winner_paid)
 
   def clear_winner_paid(self):
     """ Blank out the winner paid amount """
 
-    self.winner_paid_led.clear()
+    self.clear_numeric_display("Winner Paid")
+
+  def test(self):
+    """ Test the UI elements """
+
+    # self.winner_paid_led.test()
+    self.test_numeric_display("Credits")
+    self.test_numeric_display("Amount Bet")
+    self.test_numeric_display("Winner Paid")
 
   def show_spin(self, result):
     """ Animate the spin """

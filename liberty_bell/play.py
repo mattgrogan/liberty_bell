@@ -17,11 +17,14 @@ if __name__ == '__main__':
     # Do the test
     print("Running test sequence...\n")
 
-    # Test the winner paid display
-    from user_interfaces.numeric_display import SevenSegment_Numeric_Display
-    winner_paid_led = SevenSegment_Numeric_Display(
-        name="Winner paid", address=0x70)
-    winner_paid_led.test()
+    # Test the ui
+    from slot_machines import Liberty_Bell_Machine
+
+    slot_machine = Liberty_Bell_Machine()
+
+    from user_interfaces.rpi_ui import Slot_RPI_UI
+    ui = Slot_RPI_UI(slot_machine.reels)
+    ui.test()
 
   else:
 

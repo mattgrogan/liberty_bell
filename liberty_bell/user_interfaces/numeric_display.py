@@ -32,25 +32,25 @@ class Numeric_Display(object):
 class Text_Numeric_Display(Numeric_Display):
   """ This class will output directly to the console """
 
-  def __init__(self):
+  def __init__(self, name):
     """ Pass to the parent """
 
-    super(Numeric_Display, self).__init__()
+    self.name = name
 
   def clear(self):
     """ Do nothing """
 
     pass
 
-  def display(self, value):
+  def display(self, val):
     """ Print the text """
 
-    print "%s\n" % value
+    print "%s: %s\n" % (self.name, val)
 
   def test(self):
     """ Test the output """
 
-    print "Text_Numeric_Display.test()"
+    print "%s: test..." % self.name
 
 
 class SevenSegment_Display(Numeric_Display):

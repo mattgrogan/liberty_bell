@@ -21,6 +21,8 @@ class Slot_UI(object):
     self.events = {event: dict() for event in events}
     self.buttons = {}
 
+    self._numeric_displays = {}
+
   def notify(self, event, message=None):
     """ Notify the subscribers for a particular event """
 
@@ -39,6 +41,31 @@ class Slot_UI(object):
     """ Add a button to the UI """
 
     self.buttons[button.name] = button
+
+  def add_numeric_display(self, name, display):
+    """ Add a numeric display """
+
+    if name in self._numeric_displays:
+      self._numeric_displays[name].append(display)
+    else:
+      self._numeric_displays[name] = [display]
+
+  def clear_numeric_display(self, name):
+    """ Clear a numeric display """
+
+    for numeric_display in self._numeric_displays[name]:
+      numeric_display.clear()
+
+  def update_numeric_display(self, name, val):
+    """ Update the display to val """
+
+    for numeric_display in self._numeric_displays[name]:
+      numeric_display.display(val)
+
+  def test_numeric_display(self, name):
+    """ Test all numeric displays for name """
+    for numeric_display in self._numeric_displays[name]:
+      numeric_display.test()
 
   def enable_button(self, name):
     """ Enable the button """

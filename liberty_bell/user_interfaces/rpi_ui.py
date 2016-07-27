@@ -5,10 +5,10 @@ import time
 from datetime import datetime
 
 import RPi.GPIO as GPIO
-from Adafruit_LED_Backpack import SevenSegment
 from button import Button
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
+from numeric_display import SevenSegment_Display
 from ssd1351 import Adafruit_SSD1351
 
 WINNER_PAID_LED = 0x72
@@ -39,36 +39,13 @@ class Slot_RPI_UI(Slot_UI):
     self.reels = reels
     self.current_stops = [0] * len(self.reels)
 
-    # Set up the winner paid LED
-    self.winner_paid_led = SevenSegment.SevenSegment(
-        address=WINNER_PAID_LED)
-    try:
-      self.winner_paid_led.begin()
-    except IOError:
-      raise IOError("Could not connect to winner paid LED")
-
-    self.winner_paid_led.clear()
-    self.winner_paid_led.write_display()
-
-    # Set up the credits LED
-    self.credits_led = SevenSegment.SevenSegment(address=CREDITS_LED)
-    try:
-      self.credits_led.begin()
-    except IOError:
-      raise IOError("Could not connect to credits LED")
-
-    self.credits_led.clear()
-    self.credits_led.write_display()
-
-    # Set up the amount bet LED
-    self.amount_bet_led = SevenSegment.SevenSegment(address=AMOUNT_BET_LED)
-    try:
-      self.amount_bet_led.begin()
-    except IOError:
-      raise IOError("Could not connect to amount bet LED")
-
-    self.amount_bet_led.clear()
-    self.amount_bet_led.write_display()
+    # Set up the LEDs
+    self.winner_paid_led = SevenSegment_Display(name="Winner Paid",
+                                                address=WINNER_PAID_LED)
+    self.credits_led = SevenSegment_Display(
+        name="Credits", address=CREDITS_LED)
+    self.amount_bet_led = SevenSegment_Display(
+        name="Amount Bet", address=AMOUNT_BET_LED)
 
     # Set up the OLED screens
     self.oleds = []
@@ -142,31 +119,24 @@ class Slot_RPI_UI(Slot_UI):
     """ Update the credits box """
 
     print("Credits: %i" % credits)
-    self.credits_led.clear()
-    self.credits_led.print_float(credits, decimal_digits=0)
-    self.credits_led.write_display()
+    self.credits_led.display(credits)
 
   def update_bet(self, bet):
     """ Update the bet """
 
     print("Bet: %i" % bet)
-    self.amount_bet_led.clear()
-    self.amount_bet_led.print_float(bet, decimal_digits=0)
-    self.amount_bet_led.write_display()
+    self.amount_bet_led.display(bet)
 
   def update_winner_paid(self, winner_paid):
     """ Print the amount paid """
 
     print("Winner paid: %i" % winner_paid)
-    self.winner_paid_led.clear()
-    self.winner_paid_led.print_float(winner_paid, decimal_digits=0)
-    self.winner_paid_led.write_display()
+    self.winner_paid_led.display(winner_paid)
 
   def clear_winner_paid(self):
     """ Blank out the winner paid amount """
 
     self.winner_paid_led.clear()
-    self.winner_paid_led.write_display()
 
   def show_spin(self, result):
     """ Animate the spin """

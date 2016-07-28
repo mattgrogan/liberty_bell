@@ -1,3 +1,5 @@
+import copy
+
 from PIL import Image, ImageOps
 
 SSD1351_WIDTH = 128
@@ -60,7 +62,12 @@ class Symbol(object):
     """ Return self as an iterator """
 
     self._current_row = 0  # Reset to the top of the image
-    return self
+    return copy.copy(self)
+
+  def has_next(self):
+    """ Return true if there's another row """
+
+    return self._current_row < self.height
 
   def next(self):
     """ Return the next row in the iteration """

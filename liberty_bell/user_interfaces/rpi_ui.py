@@ -163,10 +163,6 @@ class Slot_RPI_UI(Slot_UI):
     for i, reel in enumerate(result.reels):
       print("Reel %i: %s" % (i, reel))
 
-    # Reset the reels
-    # for reel in range(len(self.reels)):
-    #  self.reels[reel].reset(required_spins=((reel + 1) ** 2))
-
     # Which reels are still spinning?
     reel_iterators = []
 

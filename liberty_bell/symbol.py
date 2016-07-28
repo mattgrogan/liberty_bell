@@ -16,6 +16,8 @@ class Symbol(object):
     self.width = SSD1351_WIDTH
     self.height = SSD1351_HEIGHT
 
+    self._current_row = 0  # Current row for the iterator
+
     if self.img_path is not None:
       # Load the image
       self.image = Image.open(self.img_path)
@@ -54,6 +56,23 @@ class Symbol(object):
 
     return self.name == other.name
 
+  def __iter__(self):
+    """ Return self as an iterator """
+
+    self._current_row = 0  # Reset to the top of the image
+    return self
+
+  def next(self):
+    """ Return the next row in the iteration """
+
+    if self._current_row >= self.height:
+      raise StopIteration()
+
+    row_data = self.pix565[:][self._current_row]
+    self._current_row = self._current_row + 1
+
+    return row_data
+
   def get_row(self, row_number):
     """ Get a single row from the image """
 
@@ -68,7 +87,7 @@ def color565(red, green=None, blue=None):
   Bit Format: RRRR RGGG GGGB BBBB
 
   Usage:
-  color565(red=[0,255], green=[0,255], blue=[0,255)
+  color565(red=[0,255], green=[0,255], blue=[0,255])
   color565(0xFFE92)
   """
 

@@ -9,7 +9,6 @@ from button import Button
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
 from numeric_display import SevenSegment_Display, Text_Numeric_Display
-from slot_machines import Liberty_Bell_Machine
 from ssd1351 import Adafruit_SSD1351
 
 WINNER_PAID_LED = 0x72
@@ -165,15 +164,17 @@ class Slot_RPI_UI(Slot_UI):
       print("Reel %i: %s" % (i, reel))
 
     # Reset the reels
-    for reel in range(len(self.reels)):
-      self.reels[reel].reset(required_spins=((reel + 1) ** 2))
+    # for reel in range(len(self.reels)):
+    #  self.reels[reel].reset(required_spins=((reel + 1) ** 2))
 
     # Which reels are still spinning?
     reel_iterators = []
 
     for i, reel in enumerate(self.reels):
       # Get an iterator
-      reel_iterator = reel.get_scroller(result.reels[i])
+      required_spins = ((i + 1) ** 2)
+      reel_iterator = reel.get_scroller(
+          result.reels[i], required_spins=required_spins)
       reel_iterators.append(reel_iterator)
 
     while len(reel_iterators) >= 1:

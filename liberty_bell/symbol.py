@@ -59,7 +59,7 @@ class Symbol(object):
     return self.name == other.name
 
   def iterator(self):
-    """ Return self as an iterator """
+    """ Return an iterator """
 
     return Symbol_Line_Iterator(self)
 

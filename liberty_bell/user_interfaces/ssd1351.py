@@ -114,7 +114,8 @@ class Adafruit_SSD1351(object):
     # self.command(SSD1351_CMD_COMMANDLOCK)  # set command lock
     # self.data(0x12)
 
-    # Not sure of the purpose of sending 0xB1 (if any)
+    # Not sure of the purpose of sending 0xB1
+    # This has to do with the start row offset
     self.command(SSD1351_CMD_COMMANDLOCK)  # set command lock
     self.data(0xB1)
 
@@ -124,7 +125,6 @@ class Adafruit_SSD1351(object):
     # Set front clock divider and oscillator frequency
     self.command(SSD1351_CMD_CLOCKDIV)     # 0xB3
     # 7:4 = Oscillator Frequency, 3:0 = CLK Div Ratio (A[3:0]+1 = 1..16)
-    # self.command(0xF1)
     self.command(0xD1)
 
     # Set the multiplex ratio.
@@ -141,16 +141,6 @@ class Adafruit_SSD1351(object):
     # A[5] = Odd even splits of COM pins. 0 = (reset) odd/even; 1 = ?
     # A[7:6] = Display color mode. Select either 262l, 65;, 265 color mode
     self.data(0x74)
-
-    # Column selection
-    # self.command(SSD1351_CMD_SETCOLUMN)
-    # self.data(0x00)
-    # self.data(0x7F)  # 127 in decimal
-
-    # Row selection
-    # self.command(SSD1351_CMD_SETROW)
-    # self.data(0x00)
-    # self.data(0x7F)  # 127 in decimal
 
     # Set display start line. We like to start at the top (zero)
     self.command(SSD1351_CMD_STARTLINE)

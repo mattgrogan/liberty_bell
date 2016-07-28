@@ -152,7 +152,9 @@ class Slot_RPI_UI(Slot_UI):
   def test(self):
     """ Test the UI elements """
 
-    # self.winner_paid_led.test()
+    for button in self.buttons:
+      self.buttons[button].test()
+
     self.test_numeric_display("Credits")
     self.test_numeric_display("Amount Bet")
     self.test_numeric_display("Winner Paid")

@@ -90,9 +90,9 @@ class SevenSegment_Display(Numeric_Display):
     for i in range(reps):
 
       self.clear()
-      time.sleep(timeout)
+      time.sleep(timeout / 2)
 
       self.display(8888)
-      time.sleep(timeout)
+      time.sleep(timeout / 2)
 
       self.clear()

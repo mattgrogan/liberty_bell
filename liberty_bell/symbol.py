@@ -58,32 +58,41 @@ class Symbol(object):
 
     return self.name == other.name
 
-  def __iter__(self):
+  def iterator(self):
     """ Return self as an iterator """
 
-    self._current_row = 0  # Reset to the top of the image
-    return copy.copy(self)
-
-  def has_next(self):
-    """ Return true if there's another row """
-
-    return self._current_row < self.height
-
-  def next(self):
-    """ Return the next row in the iteration """
-
-    if self._current_row >= self.height:
-      raise StopIteration()
-
-    row_data = self.pix565[:][self._current_row]
-    self._current_row = self._current_row + 1
-
-    return row_data
+    return Symbol_Line_Iterator(self)
 
   def get_row(self, row_number):
     """ Get a single row from the image """
 
     return self.pix565[:][row_number]
+
+
+class Symbol_Line_Iterator(object):
+  """ This holds the logic for iterating through a symbols lines """
+
+  def __init__(self, symbol):
+    """ Initialize the iterator at line zero """
+
+    self._symbol = symbol
+    self._current_row = 0
+
+  def has_next(self):
+    """ Is there another row? """
+
+    return self._current_row < self._symbol.height
+
+  def next(self):
+    """ Return the next row in the iteration """
+
+    if self._current_row >= self._symbol.height:
+      raise StopIteration()
+
+    row_data = self._symbol.pix565[:][self._current_row]
+    self._current_row = self._current_row + 1
+
+    return row_data
 
 
 def color565(red, green=None, blue=None):

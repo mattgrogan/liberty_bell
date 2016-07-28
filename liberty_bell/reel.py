@@ -68,7 +68,7 @@ class Slot_Reel_Scroller(object):
 
     # Hold the current references
     self._current_symbol = self.slot_reel.advance()
-    self._current_iter = self._current_symbol.__iter__()
+    self._current_iter = self._current_symbol.iterator()
 
   def __iter__(self):
     """ Return self as an iterator """
@@ -86,7 +86,7 @@ class Slot_Reel_Scroller(object):
         raise StopIteration()
       else:
         self._current_symbol = self.slot_reel.advance()
-        self._current_iter = self._current_symbol.__iter__()
+        self._current_iter = self._current_symbol.iterator()
 
     row_data = self._current_iter.next()
 

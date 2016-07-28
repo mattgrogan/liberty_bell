@@ -222,6 +222,8 @@ class Adafruit_SSD1351(object):
     """ Initialize the display """
 
     self.reset()
+    self.clear_buffer()
+    self.display()
     self.initialize()
 
   def clear_buffer(self):

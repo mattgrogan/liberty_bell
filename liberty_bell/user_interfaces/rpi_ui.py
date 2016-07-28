@@ -9,7 +9,7 @@ from button import Button
 from liberty_bell.events import Events
 from liberty_bell.ui import Slot_UI
 from numeric_display import SevenSegment_Display, Text_Numeric_Display
-from ssd1351 import Adafruit_SSD1351
+from reel_display import SSD1351_Display, Text_Reel_Display
 
 WINNER_PAID_LED = 0x72
 CREDITS_LED = 0x71
@@ -61,40 +61,41 @@ class Slot_RPI_UI(Slot_UI):
     self.add_numeric_display("Amount Bet", amount_bet_text)
 
     # Set up the OLED screens
-    self.oleds = []
 
-    self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
-                                       SSD1351_HEIGHT,
-                                       rst=25,
-                                       dc=15,
-                                       spi_port=1,
-                                       spi_device=2))
+    reel0_oled = SSD1351_Display("Reel 1",
+                                 SSD1351_WIDTH,
+                                 SSD1351_HEIGHT,
+                                 rst=25,
+                                 dc=15,
+                                 spi_port=1,
+                                 spi_device=2)
 
-    self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
-                                       SSD1351_HEIGHT,
-                                       rst=24,
-                                       dc=23,
-                                       spi_port=1,
-                                       spi_device=0))
+    reel1_oled = SSD1351_Display("Reel 2",
+                                 SSD1351_WIDTH,
+                                 SSD1351_HEIGHT,
+                                 rst=24,
+                                 dc=23,
+                                 spi_port=1,
+                                 spi_device=0)
 
-    self.oleds.append(Adafruit_SSD1351(SSD1351_WIDTH,
-                                       SSD1351_HEIGHT,
-                                       rst=6,
-                                       dc=26,
-                                       spi_port=1,
-                                       spi_device=1))
+    reel2_oled = SSD1351_Display("Reel 3",
+                                 SSD1351_WIDTH,
+                                 SSD1351_HEIGHT,
+                                 rst=6,
+                                 dc=26,
+                                 spi_port=1,
+                                 spi_device=1)
 
-    self.oleds[0].begin()
-    self.oleds[0].clear_buffer()
-    self.oleds[0].display()
+    reel0_text = Text_Reel_Display("Reel 1")
+    reel1_text = Text_Reel_Display("Reel 2")
+    reel2_text = Text_Reel_Display("Reel 3")
 
-    self.oleds[1].begin()
-    self.oleds[1].clear_buffer()
-    self.oleds[1].display()
-
-    self.oleds[2].begin()
-    self.oleds[2].clear_buffer()
-    self.oleds[2].display()
+    self.add_reel_display("Reel 1", reel0_oled)
+    self.add_reel_display("Reel 1", reel0_text)
+    self.add_reel_display("Reel 2", reel1_oled)
+    self.add_reel_display("Reel 2", reel1_text)
+    self.add_reel_display("Reel 3", reel2_oled)
+    self.add_reel_display("Reel 3", reel2_text)
 
     self.add_button(Button("Spin", SPIN_BUTTON_GPIO))
     self.add_button(Button("Up", UP_BUTTON_GPIO))
@@ -156,6 +157,9 @@ class Slot_RPI_UI(Slot_UI):
     self.test_numeric_display("Amount Bet")
     self.test_numeric_display("Winner Paid")
 
+    for reel in self.reels:
+      self.test_reel_display(reel.name)
+
   def show_spin(self, result):
     """ Animate the spin """
 
@@ -178,6 +182,7 @@ class Slot_RPI_UI(Slot_UI):
 
         try:
           line = reel.next()
-          self.oleds[reel.slot_reel.index].display_scroll(line)
+          #reel_name = "Reel %s" % (reel.slot_reel.name)
+          self.update_reel_display(reel.slot_reel.name, line)
         except StopIteration:
           reel_iterators.remove(reel)

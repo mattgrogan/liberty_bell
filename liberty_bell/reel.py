@@ -8,7 +8,7 @@ class Reel(object):
     """ Initialize the reel """
 
     self.index = index
-    self.name = "Reel %i" % index
+    self.name = "Reel %i" % (index + 1)
     self.stops = stops
     self.current_stop = 0
     self.current_spin = 0

@@ -68,8 +68,11 @@ class SevenSegment_Display(Numeric_Display):
     try:
       self._led.begin()
     except IOError:
-      raise IOError("Could not connect to %s LED at I2C address %s" %
-                    (self.name, hex(self._address)))
+      msg = "Could not connect to %s LED at I2C address %s" % (
+          self.name, hex(self._address))
+      print(msg)
+      # raise IOError("Could not connect to %s LED at I2C address %s" %
+      #              (self.name, hex(self._address)))
 
   def clear(self):
     """ Clear the display """

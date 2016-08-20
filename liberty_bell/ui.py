@@ -26,28 +26,3 @@ class Slot_UI(object):
       callback = getattr(who, 'update')
 
     self.events[event][who] = callback
-
-  def add_numeric_display(self, name, display):
-    """ Add a numeric display """
-
-    if name in self._numeric_displays:
-      self._numeric_displays[name].append(display)
-    else:
-      self._numeric_displays[name] = [display]
-
-  def clear_numeric_display(self, name):
-    """ Clear a numeric display """
-
-    for numeric_display in self._numeric_displays[name]:
-      numeric_display.clear()
-
-  def update_numeric_display(self, name, val):
-    """ Update the display to val """
-
-    for numeric_display in self._numeric_displays[name]:
-      numeric_display.display(val)
-
-  def test_numeric_display(self, name):
-    """ Test all numeric displays for name """
-    for numeric_display in self._numeric_displays[name]:
-      numeric_display.test()

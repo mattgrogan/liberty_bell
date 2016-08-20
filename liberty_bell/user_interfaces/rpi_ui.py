@@ -116,48 +116,13 @@ class Slot_RPI_UI(Slot_UI):
     while True:
 
       if self.spin_button.event_detected:
-        self.on_spin_press()
+        self.notify(Events.SPIN)
       elif self.up_button.event_detected:
-        self.on_up_press()
+        self.notify(Events.INCREMENT_BET)
       elif self.down_button.event_detected:
-        self.on_down_press()
+        self.notify(Events.DECREMENT_BET)
 
       time.sleep(0.01)
-
-  def on_spin_press(self, e=None):
-    """ Notify observers that the button was pressed """
-
-    self.notify(Events.SPIN)
-
-  def on_up_press(self, e=None):
-    """ Notify observers that the button was pressed """
-
-    self.notify(Events.INCREMENT_BET)
-
-  def on_down_press(self, e=None):
-    """ Notify observers that the button was pressed """
-
-    self.notify(Events.DECREMENT_BET)
-
-  def update_credits(self, credits):
-    """ Update the credits box """
-
-    self.update_numeric_display("Credits", credits)
-
-  def update_bet(self, bet):
-    """ Update the bet """
-
-    self.update_numeric_display("Amount Bet", bet)
-
-  def update_winner_paid(self, winner_paid):
-    """ Print the amount paid """
-
-    self.update_numeric_display("Winner Paid", winner_paid)
-
-  def clear_winner_paid(self):
-    """ Blank out the winner paid amount """
-
-    self.clear_numeric_display("Winner Paid")
 
   def test(self):
     """ Test the UI elements """
@@ -167,9 +132,9 @@ class Slot_RPI_UI(Slot_UI):
     self.down_button.test()
     self.menu_button.test()
 
-    self.test_numeric_display("Credits")
-    self.test_numeric_display("Amount Bet")
-    self.test_numeric_display("Winner Paid")
+    self.credits_led.test()
+    self.winner_paid_led.test()
+    self.amount_bet_led.test()
 
     self.display_1.test()
     self.display_2.test()

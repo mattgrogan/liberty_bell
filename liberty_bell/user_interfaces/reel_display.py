@@ -3,69 +3,8 @@ import time
 
 from ssd1351 import Adafruit_SSD1351
 
-COLOR_BARS_PATH = "./icons/color_bars_128x128.gif"
 
-
-class Reel_Display(object):
-  """ Represent a  display that shows results on a reel """
-
-  def __init__(self):
-    """ No initialization required """
-
-    pass
-
-  def clear(self):
-    """ Clear the display """
-
-    raise NotImplementedError("You must implement Reel_Display.clear()")
-
-  def display(self):
-    """ Display image on the display """
-
-    raise NotImplementedError("You must implement Reel_Display.display()")
-
-  def test(self):
-    """ Show a test pattern with pause and clear """
-
-    raise NotImplementedError("You must implement Reel_Display.test()")
-
-  def show_test_pattern(self):
-    """ Show a test pattern and leave it """
-
-    raise NotImplementedError(
-        "You must implement Reel_Display.show_test_pattern()")
-
-
-class Text_Reel_Display():
-  """ A basic text output for the reel result """
-
-  def __init__(self, name):
-    """ Initialize the display """
-
-    self.name = name
-
-  def show_test_pattern(self):
-    """ We don't have a test pattern, pass """
-
-    pass
-
-  def test(self):
-    """ Test the display """
-
-    print "%s: test" % self.name
-
-  def clear(self):
-    """ Clear on text does nothing """
-
-    pass
-
-  def display(self, data):
-    """ Display some output """
-
-    pass
-
-
-class SSD1351_Display(Reel_Display):
+class SSD1351_Display(object):
   """ This wraps the SSD1351 """
 
   def __init__(self, name, width, height, rst, dc, spi_port, spi_device):

@@ -8,22 +8,13 @@ from ui import Slot_UI
 class Slot_Game_Controller(object):
   """ Control the flow of play for the slot machine """
 
-  def __init__(self, ui):
+  def __init__(self):
     """ Initialize the game """
 
     self.slot_machine = Liberty_Bell_Machine()
 
-    if ui == "TEXT_UI":
-      from user_interfaces.text_ui import Slot_Text_UI
-      self.ui = Slot_Text_UI(reels=self.slot_machine.reels)
-    elif ui == "GUI_UI":
-      from user_interfaces.gui import Slot_GUI
-      self.ui = Slot_GUI(reels=self.slot_machine.reels)
-    elif ui == "RPI_UI":
-      from user_interfaces.rpi_ui import Slot_RPI_UI
-      self.ui = Slot_RPI_UI(reels=self.slot_machine.reels)
-    else:
-      raise Exception("Invalid UI: " % ui)
+    from user_interfaces.rpi_ui import Slot_RPI_UI
+    self.ui = Slot_RPI_UI(reels=self.slot_machine.reels)
 
     # Register for UI events
     self.ui.register(Events.SPIN, self, self.spin)

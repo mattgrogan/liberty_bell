@@ -119,10 +119,8 @@ class Slot_RPI_UI(Slot_UI):
     self.add_reel_display("Reel 3", reel2_text)
 
     self.spin_button = Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED)
-
-    #self.add_button(Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED))
-    self.add_button(Button("Up", UP_BUTTON_GPIO, UP_BUTTON_LED))
-    self.add_button(Button("Down", DOWN_BUTTON_GPIO, DOWN_BUTTON_LED))
+    self.up_button = Button("Up", UP_BUTTON_GPIO, UP_BUTTON_LED)
+    self.down_button = Button("Down", DOWN_BUTTON_GPIO, DOWN_BUTTON_LED)
 
     self.add_button(Button("Reel 1", REEL_BUTTON1_GPIO, REEL_BUTTON1_LED))
     self.add_button(Button("Reel 2", REEL_BUTTON2_GPIO, REEL_BUTTON2_LED))
@@ -144,9 +142,9 @@ class Slot_RPI_UI(Slot_UI):
 
       if self.spin_button.event_detected:
         self.on_spin_press()
-      elif self.button_pressed("Up"):
+      elif self.up_button.event_detected:
         self.on_up_press()
-      elif self.button_pressed("Down"):
+      elif self.down_button.event_detected:
         self.on_down_press()
 
       time.sleep(0.01)

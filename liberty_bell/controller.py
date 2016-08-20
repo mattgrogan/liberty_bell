@@ -1,3 +1,5 @@
+import time
+
 from events import Events
 from slot_machines import Liberty_Bell_Machine
 from ui import Slot_UI
@@ -42,6 +44,11 @@ class Slot_Game_Controller(object):
 
     # Set up the initial credits and bet
     self.slot_machine.initialize(credits=100, bet=1)
+
+    # Show a startup animation
+    self.ui.startup_animation()
+
+    time.sleep(2)
 
     # Run the main loop
     self.ui.enable_button("Spin")

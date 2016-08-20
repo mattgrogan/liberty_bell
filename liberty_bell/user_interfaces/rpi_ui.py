@@ -128,6 +128,13 @@ class Slot_RPI_UI(Slot_UI):
 
     self.add_button(Button("Menu", MENU_GPIO))
 
+  def startup_animation(self):
+    """ Show some startup sequences """
+
+    # Display test pattern on the oleds
+    for reel in self.reels:
+      self.show_test_pattern(reel.name)
+
   def listen_for_input(self):
     """ Wait for next button press """
 

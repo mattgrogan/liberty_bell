@@ -79,6 +79,12 @@ class Slot_UI(object):
     for reel_display in self._reel_displays[name]:
       reel_display.test()
 
+  def show_test_pattern(self, name):
+    """ Display a test pattern """
+
+    for reel_display in self._reel_displays[name]:
+      reel_display.show_test_pattern()
+
   def add_button(self, button):
     """ Add a button to the UI """
 

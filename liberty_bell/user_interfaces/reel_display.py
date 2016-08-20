@@ -3,6 +3,8 @@ import time
 
 from ssd1351 import Adafruit_SSD1351
 
+COLOR_BARS_PATH = "./icons/color_bars_128x128.gif"
+
 
 class Reel_Display(object):
   """ Represent a  display that shows results on a reel """
@@ -23,9 +25,15 @@ class Reel_Display(object):
     raise NotImplementedError("You must implement Reel_Display.display()")
 
   def test(self):
-    """ Show a test pattern """
+    """ Show a test pattern with pause and clear """
 
     raise NotImplementedError("You must implement Reel_Display.test()")
+
+  def show_test_pattern(self):
+    """ Show a test pattern and leave it """
+
+    raise NotImplementedError(
+        "You must implement Reel_Display.show_test_pattern()")
 
 
 class Text_Reel_Display():
@@ -35,6 +43,11 @@ class Text_Reel_Display():
     """ Initialize the display """
 
     self.name = name
+
+  def show_test_pattern(self):
+    """ We don't have a test pattern, pass """
+
+    pass
 
   def test(self):
     """ Test the display """
@@ -66,10 +79,39 @@ class SSD1351_Display(Reel_Display):
     self._oled.begin()
     self._oled.clear_buffer()
 
+  def show_test_pattern(self):
+    """ Display the test bars """
+
+    from PIL import Image, ImageDraw
+
+    test_image = Image.new("RGB", (128, 128), "#000000")
+    draw = ImageDraw.Draw(test_image)
+
+    bar_colors = ["#FFFFFF",  # white
+                  "#FFFF00",  # Yellow
+                  "#00FFFF",  # Cyan
+                  "#00FF00",  # Green
+                  "#FF00FF",  # Magenta
+                  "#FF0000",  # Red
+                  "#000000",  # Black
+                  "#0000FF"  # Blue
+                  ]
+    x_pos = 0
+    x_offset = 16
+
+    for color in bar_colors:
+
+      draw.rectangle([(x_pos, 0), (x_pos + x_offset, 128)],
+                     outline=color, fill=color)
+      x_pos = x_pos + x_offset
+
+    self._oled.load_image(test_image)
+    self._oled.display()
+
   def test(self):
     """ Test the OLED """
 
-    self._oled.rawfill(0, 0, self.width, self.height, 0x1B6DEF)
+    self.show_test_pattern()
     time.sleep(1)
     self.clear()
 

@@ -44,11 +44,13 @@ class Button(object):
   def enable(self):
     """ Begin listening to events """
 
+    self.led_on()
     gpio.add_event_detect(self.gpio_pin, gpio.RISING, bouncetime=500)
 
   def disable(self):
     """ Stop listening to events """
 
+    self.led_off()
     gpio.remove_event_detect(self.gpio_pin)
 
   @property

@@ -48,10 +48,11 @@ class Slot_Game_Controller(object):
     # Show a startup animation
     self.ui.startup_animation()
 
-    time.sleep(2)
+    # time.sleep(2)
 
     # Run the main loop
-    self.ui.enable_button("Spin")
+    # self.ui.enable_button("Spin")
+    self.ui.spin_button.enable()
     self.ui.enable_button("Up")
     self.ui.enable_button("Down")
 
@@ -62,7 +63,7 @@ class Slot_Game_Controller(object):
 
     self.ui.clear_winner_paid()
 
-    self.ui.disable_button("Spin")
+    self.ui.spin_button.disable()
     self.ui.disable_button("Up")
     self.ui.disable_button("Down")
 
@@ -79,7 +80,7 @@ class Slot_Game_Controller(object):
     # self.ui.update_winner_paid(result)
 
     # Now we can set the ui to ready again
-    self.ui.enable_button("Spin")
+    self.ui.spin_button.enable()
     self.ui.enable_button("Up")
     self.ui.enable_button("Down")
 

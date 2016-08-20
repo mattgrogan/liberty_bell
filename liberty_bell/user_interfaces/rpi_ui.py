@@ -118,7 +118,9 @@ class Slot_RPI_UI(Slot_UI):
     self.add_reel_display("Reel 3", reel2_oled)
     self.add_reel_display("Reel 3", reel2_text)
 
-    self.add_button(Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED))
+    self.spin_button = Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED)
+
+    #self.add_button(Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED))
     self.add_button(Button("Up", UP_BUTTON_GPIO, UP_BUTTON_LED))
     self.add_button(Button("Down", DOWN_BUTTON_GPIO, DOWN_BUTTON_LED))
 
@@ -139,7 +141,8 @@ class Slot_RPI_UI(Slot_UI):
     """ Wait for next button press """
 
     while True:
-      if self.button_pressed("Spin"):
+
+      if self.spin_button.event_detected:
         self.on_spin_press()
       elif self.button_pressed("Up"):
         self.on_up_press()

@@ -121,12 +121,11 @@ class Slot_RPI_UI(Slot_UI):
     self.spin_button = Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED)
     self.up_button = Button("Up", UP_BUTTON_GPIO, UP_BUTTON_LED)
     self.down_button = Button("Down", DOWN_BUTTON_GPIO, DOWN_BUTTON_LED)
+    self.menu_button = Button("Menu", MENU_GPIO)
 
     self.add_button(Button("Reel 1", REEL_BUTTON1_GPIO, REEL_BUTTON1_LED))
     self.add_button(Button("Reel 2", REEL_BUTTON2_GPIO, REEL_BUTTON2_LED))
     self.add_button(Button("Reel 3", REEL_BUTTON3_GPIO, REEL_BUTTON3_LED))
-
-    self.add_button(Button("Menu", MENU_GPIO))
 
   def startup_animation(self):
     """ Show some startup sequences """
@@ -187,8 +186,10 @@ class Slot_RPI_UI(Slot_UI):
   def test(self):
     """ Test the UI elements """
 
-    for button in self.buttons:
-      self.buttons[button].test()
+    self.spin_button.test()
+    self.up_button.test()
+    self.down_button.test()
+    self.menu_button.test()
 
     self.test_numeric_display("Credits")
     self.test_numeric_display("Amount Bet")

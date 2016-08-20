@@ -32,15 +32,31 @@ class Liberty_Bell_Machine(Slot_Machine):
     self.name = "Liberty Bell"
     self.symbols = Liberty_Bell_Symbols()
 
-    stops = [self.symbols.LIBERTY_BELL, self.symbols.HORSESHOE,
-             self.symbols.HEART, self.symbols.HORSESHOE,
-             self.symbols.DIAMOND, self.symbols.SPADE,
-             self.symbols.HORSESHOE, self.symbols.SPADE,
-             self.symbols.STAR, self.symbols.SPADE]
+    # Actual stops from Charles Fey's Liberty Bell machine
+    # Source: Slot Machines: A Pictoral History of the First
+    #  100 Years (Fifth Edition) by Marshall Fey
 
+    stops0 = [self.symbols.HORSESHOE, self.symbols.DIAMOND,
+              self.symbols.HORSESHOE, self.symbols.HORSESHOE,
+              self.symbols.SPADE, self.symbols.LIBERTY_BELL,
+              self.symbols.SPADE, self.symbols.HORSESHOE,
+              self.symbols.HEART, self.symbols.HORSESHOE]
+
+    stops1 = [self.symbols.HEART, self.symbols.SPADE,
+              self.symbols.HORSESHOE, self.symbols.HORSESHOE,
+              self.symbols.DIAMOND, self.symbols.HORSESHOE,
+              self.symbols.SPADE, self.symbols.HORSESHOE,
+              self.symbols.LIBERTY_BELL, self.symbols.HORSESHOE]
+
+    stops2 = [self.symbols.STAR, self.symbols.DIAMOND,
+              self.symbols.LIBERTY_BELL, self.symbols.SPADE,
+              self.symbols.LIBERTY_BELL, self.symbols.DIAMOND,
+              self.symbols.HEART, self.symbols.SPADE,
+              self.symbols.DIAMOND, self.symbols.STAR]
     # Add three reels with identical stops
-    for i in range(3):
-      self.add_reel(stops=stops)
+    self.add_reel(stops=stops0)
+    self.add_reel(stops=stops1)
+    self.add_reel(stops=stops2)
 
     # Add the paylines to the payout table
     self.payout_table.append(Payline({self.symbols.LIBERTY_BELL: 3}, 20))

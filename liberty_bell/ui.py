@@ -10,10 +10,8 @@ class Slot_UI(object):
     # Set up events
     events = [Events.SPIN, Events.INCREMENT_BET, Events.DECREMENT_BET]
     self.events = {event: dict() for event in events}
-    self.buttons = {}
 
     self._numeric_displays = {}
-    self._reel_displays = {}
 
   def notify(self, event, message=None):
     """ Notify the subscribers for a particular event """
@@ -54,36 +52,12 @@ class Slot_UI(object):
     for numeric_display in self._numeric_displays[name]:
       numeric_display.test()
 
-  def add_reel_display(self, name, display):
-    """ Add a reel display """
-
-    if name in self._reel_displays:
-      self._reel_displays[name].append(display)
-    else:
-      self._reel_displays[name] = [display]
-
-  def clear_reel_display(self, name):
-    """ Clear a reel display """
-
-    for reel_display in self._reel_displays[name]:
-      reel_display.clear()
-
-  def update_reel_display(self, name, val):
-    """ Update the display to val """
-
-    for reel_display in self._reel_displays[name]:
-      reel_display.display(val)
-
-  def test_reel_display(self, name):
-    """ Test all reel displays for name """
-    for reel_display in self._reel_displays[name]:
-      reel_display.test()
-
   def show_test_pattern(self, name):
     """ Display a test pattern """
 
-    for reel_display in self._reel_displays[name]:
-      reel_display.show_test_pattern()
+    self.display_1.show_test_pattern()
+    self.display_2.show_test_pattern()
+    self.display_3.show_test_pattern()
 
   def add_button(self, button):
     """ Add a button to the UI """

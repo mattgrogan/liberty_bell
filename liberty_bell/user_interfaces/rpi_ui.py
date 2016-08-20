@@ -11,7 +11,7 @@ from liberty_bell.ui import Slot_UI
 from numeric_display import SevenSegment_Display, Text_Numeric_Display
 from reel_display import SSD1351_Display, Text_Reel_Display
 
-#import Adafruit_GPIO as GPIO
+# import Adafruit_GPIO as GPIO
 
 MENU_GPIO = 13
 
@@ -27,14 +27,14 @@ SPIN_BUTTON_LED = 4
 DOWN_BUTTON_LED = 10
 UP_BUTTON_LED = 19
 
-REEL_BUTTON1_GPIO = 8
-REEL_BUTTON1_LED = 9
+REEL_BUTTON1_GPIO = 1
+REEL_BUTTON1_LED = 0
 
 REEL_BUTTON2_GPIO = 7
 REEL_BUTTON2_LED = 11
 
-REEL_BUTTON3_GPIO = 1
-REEL_BUTTON3_LED = 0
+REEL_BUTTON3_GPIO = 8
+REEL_BUTTON3_LED = 9
 
 # OLED
 SSD1351_WIDTH = 128
@@ -83,49 +83,38 @@ class Slot_RPI_UI(Slot_UI):
 
     # Set up the OLED screens
 
-    reel0_oled = SSD1351_Display("Reel 1",
-                                 SSD1351_WIDTH,
-                                 SSD1351_HEIGHT,
-                                 rst=25,
-                                 dc=15,
-                                 spi_port=1,
-                                 spi_device=2)
+    self.display_1 = SSD1351_Display("Reel 1",
+                                     SSD1351_WIDTH,
+                                     SSD1351_HEIGHT,
+                                     rst=25,
+                                     dc=15,
+                                     spi_port=1,
+                                     spi_device=2)
 
-    reel1_oled = SSD1351_Display("Reel 2",
-                                 SSD1351_WIDTH,
-                                 SSD1351_HEIGHT,
-                                 rst=6,
-                                 dc=26,
-                                 spi_port=1,
-                                 spi_device=1)
+    self.display_2 = SSD1351_Display("Reel 2",
+                                     SSD1351_WIDTH,
+                                     SSD1351_HEIGHT,
+                                     rst=6,
+                                     dc=26,
+                                     spi_port=1,
+                                     spi_device=1)
 
-    reel2_oled = SSD1351_Display("Reel 3",
-                                 SSD1351_WIDTH,
-                                 SSD1351_HEIGHT,
-                                 rst=24,
-                                 dc=23,
-                                 spi_port=1,
-                                 spi_device=0)
-
-    reel0_text = Text_Reel_Display("Reel 1")
-    reel1_text = Text_Reel_Display("Reel 2")
-    reel2_text = Text_Reel_Display("Reel 3")
-
-    self.add_reel_display("Reel 1", reel0_oled)
-    self.add_reel_display("Reel 1", reel0_text)
-    self.add_reel_display("Reel 2", reel1_oled)
-    self.add_reel_display("Reel 2", reel1_text)
-    self.add_reel_display("Reel 3", reel2_oled)
-    self.add_reel_display("Reel 3", reel2_text)
+    self.display_3 = SSD1351_Display("Reel 3",
+                                     SSD1351_WIDTH,
+                                     SSD1351_HEIGHT,
+                                     rst=24,
+                                     dc=23,
+                                     spi_port=1,
+                                     spi_device=0)
 
     self.spin_button = Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED)
     self.up_button = Button("Up", UP_BUTTON_GPIO, UP_BUTTON_LED)
     self.down_button = Button("Down", DOWN_BUTTON_GPIO, DOWN_BUTTON_LED)
     self.menu_button = Button("Menu", MENU_GPIO)
 
-    self.add_button(Button("Reel 1", REEL_BUTTON1_GPIO, REEL_BUTTON1_LED))
-    self.add_button(Button("Reel 2", REEL_BUTTON2_GPIO, REEL_BUTTON2_LED))
-    self.add_button(Button("Reel 3", REEL_BUTTON3_GPIO, REEL_BUTTON3_LED))
+    self.reel1_button = Button("Reel 1", REEL_BUTTON1_GPIO, REEL_BUTTON1_LED)
+    self.reel2_button = Button("Reel 2", REEL_BUTTON2_GPIO, REEL_BUTTON2_LED)
+    self.reel3_button = Button("Reel 3", REEL_BUTTON3_GPIO, REEL_BUTTON3_LED)
 
   def startup_animation(self):
     """ Show some startup sequences """
@@ -195,8 +184,13 @@ class Slot_RPI_UI(Slot_UI):
     self.test_numeric_display("Amount Bet")
     self.test_numeric_display("Winner Paid")
 
-    for reel in self.reels:
-      self.test_reel_display(reel.name)
+    self.display_1.test()
+    self.display_2.test()
+    self.display_3.test()
+
+    self.reel1_button.test()
+    self.reel2_button.test()
+    self.reel3_button.test()
 
   def show_spin(self, result):
     """ Animate the spin """
@@ -208,22 +202,23 @@ class Slot_RPI_UI(Slot_UI):
     # Which reels are still spinning?
     reel_iterators = []
 
-    for i, reel in enumerate(self.reels):
-      # Get an iterator
-      required_spins = ((i + 1) ** 2)
-      reel_iterator = reel.get_scroller(
-          result.reels[i], required_spins=required_spins)
-      reel_iterators.append(reel_iterator)
+    iter0 = self.reels[0].get_scroller(result.reels[0], required_spins=1)
+    iter1 = self.reels[1].get_scroller(result.reels[1], required_spins=2)
+    iter2 = self.reels[2].get_scroller(result.reels[2], required_spins=4)
+
+    reel_iterators.append((iter0, self.display_1))
+    reel_iterators.append((iter1, self.display_2))
+    reel_iterators.append((iter2, self.display_3))
 
     while len(reel_iterators) >= 1:
-      for i, reel in enumerate(reel_iterators):
+      for reel, display in reel_iterators:
 
         try:
           line = reel.next()
-          self.update_reel_display(reel.slot_reel.name, line)
+          display.display(line)
           # slow down the reels
           delay = random.expovariate(1 / ROW_DELAY_LAMBDA) / \
               ((len(reel_iterators) + 1) * ROW_DELAY_DIVISOR)
           time.sleep(delay)
         except StopIteration:
-          reel_iterators.remove(reel)
+          reel_iterators.remove((reel, display))

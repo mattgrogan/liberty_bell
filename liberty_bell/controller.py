@@ -17,21 +17,21 @@ class Slot_Game_Controller(object):
     self.ui = Slot_RPI_UI(reels=self.slot_machine.reels)
 
     # Register for UI events
-    self.ui.register(Events.SPIN, self, self.spin)
-    self.ui.register(Events.INCREMENT_BET, self,
+    self.ui.register("spin_pressed", self, self.spin_pressed_handler)
+    self.ui.register("up_pressed", self,
                      self.slot_machine.increment_bet)
-    self.ui.register(Events.DECREMENT_BET, self,
+    self.ui.register("down_pressed", self,
                      self.slot_machine.decrement_bet)
 
     # Register for model changes
     self.slot_machine.register(
-        Events.CREDITS_CHANGED, self, self.ui.credits_led.display)
+        "credits_changed", self, self.ui.credits_led.display)
     self.slot_machine.register(
-        Events.PAYOUT, self, self.ui.winner_paid_led.display)
+        "winner_paid_changed", self, self.ui.winner_paid_led.display)
     self.slot_machine.register(
-        Events.BET_CHANGED, self, self.ui.amount_bet_led.display)
+        "amount_bet_changed", self, self.ui.amount_bet_led.display)
     self.slot_machine.register(
-        Events.SPIN_EVAL, self, self.on_evaluate_spin)
+        "spin_completed", self, self.spin_completed_handler)
 
     # Set up the initial credits and bet
     self.slot_machine.initialize(credits=100, bet=1)
@@ -48,8 +48,8 @@ class Slot_Game_Controller(object):
 
     self.ui.listen_for_input()
 
-  def spin(self, message):
-    """ Spin the slot machine """
+  def spin_pressed_handler(self, message):
+    """ Respond to the spin pressed event """
 
     self.ui.winner_paid_led.clear()
 
@@ -64,8 +64,8 @@ class Slot_Game_Controller(object):
     # Evaluate the results
     self.slot_machine.eval_spin(result)
 
-  def on_evaluate_spin(self, result):
-    """ Evaluate the spin """
+  def spin_completed_handler(self, result):
+    """ Enable the buttons and wait for next input """
 
     # Now we can set the ui to ready again
     self.ui.spin_button.enable()

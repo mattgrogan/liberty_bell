@@ -1,4 +1,3 @@
-from events import Events
 
 
 class Slot_UI(object):
@@ -8,7 +7,8 @@ class Slot_UI(object):
     """ Initialize the UI """
 
     # Set up events
-    events = [Events.SPIN, Events.INCREMENT_BET, Events.DECREMENT_BET]
+    events = ["spin_pressed", "up_pressed", "down_pressed",
+              "menu_pressed", "b1_pressed", "b2_pressed", "b3_pressed"]
     self.events = {event: dict() for event in events}
 
     self._numeric_displays = {}

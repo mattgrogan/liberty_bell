@@ -85,9 +85,9 @@ class Adafruit_SSD1351(object):
         raise ValueError(
             "spi_port and spi_dev must be set if no spi object is passed")
       self._spi = SPI.SpiDev(
-          spi_port, spi_device, max_speed_hz=8000000)
+          spi_port, spi_device, max_speed_hz=20000000)
 
-    self._spi.set_clock_hz(8000000)
+    self._spi.set_clock_hz(20000000)
 
     # Create buffer for images
     self._buffer = [0] * (self.width * self.height)

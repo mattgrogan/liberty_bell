@@ -44,6 +44,10 @@ DC = 23
 SPI_PORT = 0
 SPI_DEVICE = 0
 
+# Animation parameters
+ROW_DELAY_LAMBDA = 0.001
+ROW_DELAY_DIVISOR = 2
+
 
 class Slot_RPI_UI(Slot_UI):
   """ Raspberry PI UI for the slot machine """
@@ -207,7 +211,10 @@ class Slot_RPI_UI(Slot_UI):
 
         try:
           line = reel.next()
-          #reel_name = "Reel %s" % (reel.slot_reel.name)
           self.update_reel_display(reel.slot_reel.name, line)
+          # slow down the reels
+          delay = random.expovariate(1 / ROW_DELAY_LAMBDA) / \
+              ((len(reel_iterators) + 1) * ROW_DELAY_DIVISOR)
+          time.sleep(delay)
         except StopIteration:
           reel_iterators.remove(reel)

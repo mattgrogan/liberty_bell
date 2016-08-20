@@ -61,12 +61,14 @@ class SevenSegment_Display(Numeric_Display):
 
     self.name = name
     self._address = address
+    self._initialized = False
 
     from Adafruit_LED_Backpack import SevenSegment
 
     self._led = SevenSegment.SevenSegment(address=self._address)
     try:
       self._led.begin()
+      self._initialized = True
     except IOError:
       msg = "Could not connect to %s LED at I2C address %s" % (
           self.name, hex(self._address))
@@ -89,6 +91,11 @@ class SevenSegment_Display(Numeric_Display):
 
   def test(self, reps=2, timeout=TEST_DELAY_SECS):
     """ Show a test pattern on the display """
+
+    if not self._initialized:
+      print("Not connected to %s LED at I2c address %s" %
+            (self.name, hex(self._address)))
+      return
 
     for i in range(reps):
 

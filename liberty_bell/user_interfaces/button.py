@@ -20,6 +20,27 @@ class Button(object):
     gpio.setmode(gpio.BCM)
     gpio.setup(gpio_pin, gpio.IN, pull_up_down=gpio.PUD_UP)
 
+    if self.led_pin is not None:
+      gpio.setup(self.led_pin, gpio.OUT)
+
+  def led_on(self):
+    """ Turn the LED on """
+
+    if self.led_pin is not None:
+      gpio.output(self.led_pin, gpio.HIGH)
+
+  def led_off(self):
+    """ Turn the LED off """
+
+    if self.led_pin is not None:
+      gpio.output(self.led_pin, gpio.LOW)
+
+  def led_toggle(self):
+    """ Switch the LED """
+
+    if self.led_pin is not None:
+      gpio.output(self.led_pin, not gpio.input(self.led_pin))
+
   def enable(self):
     """ Begin listening to events """
 
@@ -40,16 +61,20 @@ class Button(object):
     """ Test the button """
 
     self.enable()
-    print("Press %s within %i seconds" % (self.name, timeout))
+    print("Press %s on pin %i within %i seconds" %
+          (self.name, self.gpio_pin, timeout))
 
     for t in range(timeout):
       if self.event_detected:
         print("Click detected!")
+        self.led_off()
         return True
       else:
         sys.stdout.write('.')
         sys.stdout.flush()
+        self.led_toggle()
         time.sleep(1)
 
     print("Button %s failed." % self.name)
+    self.led_off()
     return False

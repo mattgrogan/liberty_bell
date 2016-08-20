@@ -11,6 +11,10 @@ from liberty_bell.ui import Slot_UI
 from numeric_display import SevenSegment_Display, Text_Numeric_Display
 from reel_display import SSD1351_Display, Text_Reel_Display
 
+#import Adafruit_GPIO as GPIO
+
+MENU_GPIO = 13
+
 WINNER_PAID_LED = 0x72
 CREDITS_LED = 0x71
 AMOUNT_BET_LED = 0x70
@@ -18,6 +22,19 @@ AMOUNT_BET_LED = 0x70
 SPIN_BUTTON_GPIO = 5
 UP_BUTTON_GPIO = 14
 DOWN_BUTTON_GPIO = 22
+
+SPIN_BUTTON_LED = 4
+DOWN_BUTTON_LED = 10
+UP_BUTTON_LED = 19
+
+REEL_BUTTON1_GPIO = 8
+REEL_BUTTON1_LED = 9
+
+REEL_BUTTON2_GPIO = 7
+REEL_BUTTON2_LED = 11
+
+REEL_BUTTON3_GPIO = 1
+REEL_BUTTON3_LED = 0
 
 # OLED
 SSD1351_WIDTH = 128
@@ -97,9 +114,15 @@ class Slot_RPI_UI(Slot_UI):
     self.add_reel_display("Reel 3", reel2_oled)
     self.add_reel_display("Reel 3", reel2_text)
 
-    self.add_button(Button("Spin", SPIN_BUTTON_GPIO))
-    self.add_button(Button("Up", UP_BUTTON_GPIO))
-    self.add_button(Button("Down", DOWN_BUTTON_GPIO))
+    self.add_button(Button("Spin", SPIN_BUTTON_GPIO, SPIN_BUTTON_LED))
+    self.add_button(Button("Up", UP_BUTTON_GPIO, UP_BUTTON_LED))
+    self.add_button(Button("Down", DOWN_BUTTON_GPIO, DOWN_BUTTON_LED))
+
+    self.add_button(Button("Reel 1", REEL_BUTTON1_GPIO, REEL_BUTTON1_LED))
+    self.add_button(Button("Reel 2", REEL_BUTTON2_GPIO, REEL_BUTTON2_LED))
+    self.add_button(Button("Reel 3", REEL_BUTTON3_GPIO, REEL_BUTTON3_LED))
+
+    self.add_button(Button("Menu", MENU_GPIO))
 
   def listen_for_input(self):
     """ Wait for next button press """

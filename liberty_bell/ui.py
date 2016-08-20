@@ -51,30 +51,3 @@ class Slot_UI(object):
     """ Test all numeric displays for name """
     for numeric_display in self._numeric_displays[name]:
       numeric_display.test()
-
-  def show_test_pattern(self, name):
-    """ Display a test pattern """
-
-    self.display_1.show_test_pattern()
-    self.display_2.show_test_pattern()
-    self.display_3.show_test_pattern()
-
-  def add_button(self, button):
-    """ Add a button to the UI """
-
-    self.buttons[button.name] = button
-
-  def enable_button(self, name):
-    """ Enable the button """
-
-    self.buttons[name].enable()
-
-  def disable_button(self, name):
-    """ Disable the button """
-
-    self.buttons[name].disable()
-
-  def button_pressed(self, name):
-    """ Return true if the button was pressed """
-
-    return self.buttons[name].event_detected

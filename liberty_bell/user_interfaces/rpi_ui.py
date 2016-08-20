@@ -62,27 +62,15 @@ class Slot_RPI_UI(Slot_UI):
 
     # Set up the LEDs
 
-    winner_paid_led = SevenSegment_Display(name="Winner Paid",
+    self.winner_paid_led = SevenSegment_Display(name="Winner Paid",
                                                 address=WINNER_PAID_LED)
-    winner_paid_text = Text_Numeric_Display(name="Winner Paid")
-
-    self.add_numeric_display("Winner Paid", winner_paid_led)
-    self.add_numeric_display("Winner Paid", winner_paid_text)
-
-    credits_led = SevenSegment_Display(
+    self.credits_led = SevenSegment_Display(
         name="Credits", address=CREDITS_LED)
-    credits_text = Text_Numeric_Display(name="Credits")
-    self.add_numeric_display("Credits", credits_led)
-    self.add_numeric_display("Credits", credits_text)
 
-    amount_bet_led = SevenSegment_Display(
+    self.amount_bet_led = SevenSegment_Display(
         name="Amount Bet", address=AMOUNT_BET_LED)
-    amount_bet_text = Text_Numeric_Display(name="Amount Bet")
-    self.add_numeric_display("Amount Bet", amount_bet_led)
-    self.add_numeric_display("Amount Bet", amount_bet_text)
 
     # Set up the OLED screens
-
     self.display_1 = SSD1351_Display("Reel 1",
                                      SSD1351_WIDTH,
                                      SSD1351_HEIGHT,
@@ -119,9 +107,8 @@ class Slot_RPI_UI(Slot_UI):
   def startup_animation(self):
     """ Show some startup sequences """
 
-    # Display test pattern on the oleds
-    for reel in self.reels:
-      self.show_test_pattern(reel.name)
+    # Do nothing right now
+    pass
 
   def listen_for_input(self):
     """ Wait for next button press """

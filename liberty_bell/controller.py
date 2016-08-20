@@ -34,11 +34,11 @@ class Slot_Game_Controller(object):
 
     # Register for model changes
     self.slot_machine.register(
-        Events.CREDITS_CHANGED, self, self.ui.update_credits)
+        Events.CREDITS_CHANGED, self, self.ui.credits_led.display)
     self.slot_machine.register(
-        Events.PAYOUT, self, self.ui.update_winner_paid)
+        Events.PAYOUT, self, self.ui.winner_paid_led.display)
     self.slot_machine.register(
-        Events.BET_CHANGED, self, self.ui.update_bet)
+        Events.BET_CHANGED, self, self.ui.amount_bet_led.display)
     self.slot_machine.register(
         Events.SPIN_EVAL, self, self.on_evaluate_spin)
 
@@ -60,7 +60,7 @@ class Slot_Game_Controller(object):
   def spin(self, message):
     """ Spin the slot machine """
 
-    self.ui.clear_winner_paid()
+    self.ui.winner_paid_led.clear()
 
     self.ui.spin_button.disable()
     self.ui.up_button.disable()

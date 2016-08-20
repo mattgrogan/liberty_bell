@@ -15,8 +15,8 @@ from reel_display import SSD1351_Display, Text_Reel_Display
 
 MENU_GPIO = 13
 
-WINNER_PAID_LED = 0x72
-CREDITS_LED = 0x71
+WINNER_PAID_LED = 0x71
+CREDITS_LED = 0x72
 AMOUNT_BET_LED = 0x70
 
 SPIN_BUTTON_GPIO = 5
@@ -90,18 +90,18 @@ class Slot_RPI_UI(Slot_UI):
     reel1_oled = SSD1351_Display("Reel 2",
                                  SSD1351_WIDTH,
                                  SSD1351_HEIGHT,
-                                 rst=24,
-                                 dc=23,
-                                 spi_port=1,
-                                 spi_device=0)
-
-    reel2_oled = SSD1351_Display("Reel 3",
-                                 SSD1351_WIDTH,
-                                 SSD1351_HEIGHT,
                                  rst=6,
                                  dc=26,
                                  spi_port=1,
                                  spi_device=1)
+
+    reel2_oled = SSD1351_Display("Reel 3",
+                                 SSD1351_WIDTH,
+                                 SSD1351_HEIGHT,
+                                 rst=24,
+                                 dc=23,
+                                 spi_port=1,
+                                 spi_device=0)
 
     reel0_text = Text_Reel_Display("Reel 1")
     reel1_text = Text_Reel_Display("Reel 2")

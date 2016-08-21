@@ -1,7 +1,6 @@
-from symbol import Symbol
-
-from machine import Slot_Machine
-from payout import Payline
+from components.payline import Payline
+from components.slot_machine import Slot_Machine
+from components.symbol import Symbol
 
 
 class Liberty_Bell_Symbols(object):

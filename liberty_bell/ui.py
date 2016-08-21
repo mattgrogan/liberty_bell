@@ -29,7 +29,6 @@ class Slot_UI(object):
     self._numeric_displays = {}
 
     self.reels = reels
-    self.current_stops = [0] * len(self.reels)
 
     # Set up the LEDs
     self.winner_paid_led = SevenSegment_Display(

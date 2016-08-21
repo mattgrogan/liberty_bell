@@ -1,7 +1,8 @@
 import random
 import time
 
-from payout import Payline, Payout_Table
+from payline import Payline
+from pay_table import Pay_Table
 from reel import Reel
 from spin_result import Spin_Result
 
@@ -22,7 +23,7 @@ class Slot_Machine(object):
     self.symbols = []
     self.reels = []
     self.randomizer = randomizer
-    self.payout_table = Payout_Table()
+    self.payout_table = Pay_Table()
 
     # Set up events
     events = ["credits_changed", "winner_paid_changed",

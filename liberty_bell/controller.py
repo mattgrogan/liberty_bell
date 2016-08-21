@@ -1,6 +1,5 @@
 import time
 
-from events import Events
 from slot_machines import Liberty_Bell_Machine
 from ui import Slot_UI
 

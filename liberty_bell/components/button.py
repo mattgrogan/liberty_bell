@@ -22,6 +22,7 @@ class Button(object):
 
     if self.led_pin is not None:
       gpio.setup(self.led_pin, gpio.OUT)
+      self.led_off()
 
   def led_on(self):
     """ Turn the LED on """

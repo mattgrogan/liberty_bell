@@ -123,14 +123,14 @@ class Slot_UI(object):
     self.display_2.test()
     self.display_3.test()
 
+    self.credits_led.test()
+    self.winner_paid_led.test()
+    self.amount_bet_led.test()
+
     self.spin_button.test()
     self.up_button.test()
     self.down_button.test()
     self.menu_button.test()
-
-    self.credits_led.test()
-    self.winner_paid_led.test()
-    self.amount_bet_led.test()
 
     self.display_1.test()
     self.display_2.test()
@@ -144,6 +144,10 @@ class Slot_UI(object):
     self.display_1.clear()
     self.display_2.clear()
     self.display_3.clear()
+
+    self.credits_led.clear()
+    self.winner_paid_led.clear()
+    self.amount_bet_led.clear()
 
   def show_spin(self, result):
     """ Animate the spin

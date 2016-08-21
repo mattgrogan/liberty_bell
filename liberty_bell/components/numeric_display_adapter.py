@@ -2,8 +2,6 @@ import time
 
 from Adafruit_LED_Backpack import SevenSegment
 
-TEST_DELAY_SECS = 1.0
-
 
 class Numeric_Display_Adapter(object):
   """ Numeric display uses the Adafruit SevenSegment display with i2c backpack """
@@ -38,7 +36,7 @@ class Numeric_Display_Adapter(object):
     self._led.print_float(val, decimal_digits=0)
     self._led.write_display()
 
-  def test(self, reps=2, timeout=TEST_DELAY_SECS):
+  def test(self):
     """ Show a test pattern on the display """
 
     if not self._initialized:
@@ -46,12 +44,5 @@ class Numeric_Display_Adapter(object):
             (self.name, hex(self._address)))
       return
 
-    for i in range(reps):
-
-      self.clear()
-      time.sleep(timeout / 2)
-
-      self.display(8888)
-      time.sleep(timeout / 2)
-
-      self.clear()
+    self.clear()
+    self.display(8888)

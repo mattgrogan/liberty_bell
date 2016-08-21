@@ -13,8 +13,7 @@ class Slot_Game_Controller(object):
 
     self.slot_machine = Liberty_Bell_Machine()
 
-    from user_interfaces.rpi_ui import Slot_RPI_UI
-    self.ui = Slot_RPI_UI(reels=self.slot_machine.reels)
+    self.ui = Slot_UI(reels=self.slot_machine.reels)
 
     # Register for UI events
     self.ui.register("spin_pressed", self, self.spin_pressed_handler)
@@ -46,7 +45,7 @@ class Slot_Game_Controller(object):
     self.ui.up_button.enable()
     self.ui.down_button.enable()
 
-    self.ui.listen_for_input()
+    self.ui.mainloop()
 
   def spin_pressed_handler(self, message):
     """ Respond to the spin pressed event """
@@ -72,4 +71,4 @@ class Slot_Game_Controller(object):
     self.ui.up_button.enable()
     self.ui.down_button.enable()
 
-    self.ui.listen_for_input()
+    self.ui.mainloop()

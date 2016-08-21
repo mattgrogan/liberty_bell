@@ -2,8 +2,8 @@ import random
 import time
 
 from components.button import Button
-from components.numeric_display import SevenSegment_Display
-from components.reel_display import SSD1351_Display
+from components.numeric_display_adapter import Numeric_Display_Adapter
+from components.ssd1351_display_adapter import SSD1351_Display_Adapter
 from config import Config
 
 CONFIG_FILE = "config.ini"
@@ -31,37 +31,37 @@ class Slot_UI(object):
     self.reels = reels
 
     # Set up the LEDs
-    self.winner_paid_led = SevenSegment_Display(
+    self.winner_paid_led = Numeric_Display_Adapter(
         name="Winner Paid", address=config.winner_paid_i2c)
-    self.credits_led = SevenSegment_Display(
+    self.credits_led = Numeric_Display_Adapter(
         name="Credits", address=config.credits_i2c)
-    self.amount_bet_led = SevenSegment_Display(
+    self.amount_bet_led = Numeric_Display_Adapter(
         name="Amount Bet", address=config.amount_bet_i2c)
 
     # Set up the OLED screens
-    self.display_1 = SSD1351_Display("Reel 1",
-                                     config.display_1["width"],
-                                     config.display_1["height"],
-                                     config.display_1["reset"],
-                                     config.display_1["dc"],
-                                     config.display_1["spi_port"],
-                                     config.display_1["spi_device"])
+    self.display_1 = SSD1351_Display_Adapter("Reel 1",
+                                             config.display_1["width"],
+                                             config.display_1["height"],
+                                             config.display_1["reset"],
+                                             config.display_1["dc"],
+                                             config.display_1["spi_port"],
+                                             config.display_1["spi_device"])
 
-    self.display_2 = SSD1351_Display("Reel 2",
-                                     config.display_2["width"],
-                                     config.display_2["height"],
-                                     config.display_2["reset"],
-                                     config.display_2["dc"],
-                                     config.display_2["spi_port"],
-                                     config.display_2["spi_device"])
+    self.display_2 = SSD1351_Display_Adapter("Reel 2",
+                                             config.display_2["width"],
+                                             config.display_2["height"],
+                                             config.display_2["reset"],
+                                             config.display_2["dc"],
+                                             config.display_2["spi_port"],
+                                             config.display_2["spi_device"])
 
-    self.display_3 = SSD1351_Display("Reel 3",
-                                     config.display_3["width"],
-                                     config.display_3["height"],
-                                     config.display_3["reset"],
-                                     config.display_3["dc"],
-                                     config.display_3["spi_port"],
-                                     config.display_3["spi_device"])
+    self.display_3 = SSD1351_Display_Adapter("Reel 3",
+                                             config.display_3["width"],
+                                             config.display_3["height"],
+                                             config.display_3["reset"],
+                                             config.display_3["dc"],
+                                             config.display_3["spi_port"],
+                                             config.display_3["spi_device"])
 
     self.spin_button = Button("Spin", config.spin_pin, config.spin_led)
     self.up_button = Button("Up", config.up_pin, config.up_led)
@@ -147,7 +147,7 @@ class Slot_UI(object):
 
         try:
           line = reel.next()
-          display.display(line)
+          display.write_line(line)
           # slow down the reels
           delay = random.expovariate(1 / ROW_DELAY_LAMBDA) / \
               ((len(reel_iterators) + 1) * ROW_DELAY_DIVISOR)

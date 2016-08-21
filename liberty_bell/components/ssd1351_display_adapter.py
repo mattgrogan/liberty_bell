@@ -1,7 +1,7 @@
 """ This module holds code for all displays """
 import time
 
-from ssd1351 import SSD1351_Display
+from ssd1351_display import SSD1351_Display
 
 
 class SSD1351_Display_Adapter(object):
@@ -12,7 +12,7 @@ class SSD1351_Display_Adapter(object):
 
     self.width = width
     self.height = height
-    self._oled = Adafruit_SSD1351(
+    self._oled = SSD1351_Display(
         width, height, rst=rst, dc=dc, spi_port=spi_port, spi_device=spi_device)
 
     self._oled.begin()
@@ -60,7 +60,7 @@ class SSD1351_Display_Adapter(object):
     self._oled.clear_buffer()
     self._oled.display()
 
-  def display(self, data):
+  def write_line(self, data):
     """ Add row to the display """
 
     self._oled.display_scroll(data)

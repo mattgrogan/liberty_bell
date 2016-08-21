@@ -15,7 +15,7 @@ class SSD1351_Display_Adapter(object):
     self._oled = SSD1351_Display(
         width, height, rst=rst, dc=dc, spi_port=spi_port, spi_device=spi_device)
 
-    self._oled.begin()
+    self._oled.start_display()
     self._oled.clear_buffer()
 
   def show_test_pattern(self):
@@ -45,7 +45,7 @@ class SSD1351_Display_Adapter(object):
       x_pos = x_pos + x_offset
 
     self._oled.load_image(test_image)
-    self._oled.display()
+    self._oled.write_buffer()
 
   def test(self):
     """ Test the display """
@@ -58,9 +58,9 @@ class SSD1351_Display_Adapter(object):
     """ Clear the display """
 
     self._oled.clear_buffer()
-    self._oled.display()
+    self._oled.write_buffer()
 
   def write_line(self, data):
     """ Add row to the display """
 
-    self._oled.display_scroll(data)
+    self._oled.write_line(data)

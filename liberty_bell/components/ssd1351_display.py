@@ -283,34 +283,6 @@ class SSD1351_Display(object):
     self._gpio.set_high(self._dc)
     self._spi.write(buf)
 
-  def write_fill(self, x, y, w, h, color):
-    if (x >= self.width) or (y >= self.height):
-      return
-
-    if y + h > self.height:
-      h = self.height - y - 1
-
-    if x + w > self.width:
-      w = self.width - x - 1
-
-    self.send_command(SSD1351_CMD_SETCOLUMN)
-    self.send_data(x)
-    self.send_data(x + w - 1)
-
-    self.send_command(SSD1351_CMD_SETROW)
-    self.send_data(y)
-    self.send_data(y + h - 1)
-
-    buf = []
-    self.send_command(SSD1351_CMD_WRITERAM)
-    for num in range(0, w * h):
-      buf.append(color >> 8)
-      buf.append(color)
-
-    # Write the array directly to output
-    self._gpio.set_high(self._dc)
-    self._spi.write(buf)
-
   def load_image(self, image):
     """ Set buffer to PIL image """
 

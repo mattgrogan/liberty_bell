@@ -74,7 +74,6 @@ class Button(object):
       else:
         sys.stdout.write('.')
         sys.stdout.flush()
-        self.led_toggle()
         time.sleep(1)
 
     print("Button %s failed." % self.name)

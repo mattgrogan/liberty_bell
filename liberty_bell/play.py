@@ -21,8 +21,8 @@ if __name__ == '__main__':
 
     slot_machine = Liberty_Bell_Machine()
 
-    from user_interfaces.rpi_ui import Slot_RPI_UI
-    ui = Slot_RPI_UI(slot_machine.reels)
+    from ui import Slot_UI
+    ui = Slot_UI(slot_machine.reels)
     ui.test()
 
   else:

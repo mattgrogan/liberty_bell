@@ -51,8 +51,6 @@ class SSD1351_Display_Adapter(object):
     """ Test the display """
 
     self.show_test_pattern()
-    time.sleep(1)
-    self.clear()
 
   def clear(self):
     """ Clear the display """

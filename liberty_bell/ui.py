@@ -119,6 +119,10 @@ class Slot_UI(object):
 
     self.menu_display.test()
 
+    self.display_1.test()
+    self.display_2.test()
+    self.display_3.test()
+
     self.spin_button.test()
     self.up_button.test()
     self.down_button.test()
@@ -135,6 +139,11 @@ class Slot_UI(object):
     self.reel1_button.test()
     self.reel2_button.test()
     self.reel3_button.test()
+
+    self.menu_display.clear()
+    self.display_1.clear()
+    self.display_2.clear()
+    self.display_3.clear()
 
   def show_spin(self, result):
     """ Animate the spin

@@ -21,13 +21,19 @@ class SSD1306_Display_Adapter(object):
   def show_test_pattern(self):
     """ Display a basic test pattern """
 
-    from PIL import Image, ImageDraw, ImageFont
+    from PIL import Image, ImageDraw
 
     test_image = Image.new("1", (self.width, self.height))
     draw = ImageDraw.Draw(test_image)
-    font = ImageFont.load_default()
 
-    draw.text((20, 20), 'Liberty Bell',  font=font, fill=255)
+    x_pos = 0
+    x_offset = 8
+
+    for bar in range(self.width / x_offset):
+      color = 0xFF if bar % 2 == 0 else 0x00
+      draw.rectangle((x_pos, 0, x_pos + x_offset, self.height),
+                     outline=color, fill=color)
+      x_pos = x_pos + x_offset
 
     self._oled.load_image(test_image)
     self._oled.write_buffer()
@@ -36,8 +42,6 @@ class SSD1306_Display_Adapter(object):
     """ Test the display """
 
     self.show_test_pattern()
-    time.sleep(1)
-    self.clear()
 
   def clear(self):
     """ Clear the display """

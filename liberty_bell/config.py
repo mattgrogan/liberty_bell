@@ -43,6 +43,13 @@ class Config(object):
     self.display_2 = self.get_section_dict("DISPLAY_2")
     self.display_3 = self.get_section_dict("DISPLAY_3")
 
+    # MENU DISPLAY
+    self.menu_display_i2c = config.get("MENU_DISPLAY", "i2c_address")
+    self.menu_display_i2c = int(self.menu_display_i2c, 16)
+    self.menu_display_reset = config.getint("MENU_DISPLAY", "reset")
+    self.menu_display_width = config.getint("MENU_DISPLAY", "width")
+    self.menu_display_height = config.getint("MENU_DISPLAY", "height")
+
   def get_section_dict(self, section):
     """ Read in a sectiion as a dict """
 

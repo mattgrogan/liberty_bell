@@ -3,6 +3,7 @@ import time
 
 from components.button import Button
 from components.numeric_display_adapter import Numeric_Display_Adapter
+from components.ssd1306_display_adapter import SSD1306_Display_Adapter
 from components.ssd1351_display_adapter import SSD1351_Display_Adapter
 from config import Config
 
@@ -37,6 +38,13 @@ class Slot_UI(object):
         name="Credits", address=config.credits_i2c)
     self.amount_bet_led = Numeric_Display_Adapter(
         name="Amount Bet", address=config.amount_bet_i2c)
+
+    self.menu_display = SSD1306_Display_Adapter(
+        "Menu Display",
+        config.menu_display_width,
+        config.menu_display_height,
+        config.menu_display_reset,
+        config.menu_display_i2c)
 
     # Set up the OLED screens
     self.display_1 = SSD1351_Display_Adapter("Reel 1",
@@ -108,6 +116,8 @@ class Slot_UI(object):
 
   def test(self):
     """ Test the UI elements """
+
+    self.menu_display.test()
 
     self.spin_button.test()
     self.up_button.test()

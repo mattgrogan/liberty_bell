@@ -41,7 +41,7 @@ SSD1351_CMD_STOPSCROLL = 0x9E
 SSD1351_CMD_STARTSCROLL = 0x9F
 
 
-class Adafruit_SSD1351(object):
+class SSD1351_Display(object):
   """ Controller for Adafruit SSD1351 1.5" Color OLED: http://adafru.it/1431 """
 
   def __init__(self, width, height, rst, dc, spi=None, spi_port=None, spi_device=None, gpio=None):

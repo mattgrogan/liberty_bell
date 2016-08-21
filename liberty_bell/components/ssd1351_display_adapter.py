@@ -1,10 +1,10 @@
 """ This module holds code for all displays """
 import time
 
-from ssd1351 import Adafruit_SSD1351
+from ssd1351 import SSD1351_Display
 
 
-class SSD1351_Display(object):
+class SSD1351_Display_Adapter(object):
   """ This wraps the SSD1351 """
 
   def __init__(self, name, width, height, rst, dc, spi_port, spi_device):
@@ -48,7 +48,7 @@ class SSD1351_Display(object):
     self._oled.display()
 
   def test(self):
-    """ Test the OLED """
+    """ Test the display """
 
     self.show_test_pattern()
     time.sleep(1)

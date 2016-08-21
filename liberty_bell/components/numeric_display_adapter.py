@@ -1,4 +1,3 @@
-""" This module holds the implementations for Seven Segment LEDs """
 import time
 
 from Adafruit_LED_Backpack import SevenSegment
@@ -6,8 +5,8 @@ from Adafruit_LED_Backpack import SevenSegment
 TEST_DELAY_SECS = 1.0
 
 
-class SevenSegment_Display(object):
-  """ The Adafruit SevenSegment display """
+class Numeric_Display_Adapter(object):
+  """ Numeric display uses the Adafruit SevenSegment display with i2c backpack """
 
   def __init__(self, name, address):
     """ Initalize a seven segment display with i2c """

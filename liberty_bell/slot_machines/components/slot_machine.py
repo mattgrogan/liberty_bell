@@ -1,13 +1,11 @@
 import random
 import time
 
-from payline import Payline
+from config import Config
 from pay_table import Pay_Table
+from payline import Payline
 from reel import Reel
 from spin_result import Spin_Result
-
-MAX_BET = 10
-PAYOUT_DELAY_SECS = 0.20
 
 
 class Slot_Machine(object):
@@ -19,7 +17,11 @@ class Slot_Machine(object):
     self.name = "Slot Machine"
     self.credits = None
     self.bet = None
-    self.max_bet = MAX_BET
+
+    config = Config()
+    self.max_bet = config.max_bet
+    self.payout_delay_secs = config.payout_delay_secs
+
     self.symbols = []
     self.reels = []
     self.randomizer = randomizer
@@ -69,7 +71,7 @@ class Slot_Machine(object):
       self.credits = self.credits + 1
       self.notify("winner_paid_changed", i + 1)
       self.notify("credits_changed", self.credits)
-      time.sleep(PAYOUT_DELAY_SECS)
+      time.sleep(self.payout_delay_secs)
 
   def place_bet(self):
     """ Place the bet and remove the amount from the credits """

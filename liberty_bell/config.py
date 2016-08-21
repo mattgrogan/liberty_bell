@@ -1,15 +1,23 @@
 import ConfigParser
 
+CONFIG_FILE = "config.ini"
+
 
 class Config(object):
   """ Handle all the configuration options """
 
-  def __init__(self, config_file):
+  def __init__(self, config_file=CONFIG_FILE):
     """ Read the configuration file and parse out the options """
 
     config = ConfigParser.ConfigParser()
     config.read(config_file)
     self.config = config
+
+    # options
+    self.default_credits = config.getint("OPTIONS", "default_credits")
+    self.default_bet = config.getint("OPTIONS", "default_bet")
+    self.max_bet = config.getint("OPTIONS", "max_bet")
+    self.payout_delay_secs = config.getfloat("OPTIONS", "payout_delay_secs")
 
     # SEVEN SEGMENT DISPLAYS
     self.winner_paid_i2c = config.get("SEVENSEG_DISPLAYS", "winner_paid_i2c")

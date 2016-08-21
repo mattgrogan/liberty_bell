@@ -1,5 +1,6 @@
 import time
 
+from config import Config
 from slot_machines import Liberty_Bell_Machine
 from ui import Slot_UI
 
@@ -9,6 +10,8 @@ class Slot_Game_Controller(object):
 
   def __init__(self):
     """ Initialize the game """
+
+    config = Config()
 
     self.slot_machine = Liberty_Bell_Machine()
 
@@ -32,7 +35,8 @@ class Slot_Game_Controller(object):
         "spin_completed", self, self.spin_completed_handler)
 
     # Set up the initial credits and bet
-    self.slot_machine.initialize(credits=100, bet=1)
+    self.slot_machine.initialize(
+        credits=config.default_credits, bet=config.default_bet)
 
     # Show a startup animation
     self.ui.startup_animation()

@@ -7,8 +7,6 @@ from components.ssd1306_display_adapter import SSD1306_Display_Adapter
 from components.ssd1351_display_adapter import SSD1351_Display_Adapter
 from config import Config
 
-CONFIG_FILE = "config.ini"
-
 # Animation parameters
 ROW_DELAY_LAMBDA = 0.001
 ROW_DELAY_DIVISOR = 2
@@ -20,7 +18,7 @@ class Slot_UI(object):
   def __init__(self, reels):
     """ Initialize the UI """
 
-    config = Config(CONFIG_FILE)
+    config = Config()
 
     # Set up events
     events = ["spin_pressed", "up_pressed", "down_pressed",

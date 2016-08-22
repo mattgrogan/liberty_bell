@@ -29,9 +29,17 @@ class Slot_Machine(object):
 
     # Set up events
     events = ["credits_changed", "winner_paid_changed",
-              "amount_bet_changed", "spin_completed"]
+              "amount_bet_changed", "spin_completed",
+              "enable_spin", "disable_spin",
+              "enable_increase_bet", "disable_increase_bet",
+              "enable_decrease_bet", "disable_decrease_bet"]
 
     self.events = {event: dict() for event in events}
+
+    # Register for events
+    self.register("amount_bet_changed", self, self.handle_state_change)
+    self.register("credits_changed", self, self.handle_state_change)
+    self.register("spin_completed", self, self.handle_state_change)
 
   def add_reel(self, stops):
     """ Add a reel to the machine """
@@ -57,6 +65,11 @@ class Slot_Machine(object):
       callback = getattr(who, 'update')
 
     self.events[event][who] = callback
+
+  def unregister(self, event, who):
+    """ Unregister for updates """
+
+    del self.events[event][who]
 
   def notify(self, event, message=None):
     """ Notify the subscribers for a particular event """
@@ -87,14 +100,39 @@ class Slot_Machine(object):
 
     return self.bet
 
+  def handle_state_change(self, message=None):
+    """ Handle any changes to the bet and raise events when we hit the min or max """
+
+    bet_is_below_credits = self.bet < self.credits
+    has_enough_credits = self.bet <= self.credits
+    below_max_bet = self.bet < self.max_bet
+    at_least_one_credit_bet = self.bet > 1
+
+    # Can we increase the bet?
+    if below_max_bet and bet_is_below_credits:
+      self.notify("enable_increase_bet")
+    else:
+      self.notify("disable_increase_bet")
+
+    # Can we decrease the bet?
+    if at_least_one_credit_bet:
+      self.notify("enable_decrease_bet")
+    else:
+      self.notify("disable_decrease_bet")
+
+    # Can we spin?
+    if has_enough_credits:
+      self.notify("enable_spin")
+    else:
+      self.notify("disable_spin")
+
   def increment_bet(self, message=None):
     """ Increment the bet by one """
 
-    if (self.bet + 1) > self.credits:
-      raise ValueError("Not enough credits")
+    attempted_bet = self.bet + 1
 
-    if self.bet < self.max_bet:
-      self.bet += 1
+    if attempted_bet <= self.credits and attempted_bet <= self.max_bet:
+      self.bet = attempted_bet
       self.notify("amount_bet_changed", self.bet)
 
   def decrement_bet(self, message=None):

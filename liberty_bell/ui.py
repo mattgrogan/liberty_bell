@@ -96,7 +96,22 @@ class Slot_UI(object):
     """ Show some startup sequences """
 
     # Do nothing right now
-    pass
+    for i in range(5):
+      self.spin_button.led_on()
+      self.up_button.led_on()
+      self.down_button.led_on()
+      self.reel1_button.led_on()
+      self.reel2_button.led_on()
+      self.reel3_button.led_on()
+      time.sleep(0.20)
+
+      self.spin_button.led_off()
+      self.up_button.led_off()
+      self.down_button.led_off()
+      self.reel1_button.led_off()
+      self.reel2_button.led_off()
+      self.reel3_button.led_off()
+      time.sleep(0.20)
 
   def mainloop(self):
     """ Wait for next button press """

@@ -15,6 +15,7 @@ class Button(object):
     self.name = name
     self.gpio_pin = gpio_pin
     self.led_pin = led_pin
+    self.is_enabled = False
 
     # Set up the GPIO pins
     gpio.setmode(gpio.BCM)
@@ -42,23 +43,30 @@ class Button(object):
     if self.led_pin is not None:
       gpio.output(self.led_pin, not gpio.input(self.led_pin))
 
-  def enable(self):
+  def enable(self, *args, **kwargs):
     """ Begin listening to events """
 
-    self.led_on()
-    gpio.add_event_detect(self.gpio_pin, gpio.RISING, bouncetime=500)
+    if not self.is_enabled:
+      self.led_on()
+      gpio.add_event_detect(self.gpio_pin, gpio.FALLING, bouncetime=250)
+      self.is_enabled = True
 
-  def disable(self):
+  def disable(self, *args, **kwargs):
     """ Stop listening to events """
 
-    self.led_off()
-    gpio.remove_event_detect(self.gpio_pin)
+    if self.is_enabled:
+      self.led_off()
+      gpio.remove_event_detect(self.gpio_pin)
+      self.is_enabled = False
 
   @property
   def event_detected(self):
     """ Return true if the gpio event was detected """
 
-    return gpio.event_detected(self.gpio_pin)
+    if gpio.event_detected(self.gpio_pin):
+      return True
+    else:
+      return False
 
   def test(self, timeout=10):
     """ Test the button """

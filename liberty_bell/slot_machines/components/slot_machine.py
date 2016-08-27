@@ -29,7 +29,7 @@ class Slot_Machine(object):
 
     # Set up events
     events = ["credits_changed", "winner_paid_changed",
-              "amount_bet_changed", "spin_completed",
+              "amount_bet_changed", "spin_completed", "spin_lose",
               "enable_spin", "disable_spin",
               "enable_increase_bet", "disable_increase_bet",
               "enable_decrease_bet", "disable_decrease_bet"]
@@ -166,5 +166,7 @@ class Slot_Machine(object):
     # Add the winnings, if any
     if winner_paid > 0:
       self.payout(winner_paid)
+    else:
+      self.notify("spin_lose")
 
     self.notify("spin_completed", winner_paid)

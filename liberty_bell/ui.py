@@ -2,6 +2,7 @@ import random
 import time
 
 from components.button import Button
+from components.buzzer import Buzzer
 from components.numeric_display_adapter import Numeric_Display_Adapter
 from components.ssd1306_display_adapter import SSD1306_Display_Adapter
 from components.ssd1351_display_adapter import SSD1351_Display_Adapter
@@ -78,6 +79,8 @@ class Slot_UI(object):
     self.reel2_button = Button("Btn 2", config.button2_pin, config.button2_led)
     self.reel3_button = Button("Btn 3", config.button3_pin, config.button3_led)
 
+    self.buzzer = Buzzer(config.buzzer_pin, config.sound_enabled)
+
   def notify(self, event, message=None):
     """ Notify the subscribers for a particular event """
 
@@ -119,6 +122,7 @@ class Slot_UI(object):
     while True:
 
       if self.spin_button.event_detected:
+        self.buzzer.button_tone()
         self.notify("spin_pressed")
       elif self.up_button.event_detected:
         self.notify("up_pressed")
@@ -161,6 +165,12 @@ class Slot_UI(object):
     self.credits_led.clear()
     self.winner_paid_led.clear()
     self.amount_bet_led.clear()
+
+  def spin_lose_handler(self, message=None):
+    """ Handle the spin lose event """
+
+    self.buzzer.lose_tone()
+
 
   def show_spin(self, result):
     """ Animate the spin

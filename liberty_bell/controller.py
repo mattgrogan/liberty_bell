@@ -35,6 +35,8 @@ class Slot_Game_Controller(object):
     self.slot_machine.register(
         "amount_bet_changed", self, self.ui.amount_bet_led.display)
     self.slot_machine.register(
+        "spin_lose", self, self.ui.spin_lose_handler)
+    self.slot_machine.register(
         "spin_completed", self, self.spin_completed_handler)
 
     # Set up the initial credits and bet

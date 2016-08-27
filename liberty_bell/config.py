@@ -58,6 +58,10 @@ class Config(object):
     self.menu_display_width = config.getint("MENU_DISPLAY", "width")
     self.menu_display_height = config.getint("MENU_DISPLAY", "height")
 
+    # SOUND
+    self.sound_enabled = config.getint("SOUND", "enabled") == 1
+    self.buzzer_pin = config.getint("SOUND", "buzzer_pin")
+
   def get_section_dict(self, section):
     """ Read in a sectiion as a dict """
 

@@ -33,6 +33,11 @@ class Buzzer(object):
         time.sleep(duration)
         self.pwm.ChangeDutyCycle(0.00)
 
+    def increment_tone(self):
+        """ Tone for incrementing the payout """
+
+        self.tone(932.33, 0.10)
+
     def lose_tone(self):
         """ Play a lose tone """
 

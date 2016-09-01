@@ -171,6 +171,10 @@ class Slot_UI(object):
 
     self.buzzer.lose_tone()
 
+  def winner_paid_handler(self, message=None):
+
+    self.buzzer.increment_tone()
+    self.winner_paid_led.display(message)
 
   def show_spin(self, result):
     """ Animate the spin

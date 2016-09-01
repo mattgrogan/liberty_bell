@@ -31,7 +31,7 @@ class Slot_Game_Controller(object):
     self.slot_machine.register(
         "credits_changed", self, self.ui.credits_led.display)
     self.slot_machine.register(
-        "winner_paid_changed", self, self.ui.winner_paid_led.display)
+        "winner_paid_changed", self, self.ui.winner_paid_handler)
     self.slot_machine.register(
         "amount_bet_changed", self, self.ui.amount_bet_led.display)
     self.slot_machine.register(

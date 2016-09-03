@@ -21,12 +21,13 @@ class Slot_UI(object):
 
     config = Config()
 
+    # Are we listening for events?
+    self._listening = True
+
     # Set up events
     events = ["spin_pressed", "up_pressed", "down_pressed",
               "menu_pressed", "b1_pressed", "b2_pressed", "b3_pressed"]
     self.events = {event: dict() for event in events}
-
-    self._numeric_displays = {}
 
     self.reels = reels
 
@@ -95,6 +96,11 @@ class Slot_UI(object):
 
     self.events[event][who] = callback
 
+  def stop_listening(self):
+    """ Trip the listening boolean """
+
+    self._listening = False
+
   def startup_animation(self):
     """ Show some startup sequences """
 
@@ -127,7 +133,7 @@ class Slot_UI(object):
   def mainloop(self):
     """ Wait for next button press """
 
-    while True:
+    while self._listening:
 
       if self.spin_button.event_detected:
         self.buzzer.button_tone()
@@ -136,7 +142,8 @@ class Slot_UI(object):
         self.notify("up_pressed")
       elif self.down_button.event_detected:
         self.notify("down_pressed")
-
+      elif self.menu_button.event_detected:
+        self.notify("menu_pressed")
       time.sleep(0.01)
 
   def test(self):

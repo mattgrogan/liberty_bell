@@ -11,8 +11,6 @@ class Slot_Game_Controller(object):
   def __init__(self):
     """ Initialize the game """
 
-    config = Config()
-
     self.slot_machine = Liberty_Bell_Machine()
 
     self.ui = Slot_UI(reels=self.slot_machine.reels)
@@ -21,6 +19,7 @@ class Slot_Game_Controller(object):
     self.ui.startup_animation()
 
     # Register for UI events
+    self.ui.register("menu_pressed", self, self.menu_pressed_handler)
     self.ui.register("spin_pressed", self, self.spin_pressed_handler)
     self.ui.register("up_pressed", self,
                      self.slot_machine.increment_bet)
@@ -39,6 +38,14 @@ class Slot_Game_Controller(object):
     self.slot_machine.register(
         "spin_completed", self, self.spin_completed_handler)
 
+    self.ui.menu_button.enable()
+    self.reset()
+
+  def reset(self):
+    """ Initialize the slot machine """
+
+    config = Config()
+
     # Set up the initial credits and bet
     self.slot_machine.initialize(
         credits=config.default_credits, bet=config.default_bet)
@@ -46,9 +53,15 @@ class Slot_Game_Controller(object):
     self.register_buttons()
     self.slot_machine.handle_state_change()
 
-    # time.sleep(2)
+  def start(self):
+    """ Start the game """
 
     self.ui.mainloop()
+
+  def menu_pressed_handler(self, message):
+    """ What to do when menu is pressed """
+
+    self.ui.stop_listening()
 
   def register_buttons(self):
     """ Listen for button changes """

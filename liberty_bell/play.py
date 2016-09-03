@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import argparse
 
-from controller import Slot_Game_Controller
+from slot_game_controller import Slot_Game_Controller
 
 if __name__ == '__main__':
 
@@ -28,3 +28,6 @@ if __name__ == '__main__':
   else:
 
     controller = Slot_Game_Controller()
+    controller.start()
+
+    print("Exiting...")

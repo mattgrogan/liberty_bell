@@ -98,6 +98,10 @@ class Slot_UI(object):
   def startup_animation(self):
     """ Show some startup sequences """
 
+    self.menu_display.text("Liberty", 0, 0)
+    self.menu_display.text("Bell", 0, 25)
+    self.menu_display.display()
+
     for i in range(5):
       self.down_button.led_on()
       self.reel1_button.led_on()

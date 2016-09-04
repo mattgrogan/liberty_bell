@@ -16,20 +16,19 @@ ROW_DELAY_DIVISOR = 2
 class Slot_UI(object):
   """ UI for the slot machine """
 
-  def __init__(self, reels):
+  def __init__(self):
     """ Initialize the UI """
 
     config = Config()
 
-    # Are we listening for events?
-    self._listening = True
-
     # Set up events
-    events = ["spin_pressed", "up_pressed", "down_pressed",
-              "menu_pressed", "b1_pressed", "b2_pressed", "b3_pressed"]
-    self.events = {event: dict() for event in events}
+    self.event_names = ["spin_pressed", "up_pressed", "down_pressed",
+                        "menu_pressed", "b1_pressed", "b2_pressed", "b3_pressed"]
 
-    self.reels = reels
+    self.events = None
+    self.events = {event: dict() for event in self.event_names}
+
+    self.reels = None
 
     # Set up the LEDs
     self.winner_paid_led = Numeric_Display_Adapter(
@@ -82,6 +81,11 @@ class Slot_UI(object):
 
     self.buzzer = Buzzer(config.buzzer_pin, config.sound_enabled)
 
+  def reset_callbacks(self):
+    """ Remove all the callbacks """
+
+    self.events = {event: dict() for event in self.event_names}
+
   def notify(self, event, message=None):
     """ Notify the subscribers for a particular event """
 
@@ -96,100 +100,23 @@ class Slot_UI(object):
 
     self.events[event][who] = callback
 
-  def stop_listening(self):
-    """ Trip the listening boolean """
+  def detect_event(self):
+    """ Detect any presses and raise appropriate notifications """
 
-    self._listening = False
-
-  def startup_animation(self):
-    """ Show some startup sequences """
-
-    self.menu_display.text("Liberty", 0, 0)
-    self.menu_display.text("Bell", 0, 25)
-    self.menu_display.display()
-
-    for i in range(5):
-      self.down_button.led_on()
-      self.reel1_button.led_on()
-      time.sleep(0.10)
-      self.down_button.led_off()
-      self.reel1_button.led_off()
-      time.sleep(0.10)
-
-      self.up_button.led_on()
-      self.reel2_button.led_on()
-      time.sleep(0.10)
-      self.up_button.led_off()
-      self.reel2_button.led_off()
-      time.sleep(0.10)
-
-      self.spin_button.led_on()
-      self.reel3_button.led_on()
-      time.sleep(0.10)
-      self.spin_button.led_off()
-      self.reel3_button.led_off()
-      time.sleep(0.10)
-
-  def mainloop(self):
-    """ Wait for next button press """
-
-    while self._listening:
-
-      if self.spin_button.event_detected:
-        self.buzzer.button_tone()
-        self.notify("spin_pressed")
-      elif self.up_button.event_detected:
-        self.notify("up_pressed")
-      elif self.down_button.event_detected:
-        self.notify("down_pressed")
-      elif self.menu_button.event_detected:
-        self.notify("menu_pressed")
-      time.sleep(0.01)
-
-  def test(self):
-    """ Test the UI elements """
-
-    self.menu_display.test()
-
-    self.display_1.test()
-    self.display_2.test()
-    self.display_3.test()
-
-    self.credits_led.test()
-    self.winner_paid_led.test()
-    self.amount_bet_led.test()
-
-    self.spin_button.test()
-    self.up_button.test()
-    self.down_button.test()
-    self.menu_button.test()
-
-    self.display_1.test()
-    self.display_2.test()
-    self.display_3.test()
-
-    self.reel1_button.test()
-    self.reel2_button.test()
-    self.reel3_button.test()
-
-    self.menu_display.clear()
-    self.display_1.clear()
-    self.display_2.clear()
-    self.display_3.clear()
-
-    self.credits_led.clear()
-    self.winner_paid_led.clear()
-    self.amount_bet_led.clear()
-
-  def spin_lose_handler(self, message=None):
-    """ Handle the spin lose event """
-
-    self.buzzer.lose_tone()
-
-  def winner_paid_handler(self, message=None):
-
-    self.buzzer.increment_tone()
-    self.winner_paid_led.display(message)
+    if self.spin_button.event_detected:
+      self.notify("spin_pressed")
+    elif self.up_button.event_detected:
+      self.notify("up_pressed")
+    elif self.down_button.event_detected:
+      self.notify("down_pressed")
+    elif self.menu_button.event_detected:
+      self.notify("menu_pressed")
+    elif self.reel1_button.event_detected:
+      self.notify("b1_pressed")
+    elif self.reel2_button.event_detected:
+      self.notify("b2_pressed")
+    elif self.reel3_button.event_detected:
+      self.notify("b3_pressed")
 
   def show_spin(self, result):
     """ Animate the spin

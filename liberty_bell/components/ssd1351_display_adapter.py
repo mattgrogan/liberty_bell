@@ -18,6 +18,12 @@ class SSD1351_Display_Adapter(object):
     self._oled.start_display()
     self._oled.clear_buffer()
 
+  def display_image(self, image):
+    """ Load an image into the buffer """
+
+    self._oled.load_image(image)
+    self._oled.write_buffer()
+
   def show_test_pattern(self):
     """ Display the test bars """
 

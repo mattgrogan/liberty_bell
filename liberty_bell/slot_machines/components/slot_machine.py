@@ -14,11 +14,13 @@ class Slot_Machine(object):
   def __init__(self, randomizer=random):
     """ Initialize the machine """
 
-    self.name = "Slot Machine"
-    self.credits = None
-    self.bet = None
-
     config = Config()
+
+    self.name = "Slot Machine"
+    self.credits = config.default_credits
+    self.winner_paid = 0
+    self.bet = config.default_bet
+
     self.max_bet = config.max_bet
     self.payout_delay_secs = config.payout_delay_secs
 
@@ -28,35 +30,15 @@ class Slot_Machine(object):
     self.payout_table = Pay_Table()
 
     # Set up events
-    events = ["credits_changed", "winner_paid_changed",
-              "amount_bet_changed", "spin_completed", "spin_lose",
-              "enable_spin", "disable_spin",
-              "enable_increase_bet", "disable_increase_bet",
-              "enable_decrease_bet", "disable_decrease_bet"]
+    events = ["state_changed", "spin_completed"]
 
     self.events = {event: dict() for event in events}
-
-    # Register for events
-    self.register("amount_bet_changed", self, self.handle_state_change)
-    self.register("credits_changed", self, self.handle_state_change)
-    self.register("spin_completed", self, self.handle_state_change)
 
   def add_reel(self, stops):
     """ Add a reel to the machine """
 
     reel = Reel(index=len(self.reels), stops=stops, randomizer=self.randomizer)
     self.reels.append(reel)
-
-  def initialize(self, credits=None, bet=None):
-    """ Initialize credit and/or bet values """
-
-    if credits is not None:
-      self.credits = credits
-      self.notify("credits_changed", self.credits)
-
-    if bet is not None:
-      self.bet = bet
-      self.notify("amount_bet_changed", bet)
 
   def register(self, event, who, callback=None):
     """ Register for updates """
@@ -80,10 +62,12 @@ class Slot_Machine(object):
   def payout(self, amount):
     """ Add to the credits """
 
+    self.winner_paid = 0
+
     for i in range(amount):
       self.credits = self.credits + 1
-      self.notify("winner_paid_changed", i + 1)
-      self.notify("credits_changed", self.credits)
+      self.winner_paid = self.winner_paid + 1
+      self.notify("state_changed")
       time.sleep(self.payout_delay_secs)
 
   def place_bet(self):
@@ -96,35 +80,30 @@ class Slot_Machine(object):
     assert self.bet <= self.credits
     self.credits -= self.bet
 
-    self.notify("credits_changed", self.credits)
+    self.notify("state_changed")
 
     return self.bet
 
-  def handle_state_change(self, message=None):
-    """ Handle any changes to the bet and raise events when we hit the min or max """
+  @property
+  def can_increase_bet(self):
+    """ Do we have enough credits to increase the bet """
 
-    bet_is_below_credits = self.bet < self.credits
-    has_enough_credits = self.bet <= self.credits
     below_max_bet = self.bet < self.max_bet
-    at_least_one_credit_bet = self.bet > 1
+    bet_is_below_credits = self.bet < self.credits
 
-    # Can we increase the bet?
-    if below_max_bet and bet_is_below_credits:
-      self.notify("enable_increase_bet")
-    else:
-      self.notify("disable_increase_bet")
+    return below_max_bet and bet_is_below_credits
 
-    # Can we decrease the bet?
-    if at_least_one_credit_bet:
-      self.notify("enable_decrease_bet")
-    else:
-      self.notify("disable_decrease_bet")
+  @property
+  def can_decrease_bet(self):
+    """ Do we have at least one credit? """
 
-    # Can we spin?
-    if has_enough_credits:
-      self.notify("enable_spin")
-    else:
-      self.notify("disable_spin")
+    return self.bet > 1
+
+  @property
+  def can_spin(self):
+    """ Return true if there's enough credits to spin """
+
+    return self.bet <= self.credits
 
   def increment_bet(self, message=None):
     """ Increment the bet by one """
@@ -133,14 +112,14 @@ class Slot_Machine(object):
 
     if attempted_bet <= self.credits and attempted_bet <= self.max_bet:
       self.bet = attempted_bet
-      self.notify("amount_bet_changed", self.bet)
+      self.notify("state_changed")
 
   def decrement_bet(self, message=None):
     """ Decrement the bet by one """
 
     if self.bet > 1:
       self.bet -= 1
-      self.notify("amount_bet_changed", self.bet)
+      self.notify("state_changed")
 
   def spin(self):
     """ Spin the reels """
@@ -166,7 +145,5 @@ class Slot_Machine(object):
     # Add the winnings, if any
     if winner_paid > 0:
       self.payout(winner_paid)
-    else:
-      self.notify("spin_lose")
 
     self.notify("spin_completed", winner_paid)

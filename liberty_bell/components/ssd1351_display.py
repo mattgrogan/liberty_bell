@@ -244,9 +244,15 @@ class SSD1351_Display(object):
     # Write buffer data
     self._gpio.set_high(self._dc)
     self.send_command(SSD1351_CMD_WRITERAM)
+
+    buf = []
     for i in xrange(len(self._buffer)):
-      self.send_data(self._buffer[i] >> 8)
-      self.send_data(self._buffer[i])
+      buf.append(self._buffer[i] >> 8)
+      buf.append(self._buffer[i])
+
+    # Write the array directly to output
+    self._gpio.set_high(self._dc)
+    self._spi.write(buf)
 
   def write_line(self, line):
     """ Add a new line to the bottom and scroll the current image up.

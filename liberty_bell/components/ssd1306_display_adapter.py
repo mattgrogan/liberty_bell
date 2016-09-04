@@ -1,4 +1,5 @@
 import os
+import textwrap
 import time
 
 from PIL import Image, ImageDraw, ImageFont
@@ -6,8 +7,10 @@ from PIL import Image, ImageDraw, ImageFont
 from ssd1306_display import SSD1306_Display
 
 dir = os.path.dirname(__file__)
-FONT_PATH = os.path.join(dir, '../fonts/VCR_OSD_MONO_1.001.ttf')
-FONT_SIZE = 20
+#FONT_PATH = os.path.join(dir, '../fonts/VCR_OSD_MONO_1.001.ttf')
+#FONT_PATH = os.path.join(dir, '../fonts/ARCADEPI.TTF')
+FONT_PATH = os.path.join(dir, '../fonts/Moder DOS 437.ttf')
+FONT_SIZE = 16
 
 # liberty_bell\fonts\VCR_OSD_MONO_1.001.ttf
 
@@ -51,11 +54,18 @@ class SSD1306_Display_Adapter(object):
     self._oled.load_image(self.image)
     self._oled.write_buffer()
 
-  def text(self, text, x, y, font_size=FONT_SIZE):
+  def text(self, text, x=0, y=10, font_size=FONT_SIZE):
     """ Draw text on the screen """
 
+    y_text = y
+
     font = ImageFont.truetype(FONT_PATH, font_size)
-    self.draw.text((x, y), text, font=font, fill=255)
+    lines = textwrap.wrap(text, width=14)
+
+    for line in lines:
+      width, height = font.getsize(line)
+      self.draw.text((x, y_text), line, font=font, fill=255)
+      y_text += height
 
   def test(self):
     """ Test the display """

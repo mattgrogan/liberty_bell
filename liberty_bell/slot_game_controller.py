@@ -1,129 +1,189 @@
 import time
 
-from config import Config
-from slot_machines import Liberty_Bell_Machine
-from ui import Slot_UI
+
+class Ready_State(object):
+  """ The slot machine is ready for a spin """
+
+  def __init__(self, controller, ui, slot_machine):
+    """ Initialize the state """
+
+    self.controller = controller
+    self.ui = ui
+    self.slot_machine = slot_machine
+
+  def enable_buttons(self):
+    """ Enable buttons if they're allowed """
+
+    self.ui.menu_button.enable()
+
+    if self.slot_machine.can_spin:
+      self.ui.spin_button.enable()
+    else:
+      self.ui.spin_button.disable()
+
+    if self.slot_machine.can_increase_bet:
+      self.ui.up_button.enable()
+    else:
+      self.ui.up_button.disable()
+
+    if self.slot_machine.can_decrease_bet:
+      self.ui.down_button.enable()
+    else:
+      self.ui.down_button.disable()
+
+    # We're not using the reel buttons
+    self.ui.reel1_button.disable()
+    self.ui.reel2_button.disable()
+    self.ui.reel3_button.disable()
+
+  def up_pressed_handler(self):
+    """ Increase the bet """
+
+    self.controller.slot_machine.increment_bet()
+
+  def down_pressed_handler(self):
+    """ Decrease the bet """
+
+    self.controller.slot_machine.decrement_bet()
+
+  def spin_pressed_handler(self):
+    """ Spin the reels """
+
+    # Clear the winner paid
+    self.ui.winner_paid_led.clear()
+
+    # Change the state to Spinning_State
+    self.controller.current_state = self.controller.spinning_state
+    self.controller.current_state.enable_buttons()
+
+    # Find the result and do the animation
+    result = self.controller.slot_machine.spin()
+    self.ui.show_spin(result)
+
+    # Evaluate the results
+    self.controller.slot_machine.eval_spin(result)
+
+
+class Spinning_State(object):
+  """ The spin button was pressed and we're in the spinning state """
+
+  def __init__(self, controller, ui, slot_machine):
+    """ Initialize the state """
+
+    self.controller = controller
+    self.ui = ui
+    self.slot_machine = slot_machine
+
+  def spin_completed_handler(self):
+    """ Spin is complete, move to ready state """
+
+    self.controller.current_state = self.controller.ready_state
+    self.controller.current_state.enable_buttons()
+
+  def enable_buttons(self):
+    """ No buttons allowed """
+
+    self.ui.spin_button.disable()
+    self.ui.up_button.disable()
+    self.ui.down_button.disable()
+    self.ui.menu_button.disable()
+
+    # We're not using the reel buttons
+    self.ui.reel1_button.disable()
+    self.ui.reel2_button.disable()
+    self.ui.reel3_button.disable()
 
 
 class Slot_Game_Controller(object):
   """ Control the flow of play for the slot machine """
 
-  def __init__(self):
+  def __init__(self, ui, slot_machine):
     """ Initialize the game """
 
-    self.slot_machine = Liberty_Bell_Machine()
-
-    self.ui = Slot_UI(reels=self.slot_machine.reels)
-
-    # Show a startup animation
-    self.ui.startup_animation()
-
-    # Register for UI events
-    self.ui.register("menu_pressed", self, self.menu_pressed_handler)
-    self.ui.register("spin_pressed", self, self.spin_pressed_handler)
-    self.ui.register("up_pressed", self,
-                     self.slot_machine.increment_bet)
-    self.ui.register("down_pressed", self,
-                     self.slot_machine.decrement_bet)
-
-    # Register for model changes
-    self.slot_machine.register(
-        "credits_changed", self, self.ui.credits_led.display)
-    self.slot_machine.register(
-        "winner_paid_changed", self, self.ui.winner_paid_handler)
-    self.slot_machine.register(
-        "amount_bet_changed", self, self.ui.amount_bet_led.display)
-    self.slot_machine.register(
-        "spin_lose", self, self.ui.spin_lose_handler)
+    # Connect to the slot machine
+    self.slot_machine = slot_machine
     self.slot_machine.register(
         "spin_completed", self, self.spin_completed_handler)
-
-    self.ui.menu_button.enable()
-    self.reset()
-
-  def reset(self):
-    """ Initialize the slot machine """
-
-    config = Config()
-
-    # Set up the initial credits and bet
-    self.slot_machine.initialize(
-        credits=config.default_credits, bet=config.default_bet)
-
-    self.register_buttons()
-    self.slot_machine.handle_state_change()
-
-  def start(self):
-    """ Start the game """
-
-    self.ui.mainloop()
-
-  def menu_pressed_handler(self, message):
-    """ What to do when menu is pressed """
-
-    self.ui.stop_listening()
-
-  def register_buttons(self):
-    """ Listen for button changes """
-
-    # Register for button changes
     self.slot_machine.register(
-        "enable_increase_bet", self, self.ui.up_button.enable)
-    self.slot_machine.register(
-        "disable_increase_bet", self, self.ui.up_button.disable)
-    self.slot_machine.register(
-        "enable_decrease_bet", self, self.ui.down_button.enable)
-    self.slot_machine.register(
-        "disable_decrease_bet", self, self.ui.down_button.disable)
-    self.slot_machine.register(
-        "enable_spin", self, self.ui.spin_button.enable)
-    self.slot_machine.register(
-        "disable_spin", self, self.ui.spin_button.disable)
+        "state_changed", self, self.state_changed_handler)
 
-  def unregister_buttons(self):
-    """ Stop listening for button changes """
+    self.action = None
 
-    self.slot_machine.unregister(
-        "enable_increase_bet", self)
-    self.slot_machine.unregister(
-        "disable_increase_bet", self)
-    self.slot_machine.unregister(
-        "enable_decrease_bet", self)
-    self.slot_machine.unregister(
-        "disable_decrease_bet", self)
-    self.slot_machine.unregister(
-        "enable_spin", self)
-    self.slot_machine.unregister(
-        "disable_spin", self)
+    self.ui = ui
 
-  def spin_pressed_handler(self, message):
-    """ Respond to the spin pressed event """
+    self.ui.reels = self.slot_machine.reels
 
-    # Handle UI
-    self.ui.winner_paid_led.clear()
-    self.ui.spin_button.disable()
-    self.ui.up_button.disable()
-    self.ui.down_button.disable()
+    self.ready_state = Ready_State(self, ui, slot_machine)
+    self.spinning_state = Spinning_State(self, ui, slot_machine)
 
-    # Stop listening for events
-    self.unregister_buttons()
+    self.current_state = self.ready_state
 
-    # Find the result and do the animation
-    result = self.slot_machine.spin()
-    self.ui.show_spin(result)
+  def initialize_ui(self):
+    """ Set up the UI """
 
-    # Evaluate the results
-    self.slot_machine.eval_spin(result)
+    self.action = None
+    self.current_state.enable_buttons()
+    self.update_display()
 
-  def spin_completed_handler(self, result):
-    """ Enable the buttons and wait for next input """
+  def spin_pressed_handler(self, e=None):
+    """ Handle the spin button """
 
-    self.ui.spin_button.disable()
-    self.ui.up_button.disable()
-    self.ui.down_button.disable()
+    self.current_state.spin_pressed_handler()
 
-    self.register_buttons()
+  def up_pressed_handler(self, e=None):
+    """ Handle the up button """
 
-    self.slot_machine.handle_state_change()
+    self.current_state.up_pressed_handler()
 
-    self.ui.mainloop()
+  def down_pressed_handler(self, e=None):
+    """ Handle the down button """
+
+    self.current_state.down_pressed_handler()
+
+  def menu_pressed_handler(self, e=None):
+    """ Handle menu pressed """
+
+    self.action = "menu"
+
+  def b1_pressed_handler(self, e=None):
+    """ Handle the button """
+
+    self.current_state.b1_pressed_handler()
+
+  def b2_pressed_handler(self, e=None):
+    """ Handle the button """
+
+    self.current_state.b2_pressed_handler()
+
+  def b3_pressed_handler(self, e=None):
+    """ Handle the button """
+
+    pass
+
+  def spin_completed_handler(self, e=None):
+    """ Handle the spin completion """
+
+    self.current_state.spin_completed_handler()
+
+  def state_changed_handler(self, e=None):
+    """ Update any of the data on the display """
+
+    self.update_display()
+
+  def update_display(self):
+    """ Update the display with current info """
+
+    self.ui.credits_led.display(self.slot_machine.credits)
+    self.ui.amount_bet_led.display(self.slot_machine.bet)
+
+    if self.slot_machine.winner_paid > 0:
+      self.ui.winner_paid_led.display(self.slot_machine.winner_paid)
+    else:
+      self.ui.winner_paid_led.clear()
+
+    self.current_state.enable_buttons()
+    self.ui.menu_display.clear()
+    self.ui.menu_display.display()
+
+    self.ui.menu_display.text("Press SPIN")
+    self.ui.menu_display.display()

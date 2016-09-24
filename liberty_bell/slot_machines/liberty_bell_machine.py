@@ -17,7 +17,7 @@ class Liberty_Bell_Symbols(object):
     self.SPADE = Symbol(name="Spade", img_path="./icons/Spade_96x96-32.png")
     self.HORSESHOE = Symbol(
         name="Horseshoe", img_path="./icons/Horseshoe_96x96-32.png")
-    self.STAR = Symbol(name="Star", img_path="./icons/Star_128x128-32.png")
+    self.STAR = Symbol(name="Star", img_path="./icons/Star_96x96-32.png")
 
 
 class Liberty_Bell_Machine(Slot_Machine):

@@ -1,14 +1,38 @@
 import itertools
 
+from slot_game_controller import Slot_Game_Controller
+from slot_machines import Liberty_Bell_Machine
 
-class Menu_Item(object):
-  """ Holds a menu item """
 
-  def __init__(self, name, text):
+class Slot_Machine_Menu_Item(object):
+  """ Run a slot machine """
+
+  def __init__(self, text, ui, slot_machine):
+    """ Initialize the menu option """
+
+    self.text = text
+    self.ui = ui
+    self.slot_machine = slot_machine
+    self.controller = Slot_Game_Controller(self.ui, self.slot_machine)
+
+  def execute(self):
+    """ Return the slot machine """
+
+    return self.controller
+
+
+class Exit_Menu_Item(object):
+  """ Exit the game """
+
+  def __init__(self):
     """ Initialize the menu item """
 
-    self.name = name
-    self.text = text
+    self.text = "Exit"
+
+  def execute(self):
+    """ Quit the application """
+    import sys
+    sys.exit()
 
 
 class Menu_Controller(object):
@@ -19,26 +43,24 @@ class Menu_Controller(object):
 
     self.ui = ui
 
-    liberty_bell_item = Menu_Item(
-        name="liberty_bell", text="Play Liberty Bell")
-    liberty_bell_auto = Menu_Item(
-        name="liberty_bell_auto", text="Play Liberty Bell (autoplay)")
-    view_items = Menu_Item(name="view_items", text="View Items")
-    quit_item = Menu_Item(name="quit", text="Quit")
+    liberty_bell_item = Slot_Machine_Menu_Item(
+        "Play Liberty Bell", self.ui, Liberty_Bell_Machine())
+    exit_item = Exit_Menu_Item()
 
-    self.menu_items = [liberty_bell_item,
-                       liberty_bell_auto, view_items, quit_item]
+    self.menu_items = [liberty_bell_item, exit_item]
 
     self._menu_items = itertools.cycle(self.menu_items)
     self._current_item = self._menu_items.next()
-    self.action = None
 
   def initialize_ui(self):
     """ Set up the UI """
 
-    self.ui.spin_button.enable()
+    # Down button moves to next item
+    self.ui.menu_button.enable()
+    self.ui.down_button.enable()
+
+    self.ui.spin_button.disable()
     self.ui.up_button.disable()
-    self.ui.down_button.disable()
     self.ui.reel1_button.disable()
     self.ui.reel2_button.disable()
     self.ui.reel3_button.disable()
@@ -47,7 +69,6 @@ class Menu_Controller(object):
     self.ui.winner_paid_led.clear()
     self.ui.amount_bet_led.clear()
 
-    self.action = None
     self._menu_items = itertools.cycle(self.menu_items)
     self._current_item = self._menu_items.next()
     self.display()
@@ -57,17 +78,15 @@ class Menu_Controller(object):
     self.ui.display_3.clear()
 
   def menu_pressed_handler(self, message=None):
-    """ Show the next menu option """
+    """ User selected this menu option """
 
-    self.action = None
+    return self._current_item.execute()
+
+  def down_pressed_handler(self, message=None):
+    """ Move to next item """
+
     self._current_item = self._menu_items.next()
     self.display()
-
-  def spin_pressed_handler(self, message=None):
-    """ User selected this item """
-
-    # Action is queried by application controller
-    self.action = self._current_item.name
 
   def display(self):
     """ Display a menu item """

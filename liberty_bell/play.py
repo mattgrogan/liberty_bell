@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from application_controller import Application_Controller
+from front_controller import Front_Controller
 
 if __name__ == '__main__':
 
@@ -9,6 +9,6 @@ if __name__ == '__main__':
   parser.add_argument("-t", action="store_true")
   args = parser.parse_args()
 
-  controller = Application_Controller()
+  controller = Front_Controller()
 
   controller.start()

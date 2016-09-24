@@ -21,10 +21,13 @@ class Menu_Controller(object):
 
     liberty_bell_item = Menu_Item(
         name="liberty_bell", text="Play Liberty Bell")
+    liberty_bell_auto = Menu_Item(
+        name="liberty_bell_auto", text="Play Liberty Bell (autoplay)")
     view_items = Menu_Item(name="view_items", text="View Items")
     quit_item = Menu_Item(name="quit", text="Quit")
 
-    self.menu_items = [liberty_bell_item, view_items, quit_item]
+    self.menu_items = [liberty_bell_item,
+                       liberty_bell_auto, view_items, quit_item]
 
     self._menu_items = itertools.cycle(self.menu_items)
     self._current_item = self._menu_items.next()

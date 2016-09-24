@@ -10,6 +10,7 @@ class Ready_State(object):
     self.controller = controller
     self.ui = ui
     self.slot_machine = slot_machine
+    self.instruction_text = "Press SPIN"
 
   def enable_buttons(self):
     """ Enable buttons if they're allowed """
@@ -50,14 +51,15 @@ class Ready_State(object):
     """ Spin the reels """
 
     # Clear the winner paid
-    self.ui.winner_paid_led.clear()
+    # self.ui.winner_paid_led.clear()
+
+    # Find the result and do the animation
+    result = self.controller.slot_machine.spin()
 
     # Change the state to Spinning_State
     self.controller.current_state = self.controller.spinning_state
     self.controller.current_state.enable_buttons()
 
-    # Find the result and do the animation
-    result = self.controller.slot_machine.spin()
     self.ui.show_spin(result)
 
     # Evaluate the results
@@ -73,6 +75,7 @@ class Spinning_State(object):
     self.controller = controller
     self.ui = ui
     self.slot_machine = slot_machine
+    self.instruction_text = "Good luck!"
 
   def spin_completed_handler(self):
     """ Spin is complete, move to ready state """
@@ -185,5 +188,5 @@ class Slot_Game_Controller(object):
     self.ui.menu_display.clear()
     self.ui.menu_display.display()
 
-    self.ui.menu_display.text("Press SPIN")
+    self.ui.menu_display.text(self.current_state.instruction_text)
     self.ui.menu_display.display()

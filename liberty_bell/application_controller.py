@@ -76,6 +76,14 @@ class Application_Controller(object):
         self._current_prog = self.liberty_bell
         self._current_prog.initialize_ui()
 
+      if self._current_prog.action == "liberty_bell_auto":
+        self._current_prog = self.liberty_bell
+        self._current_prog.initialize_ui()
+        self._current_prog.action = "autoplay"
+
+      if self._current_prog.action == "autoplay":
+        self.spin_pressed_handler()
+
       elif self._current_prog.action == 'menu':
         self._current_prog = self.menu
         self._current_prog.initialize_ui()

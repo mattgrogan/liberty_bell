@@ -80,6 +80,8 @@ class Slot_Machine(object):
     assert self.bet <= self.credits
     self.credits -= self.bet
 
+    self.winner_paid = 0
+
     self.notify("state_changed")
 
     return self.bet

@@ -1,3 +1,6 @@
+import time
+
+
 class Slot_Machine_Menu_Item(object):
 
   def __init__(self, slot_machine, ui):
@@ -58,9 +61,25 @@ class Slot_Machine_Menu_Item(object):
           pass
 
       if not animation_running:
-        self.slot_machine.eval_spin()
+        winner = self.slot_machine.eval_spin()
+
+        if winner:
+          # Do a nice animation =)
+          starting_credits = self.slot_machine.prev_credits
+          ending_credits = self.slot_machine.credits
+
+          for i, credits in enumerate(range(starting_credits + 1, ending_credits + 1)):
+            self.ui.credits_led.display(credits)
+            self.ui.winner_paid_led.display(i + 1)
+            self.ui.buzzer.increment_tone()
+            time.sleep(0.10)
+
+        else:
+          self.ui.buzzer.lose_tone()
+
         self.update_button_state()
         self.update_display()
+
     else:
       self.update_button_state()
       self.update_display()

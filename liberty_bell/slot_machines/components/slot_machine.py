@@ -17,7 +17,8 @@ class Slot_Machine(object):
     config = Config()
 
     self.name = "Slot Machine"
-    self.credits = config.default_credits
+    self._credits = config.default_credits
+    self.prev_credits = 0
     self.winner_paid = 0
     self.bet = config.default_bet
     self.spin_result = None
@@ -31,6 +32,16 @@ class Slot_Machine(object):
     self.payout_table = Pay_Table()
 
   @property
+  def credits(self):
+    return self._credits
+
+  @credits.setter
+  def credits(self, value):
+    if value != self._credits:
+      self.prev_credits = self._credits
+      self._credits = value
+
+  @property
   def is_spinning(self):
     return self.spin_result is not None
 
@@ -39,12 +50,6 @@ class Slot_Machine(object):
 
     reel = Reel(index=len(self.reels), stops=stops, randomizer=self.randomizer)
     self.reels.append(reel)
-
-  def payout(self, amount):
-    """ Add to the credits """
-
-    self.credits = self.credits + amount
-    self.winner_paid = amount
 
   def place_bet(self):
     """ Place the bet and remove the amount from the credits """
@@ -113,11 +118,11 @@ class Slot_Machine(object):
   def eval_spin(self):
     """ Evaluate the spin """
 
-    winner_paid = self.payout_table.calculate_payout(
+    self.winner_paid = self.payout_table.calculate_payout(
         self.spin_result.reels) * self.bet
 
-    # Add the winnings, if any
-    if winner_paid > 0:
-      self.payout(winner_paid)
+    self.credits += self.winner_paid
 
     self.spin_result = None
+
+    return self.winner_paid > 0

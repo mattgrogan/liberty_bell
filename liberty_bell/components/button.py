@@ -25,6 +25,17 @@ class Button(object):
       gpio.setup(self.led_pin, gpio.OUT)
       self.led_off()
 
+  @property
+  def enabled(self):
+    return self.is_enabled
+
+  @enabled.setter
+  def enabled(self, value):
+    if value:
+      self.enable()
+    else:
+      self.disable()
+
   def led_on(self):
     """ Turn the LED on """
 

@@ -20,6 +20,7 @@ class Slot_Machine(object):
     self.credits = config.default_credits
     self.winner_paid = 0
     self.bet = config.default_bet
+    self.spin_result = None
 
     self.max_bet = config.max_bet
     self.payout_delay_secs = config.payout_delay_secs
@@ -33,6 +34,10 @@ class Slot_Machine(object):
     events = ["state_changed", "spin_completed"]
 
     self.events = {event: dict() for event in events}
+
+  @property
+  def is_spinning(self):
+    return self.spin_result is not None
 
   def add_reel(self, stops):
     """ Add a reel to the machine """
@@ -62,13 +67,8 @@ class Slot_Machine(object):
   def payout(self, amount):
     """ Add to the credits """
 
-    self.winner_paid = 0
-
-    for i in range(amount):
-      self.credits = self.credits + 1
-      self.winner_paid = self.winner_paid + 1
-      self.notify("state_changed")
-      time.sleep(self.payout_delay_secs)
+    self.credits = self.credits + amount
+    self.winner_paid = amount
 
   def place_bet(self):
     """ Place the bet and remove the amount from the credits """
@@ -93,19 +93,19 @@ class Slot_Machine(object):
     below_max_bet = self.bet < self.max_bet
     bet_is_below_credits = self.bet < self.credits
 
-    return below_max_bet and bet_is_below_credits
+    return below_max_bet and bet_is_below_credits and not self.is_spinning
 
   @property
   def can_decrease_bet(self):
     """ Do we have at least one credit? """
 
-    return self.bet > 1
+    return self.bet > 1 and not self.is_spinning
 
   @property
   def can_spin(self):
     """ Return true if there's enough credits to spin """
 
-    return self.bet <= self.credits
+    return self.bet <= self.credits and not self.is_spinning
 
   def increment_bet(self, message=None):
     """ Increment the bet by one """
@@ -135,17 +135,18 @@ class Slot_Machine(object):
     for reel in self.reels:
       reels.append(reel.spin())
 
-    spin_result = Spin_Result(reels, winner_paid=None)
+    self.spin_result = Spin_Result(reels, winner_paid=None)
 
-    return spin_result
-
-  def eval_spin(self, spin):
+  def eval_spin(self):
     """ Evaluate the spin """
 
-    winner_paid = self.payout_table.calculate_payout(spin.reels) * self.bet
+    winner_paid = self.payout_table.calculate_payout(
+        self.spin_result.reels) * self.bet
 
     # Add the winnings, if any
     if winner_paid > 0:
       self.payout(winner_paid)
 
     self.notify("spin_completed", winner_paid)
+
+    self.spin_result = None

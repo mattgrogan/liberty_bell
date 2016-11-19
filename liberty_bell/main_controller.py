@@ -49,4 +49,4 @@ class Main_Controller(object):
     self.current_item.handle_input("MENU")
 
   def run(self):
-    self.current_item.update()
+    return self.current_item.update()

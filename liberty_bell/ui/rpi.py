@@ -58,6 +58,11 @@ class Rpi_UI(object):
                                              config.display_3["spi_port"],
                                              config.display_3["spi_device"])
 
+    self.reel_displays = []
+    self.reel_displays.append(self.display_1)
+    self.reel_displays.append(self.display_2)
+    self.reel_displays.append(self.display_3)
+
     self.spin_button = Button("Spin", config.spin_pin, config.spin_led)
     self.up_button = Button("Up", config.up_pin, config.up_led)
     self.down_button = Button("Down", config.down_pin, config.down_led)
@@ -92,5 +97,5 @@ class Rpi_UI(object):
 
     while True:
       self.detect_event()
-      self.controller.run()
-      time.sleep(0.1)
+      requested_delay = self.controller.run()
+      time.sleep(requested_delay)

@@ -49,47 +49,22 @@ class Symbol(object):
         self.pix565[x][y] = color565(r, g, b)  # This is rotating the image
 
   def __str__(self):
-    """ Convert to string """
-
     return self.name
 
   def __eq__(self, other):
-    """ Check for equality """
-
     return self.name == other.name
 
-  def iterator(self):
-    """ Return an iterator """
+  def reset(self):
 
-    return Symbol_Line_Iterator(self)
-
-  def get_row(self, row_number):
-    """ Get a single row from the image """
-
-    return self.pix565[:][row_number]
-
-
-class Symbol_Line_Iterator(object):
-  """ This holds the logic for iterating through a symbols lines """
-
-  def __init__(self, symbol):
-    """ Initialize the iterator at line zero """
-
-    self._symbol = symbol
     self._current_row = 0
 
-  def has_next(self):
-    """ Is there another row? """
+  def next_line(self):
+    """ Get a single row from the image """
 
-    return self._current_row < self._symbol.height
-
-  def next(self):
-    """ Return the next row in the iteration """
-
-    if self._current_row >= self._symbol.height:
+    if self._current_row >= self.height:
       raise StopIteration()
 
-    row_data = self._symbol.pix565[:][self._current_row]
+    row_data = self.pix565[:][self._current_row]
     self._current_row = self._current_row + 1
 
     return row_data

@@ -14,6 +14,9 @@ class Slot_Machine_Menu_Item(object):
     if command == "SPIN":
       result = self.slot_machine.spin()
 
+    self.update_button_state()
+    self.update_display()
+
   def update_button_state(self):
 
     self.ui.menu_button.enabled = False
@@ -39,11 +42,27 @@ class Slot_Machine_Menu_Item(object):
   def update(self):
     """ Update one iteration of game play """
 
-    self.update_button_state()
-    self.update_display()
+    requested_delay = 0.1
 
     if self.slot_machine.is_spinning:
-      # DO ANIMATION HERE
-      self.slot_machine.eval_spin()
+      # Is the animation still running?
+      animation_running = False
+
+      for i, reel in enumerate(self.slot_machine.reels):
+        try:
+          line = reel.next_line()
+          animation_running = True
+          self.ui.reel_displays[i].write_line(line)
+          requested_delay = 0
+        except StopIteration:
+          pass
+
+      if not animation_running:
+        self.slot_machine.eval_spin()
+        self.update_button_state()
+        self.update_display()
     else:
-      pass
+      self.update_button_state()
+      self.update_display()
+
+    return requested_delay

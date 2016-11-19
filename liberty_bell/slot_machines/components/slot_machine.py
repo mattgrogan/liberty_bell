@@ -30,11 +30,6 @@ class Slot_Machine(object):
     self.randomizer = randomizer
     self.payout_table = Pay_Table()
 
-    # Set up events
-    events = ["state_changed", "spin_completed"]
-
-    self.events = {event: dict() for event in events}
-
   @property
   def is_spinning(self):
     return self.spin_result is not None
@@ -44,25 +39,6 @@ class Slot_Machine(object):
 
     reel = Reel(index=len(self.reels), stops=stops, randomizer=self.randomizer)
     self.reels.append(reel)
-
-  def register(self, event, who, callback=None):
-    """ Register for updates """
-
-    if callback is None:
-      callback = getattr(who, 'update')
-
-    self.events[event][who] = callback
-
-  def unregister(self, event, who):
-    """ Unregister for updates """
-
-    del self.events[event][who]
-
-  def notify(self, event, message=None):
-    """ Notify the subscribers for a particular event """
-
-    for subscriber, callback in self.events[event].iteritems():
-      callback(message)
 
   def payout(self, amount):
     """ Add to the credits """
@@ -81,8 +57,6 @@ class Slot_Machine(object):
     self.credits -= self.bet
 
     self.winner_paid = 0
-
-    self.notify("state_changed")
 
     return self.bet
 
@@ -114,14 +88,12 @@ class Slot_Machine(object):
 
     if attempted_bet <= self.credits and attempted_bet <= self.max_bet:
       self.bet = attempted_bet
-      self.notify("state_changed")
 
   def decrement_bet(self, message=None):
     """ Decrement the bet by one """
 
     if self.bet > 1:
       self.bet -= 1
-      self.notify("state_changed")
 
   def spin(self):
     """ Spin the reels """
@@ -133,7 +105,8 @@ class Slot_Machine(object):
 
     reels = []
     for reel in self.reels:
-      reels.append(reel.spin())
+      reel.spin()
+      reels.append(reel.winning_symbol)
 
     self.spin_result = Spin_Result(reels, winner_paid=None)
 
@@ -146,7 +119,5 @@ class Slot_Machine(object):
     # Add the winnings, if any
     if winner_paid > 0:
       self.payout(winner_paid)
-
-    self.notify("spin_completed", winner_paid)
 
     self.spin_result = None

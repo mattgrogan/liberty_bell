@@ -28,4 +28,7 @@ if __name__ == '__main__':
   liberty_bell = Slot_Machine_Menu_Item(Liberty_Bell_Machine(), ui)
   controller.add_menu_item(liberty_bell)
 
-  ui.mainloop()
+  try:
+    ui.mainloop()
+  finally:
+    ui.shutdown()

@@ -2,6 +2,7 @@ from __future__ import division
 
 import time
 
+import RPi.GPIO as gpio
 from components.button import Button
 from components.buzzer import Buzzer
 from components.numeric_display_adapter import Numeric_Display_Adapter
@@ -73,6 +74,20 @@ class Rpi_UI(object):
     self.reel3_button = Button("Btn 3", config.button3_pin, config.button3_led)
 
     self.buzzer = Buzzer(config.buzzer_pin, config.sound_enabled)
+
+  def shutdown(self):
+    """ Turn everything off """
+
+    for display in self.reel_displays:
+      display.clear()
+
+    self.menu_display.clear()
+
+    self.amount_bet_led.clear()
+    self.winner_paid_led.clear()
+    self.credits_led.clear()
+
+    gpio.cleanup()
 
   def detect_event(self):
     """ Detect button presses """

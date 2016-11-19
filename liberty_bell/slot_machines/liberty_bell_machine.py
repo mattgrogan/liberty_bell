@@ -10,14 +10,14 @@ class Liberty_Bell_Symbols(object):
     """ Initialize the symbols for this game """
 
     self.LIBERTY_BELL = Symbol(
-        name="Liberty Bell", img_path="icons/Liberty_Bell_128x128.png")
-    self.HEART = Symbol(name="Heart", img_path="./icons/Hearts_96x96-32.png")
+        name="Liberty Bell", img_path="/home/pi/github/liberty_bell/liberty_bell/icons/Liberty_Bell_128x128.png")
+    self.HEART = Symbol(name="Heart", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Hearts_96x96-32.png")
     self.DIAMOND = Symbol(
-        name="Diamond", img_path="./icons/Diamonds_96x96-32.png")
-    self.SPADE = Symbol(name="Spade", img_path="./icons/Spade_96x96-32.png")
+        name="Diamond", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Diamonds_96x96-32.png")
+    self.SPADE = Symbol(name="Spade", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Spade_96x96-32.png")
     self.HORSESHOE = Symbol(
-        name="Horseshoe", img_path="./icons/Horseshoe_96x96-32.png")
-    self.STAR = Symbol(name="Star", img_path="./icons/Star_96x96-32.png")
+        name="Horseshoe", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Horseshoe_96x96-32.png")
+    self.STAR = Symbol(name="Star", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Star_96x96-32.png")
 
 
 class Liberty_Bell_Machine(Slot_Machine):

@@ -21,6 +21,42 @@ class Slot_Machine_Menu_Item(object):
     return self.controller
 
 
+class IP_Menu_Item(object):
+  """ Shows the IP address """
+
+  def __init__(self, text, ui, menu):
+    """ Initialize """
+
+    self.text = text
+    self.ui = ui
+    self.menu = menu
+
+  def execute(self):
+    """ Show the IP Address """
+
+    import socket
+    import fcntl
+    import struct
+    import time
+
+    ifname = 'wlan0'
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    ip = socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', ifname[:15])
+    )[20:24])
+
+    self.ui.menu_display.clear()
+    self.ui.menu_display.text(ip)
+    self.ui.menu_display.display()
+
+    time.sleep(2)
+
+    return self.menu
+
+
 class Exit_Menu_Item(object):
   """ Exit the game """
 
@@ -45,9 +81,10 @@ class Menu_Controller(object):
 
     liberty_bell_item = Slot_Machine_Menu_Item(
         "Play Liberty Bell", self.ui, Liberty_Bell_Machine())
+    ip_menu_item = IP_Menu_Item("Show IP Address", self.ui, self)
     exit_item = Exit_Menu_Item()
 
-    self.menu_items = [liberty_bell_item, exit_item]
+    self.menu_items = [liberty_bell_item, ip_menu_item, exit_item]
 
     self._menu_items = itertools.cycle(self.menu_items)
     self._current_item = self._menu_items.next()

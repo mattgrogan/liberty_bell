@@ -1,6 +1,6 @@
 import ConfigParser
 
-CONFIG_FILE = "config.ini"
+CONFIG_FILE = "/home/pi/github/liberty_bell/liberty_bell/config.ini"
 
 
 class Config(object):

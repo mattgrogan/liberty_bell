@@ -64,8 +64,7 @@ class Front_Controller(object):
       self._current_prog = self.menu
     else:
       self._current_prog = self.menu.menu_pressed_handler()
-
-    self._current_prog.initialize_ui()
+      self._current_prog.initialize_ui()
 
   def start(self):
     """ Start the program """

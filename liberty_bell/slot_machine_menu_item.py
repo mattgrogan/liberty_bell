@@ -45,7 +45,7 @@ class Slot_Machine_Menu_Item(object):
   def update(self):
     """ Update one iteration of game play """
 
-    requested_delay = 0.1
+    requested_delay_ms = 100
 
     if self.slot_machine.is_spinning:
       # Is the animation still running?
@@ -56,7 +56,7 @@ class Slot_Machine_Menu_Item(object):
           line = reel.next_line()
           animation_running = True
           self.ui.reel_displays[i].write_line(line)
-          requested_delay = 0
+          requested_delay_ms = 0
         except StopIteration:
           pass
 
@@ -84,4 +84,4 @@ class Slot_Machine_Menu_Item(object):
       self.update_button_state()
       self.update_display()
 
-    return requested_delay
+    return requested_delay_ms

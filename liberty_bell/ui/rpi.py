@@ -112,5 +112,5 @@ class Rpi_UI(object):
 
     while True:
       self.detect_event()
-      requested_delay = self.controller.run()
-      time.sleep(requested_delay)
+      requested_delay_ms = self.controller.run()
+      time.sleep(requested_delay_ms / 1000.0)

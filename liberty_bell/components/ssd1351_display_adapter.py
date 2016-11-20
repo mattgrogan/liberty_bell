@@ -67,4 +67,47 @@ class SSD1351_Display_Adapter(object):
   def write_line(self, data):
     """ Add row to the display """
 
-    self._oled.write_line(data)
+    color_data = []
+
+    for pixel in data:
+      r, g, b = pixel
+      color_data.append(color565(r, g, b))
+
+    self._oled.write_line(color_data)
+
+
+def color565(red, green=None, blue=None):
+  """ Define color in 16-bit RGB565. Red and blue
+  have five bits each and green has 6 (since the
+  eye is more sensitive to green).
+
+  Bit Format: RRRR RGGG GGGB BBBB
+
+  Usage:
+  color565(red=[0,255], green=[0,255], blue=[0,255])
+  color565(0xFFE92)
+  """
+
+  if green is None and blue is None:
+        # We were passed the full value in the first argument
+    hexcolor = red
+    red = (hexcolor >> 16) & 0xFF
+    green = (hexcolor >> 8) & 0xFF
+    blue = hexcolor & 0xFF
+
+  # We have 8 bits coming in 0-255
+  # So we truncate the least significant bits
+  # until there's 5 bits for red and blue
+  # and six for green
+  red >>= 3
+  green >>= 2
+  blue >>= 3
+
+  # Now move them to the correct locations
+  red <<= 11
+  green <<= 5
+
+  # Then "or" them together
+  result = red | green | blue
+
+  return result

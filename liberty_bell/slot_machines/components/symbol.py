@@ -1,73 +1,17 @@
-import copy
-
-from PIL import Image, ImageOps
-
-SSD1351_WIDTH = 128
-SSD1351_HEIGHT = 128
-
-
 class Symbol(object):
   """ Superclass for symbols on the slot machine """
 
-  def __init__(self, name, img_path=None):
+  def __init__(self, name, image=None):
     """ Initialize the symbol """
 
     self.name = name
-    self.img_path = img_path
-    self.image = None
-    self.width = SSD1351_WIDTH
-    self.height = SSD1351_HEIGHT
-
-    self._current_row = 0  # Current row for the iterator
-
-    if self.img_path is not None:
-      # Load the image
-      self.image = Image.open(self.img_path)
-
-      # TODO: Move this out of here! Symbol should know nothing about screen size.
-      # Resize for the screen
-      # TODO: make sure the width and height and border tuples are in the correct order
-      # it might work only because we're dealing with squares
-      if self.image.size != (SSD1351_WIDTH, SSD1351_HEIGHT):
-        width_diff = SSD1351_WIDTH - self.image.size[0]
-        height_diff = SSD1351_HEIGHT - self.image.size[1]
-        border_size = (width_diff / 2, width_diff / 2,
-                       height_diff / 2, height_diff / 2)
-        self.image = ImageOps.expand(self.image, border=border_size)
-
-    # Make sure it's RGB
-    self.image = self.image.convert("RGB")
-
-    # Stash the pixels
-    pix = self.image.load()
-    w, h = self.image.size
-    self.pix565 = [[0 for x in range(w)] for y in range(h)]
-
-    for y in range(h):
-      for x in range(w):
-        r, g, b = pix[y, x]
-        self.pix565[x][y] = color565(r, g, b)  # This is rotating the image
+    self.image = image
 
   def __str__(self):
     return self.name
 
   def __eq__(self, other):
     return self.name == other.name
-
-  def reset(self):
-
-    self._current_row = 0
-
-  def next_line(self):
-    """ Get a single row from the image """
-
-    if self._current_row >= self.height:
-      raise StopIteration()
-
-    row_data = self.pix565[:][self._current_row]
-    self._current_row = self._current_row + 1
-
-    return row_data
 
 
 def color565(red, green=None, blue=None):

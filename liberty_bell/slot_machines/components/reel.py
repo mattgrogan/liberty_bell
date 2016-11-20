@@ -39,7 +39,7 @@ class Reel(object):
       self.current_stop = 0  # go around
       self.current_spin = self.current_spin + 1
 
-    self.current_symbol.reset()
+    self.current_symbol.image.reset()
 
   def spin(self):
     """ Spin the reel and return a random result """
@@ -51,12 +51,12 @@ class Reel(object):
     """ Get the next line from the symbol """
 
     try:
-      line = self.current_symbol.next_line()
+      line = self.current_symbol.image.next_line()
     except StopIteration:
       if self.current_symbol == self.winning_symbol and self.current_spin >= self.min_spins:
         raise StopIteration  # reached the end
       else:
         self.advance()
-        line = self.current_symbol.next_line()
+        line = self.current_symbol.image.next_line()
 
     return line

@@ -22,15 +22,14 @@ class GUI_1351(tk.Label, object):
   def update_image(self):
     """ Write image to the screen """
 
-    try:
-      tkimage = ImageTk.PhotoImage(self._image)
+    tkimage = ImageTk.PhotoImage(self._image)
 
-      self.image = tkimage
-      self.configure(image=tkimage)
-      self.update()
-    except RuntimeError:
-      # this throws error if you close the window while animation is running.
-      pass
+    self.image = tkimage
+    self.configure(image=tkimage)
+    self.update()
+    # except RuntimeError:
+    # this throws error if you close the window while animation is running.
+    # pass
 
   def write_line(self, line):
 

@@ -1,8 +1,12 @@
-import os
+import os.path as p
+
 from components.payline import Payline
 from components.slot_machine import Slot_Machine
 from components.symbol import Symbol
+from components.symbol_image import Symbol_Image
 
+HEIGHT = 128
+WIDTH = 128
 
 
 class Liberty_Bell_Symbols(object):
@@ -11,21 +15,29 @@ class Liberty_Bell_Symbols(object):
   def __init__(self):
     """ Initialize the symbols for this game """
 
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+    current_dir = p.dirname(p.abspath(__file__))
+    icon_dir = p.normpath(p.join(current_dir, "../icons"))
 
-    bell = os.path.normpath(os.path.join(current_dir, "../icons/Liberty_Bell_128x128.png"))
-    heart = os.path.normpath(os.path.join(current_dir, "../icons/Hearts_96x96-32.png"))
-    diamond = os.path.normpath(os.path.join(current_dir, "../icons/Diamonds_96x96-32.png"))
-    spade = os.path.normpath(os.path.join(current_dir, "../icons/Spade_96x96-32.png"))
-    horseshoe = os.path.normpath(os.path.join(current_dir, "../icons/Horseshoe_96x96-32.png"))
-    star = os.path.normpath(os.path.join(current_dir, "../icons/Star_96x96-32.png"))
+    bell_path = p.join(icon_dir, "Liberty_Bell_128x128.png")
+    heart_path = p.join(icon_dir, "Hearts_96x96-32.png")
+    diamond_path = p.join(icon_dir, "Diamonds_96x96-32.png")
+    spade_path = p.join(icon_dir, "Spade_96x96-32.png")
+    horseshoe_path = p.join(icon_dir, "Horseshoe_96x96-32.png")
+    star_path = p.join(icon_dir, "Star_96x96-32.png")
 
-    self.LIBERTY_BELL = Symbol(name="Liberty Bell", img_path=bell)
-    self.HEART = Symbol(name="Heart", img_path=heart)
-    self.DIAMOND = Symbol(name="Diamond", img_path=diamond)
-    self.SPADE = Symbol(name="Spade", img_path=spade)
-    self.HORSESHOE = Symbol(name="Horseshoe", img_path=horseshoe)
-    self.STAR = Symbol(name="Star", img_path=star)
+    bell = Symbol_Image(bell_path, WIDTH, HEIGHT)
+    heart = Symbol_Image(heart_path, WIDTH, HEIGHT)
+    diamond = Symbol_Image(diamond_path, WIDTH, HEIGHT)
+    spade = Symbol_Image(spade_path, WIDTH, HEIGHT)
+    horseshoe = Symbol_Image(horseshoe_path, WIDTH, HEIGHT)
+    star = Symbol_Image(star_path, WIDTH, HEIGHT)
+
+    self.LIBERTY_BELL = Symbol(name="Liberty Bell", image=bell)
+    self.HEART = Symbol(name="Heart", image=heart)
+    self.DIAMOND = Symbol(name="Diamond", image=diamond)
+    self.SPADE = Symbol(name="Spade", image=spade)
+    self.HORSESHOE = Symbol(name="Horseshoe", image=horseshoe)
+    self.STAR = Symbol(name="Star", image=star)
 
 
 class Liberty_Bell_Machine(Slot_Machine):

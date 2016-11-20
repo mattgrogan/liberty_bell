@@ -1,6 +1,8 @@
+import os
 from components.payline import Payline
 from components.slot_machine import Slot_Machine
 from components.symbol import Symbol
+
 
 
 class Liberty_Bell_Symbols(object):
@@ -9,18 +11,21 @@ class Liberty_Bell_Symbols(object):
   def __init__(self):
     """ Initialize the symbols for this game """
 
-    self.LIBERTY_BELL = Symbol(
-        name="Liberty Bell", img_path="/home/pi/github/liberty_bell/liberty_bell/icons/Liberty_Bell_128x128.png")
-    self.HEART = Symbol(
-        name="Heart", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Hearts_96x96-32.png")
-    self.DIAMOND = Symbol(
-        name="Diamond", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Diamonds_96x96-32.png")
-    self.SPADE = Symbol(
-        name="Spade", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Spade_96x96-32.png")
-    self.HORSESHOE = Symbol(
-        name="Horseshoe", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Horseshoe_96x96-32.png")
-    self.STAR = Symbol(
-        name="Star", img_path="/home/pi/github/liberty_bell/liberty_bell//icons/Star_96x96-32.png")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    bell = os.path.normpath(os.path.join(current_dir, "../icons/Liberty_Bell_128x128.png"))
+    heart = os.path.normpath(os.path.join(current_dir, "../icons/Hearts_96x96-32.png"))
+    diamond = os.path.normpath(os.path.join(current_dir, "../icons/Diamonds_96x96-32.png"))
+    spade = os.path.normpath(os.path.join(current_dir, "../icons/Spade_96x96-32.png"))
+    horseshoe = os.path.normpath(os.path.join(current_dir, "../icons/Horseshoe_96x96-32.png"))
+    star = os.path.normpath(os.path.join(current_dir, "../icons/Star_96x96-32.png"))
+
+    self.LIBERTY_BELL = Symbol(name="Liberty Bell", img_path=bell)
+    self.HEART = Symbol(name="Heart", img_path=heart)
+    self.DIAMOND = Symbol(name="Diamond", img_path=diamond)
+    self.SPADE = Symbol(name="Spade", img_path=spade)
+    self.HORSESHOE = Symbol(name="Horseshoe", img_path=horseshoe)
+    self.STAR = Symbol(name="Star", img_path=star)
 
 
 class Liberty_Bell_Machine(Slot_Machine):

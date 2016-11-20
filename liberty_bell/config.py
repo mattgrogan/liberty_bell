@@ -1,6 +1,8 @@
 import ConfigParser
+import os
 
-CONFIG_FILE = "/home/pi/github/liberty_bell/liberty_bell/config.ini"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = os.path.normpath(os.path.join(current_dir, "config.ini"))
 
 
 class Config(object):

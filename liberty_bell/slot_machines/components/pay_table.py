@@ -18,10 +18,8 @@ class Pay_Table(object):
     i = 0
     winning_payout = 0
 
-    while winning_payout == 0 and i < len(self.payouts):
-      payout = self.payouts[i]
-      if payout.is_match(symbols):
+    for payout in self.payouts:
+      if payout.is_match(symbols) and payout.winner_paid > winning_payout:
         winning_payout = payout.winner_paid
-      i = i + 1
 
     return winning_payout

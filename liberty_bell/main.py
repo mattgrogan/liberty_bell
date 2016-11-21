@@ -29,7 +29,7 @@ if __name__ == '__main__':
   liberty_bell = Slot_Machine_Menu_Item(Liberty_Bell_Machine(), ui)
   gold_award = Slot_Machine_Menu_Item(Gold_Award_Machine(), ui)
 
-  controller.add_menu_item(liberty_bell)
+  controller.add_menu_item(gold_award)
 
   try:
     ui.mainloop()

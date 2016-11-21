@@ -26,7 +26,7 @@ class Symbol_Image(object):
     # Resize the image if necessary
     if self.image.size != (self.width, self.height):
       wb = (self.width - self.image.size[0]) / 2
-      hb = (self.height - self.image.size[0]) / 2
+      hb = (self.height - self.image.size[1]) / 2
       border_size = (wb, wb, hb, hb)
       self.image = ImageOps.expand(self.image, border=border_size)
 

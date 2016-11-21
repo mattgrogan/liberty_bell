@@ -3,7 +3,7 @@ import os.path as p
 from components.payline import Payline
 from components.slot_machine import Slot_Machine
 from components.symbol import Symbol
-from components.symbol_image import Symbol_Image
+from components.symbol_image_w import Symbol_Image_W
 
 HEIGHT = 128
 WIDTH = 128
@@ -18,19 +18,19 @@ class Liberty_Bell_Symbols(object):
     current_dir = p.dirname(p.abspath(__file__))
     icon_dir = p.normpath(p.join(current_dir, "../icons"))
 
-    bell_path = p.join(icon_dir, "Liberty_Bell_128x128.png")
+    bell_path = p.join(icon_dir, "Liberty_Bell.png")
     heart_path = p.join(icon_dir, "Hearts_96x96-32.png")
     diamond_path = p.join(icon_dir, "Diamonds_96x96-32.png")
     spade_path = p.join(icon_dir, "Spade_96x96-32.png")
     horseshoe_path = p.join(icon_dir, "Horseshoe_96x96-32.png")
     star_path = p.join(icon_dir, "Star_96x96-32.png")
 
-    bell = Symbol_Image(bell_path, WIDTH, HEIGHT)
-    heart = Symbol_Image(heart_path, WIDTH, HEIGHT)
-    diamond = Symbol_Image(diamond_path, WIDTH, HEIGHT)
-    spade = Symbol_Image(spade_path, WIDTH, HEIGHT)
-    horseshoe = Symbol_Image(horseshoe_path, WIDTH, HEIGHT)
-    star = Symbol_Image(star_path, WIDTH, HEIGHT)
+    bell = Symbol_Image_W(bell_path, WIDTH, HEIGHT)
+    heart = Symbol_Image_W(heart_path, WIDTH, HEIGHT)
+    diamond = Symbol_Image_W(diamond_path, WIDTH, HEIGHT)
+    spade = Symbol_Image_W(spade_path, WIDTH, HEIGHT)
+    horseshoe = Symbol_Image_W(horseshoe_path, WIDTH, HEIGHT)
+    star = Symbol_Image_W(star_path, WIDTH, HEIGHT)
 
     self.LIBERTY_BELL = Symbol(name="Liberty Bell", image=bell)
     self.HEART = Symbol(name="Heart", image=heart)

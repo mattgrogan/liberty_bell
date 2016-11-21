@@ -27,9 +27,6 @@ class GUI_1351(tk.Label, object):
     self.image = tkimage
     self.configure(image=tkimage)
     self.update()
-    # except RuntimeError:
-    # this throws error if you close the window while animation is running.
-    # pass
 
   def write_line(self, line):
 

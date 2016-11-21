@@ -8,6 +8,10 @@ class Slot_Machine_Menu_Item(object):
     self.ui = ui
     self.slot_machine = slot_machine
 
+  @property
+  def name(self):
+    return self.slot_machine.name
+
   def handle_input(self, command):
 
     if command == "UP":
@@ -22,7 +26,7 @@ class Slot_Machine_Menu_Item(object):
 
   def update_button_state(self):
 
-    self.ui.menu_button.enabled = False
+    self.ui.menu_button.enabled = self.slot_machine.can_spin
 
     self.ui.spin_button.enabled = self.slot_machine.can_spin
     self.ui.up_button.enabled = self.slot_machine.can_increase_bet
@@ -41,6 +45,15 @@ class Slot_Machine_Menu_Item(object):
       self.ui.winner_paid_led.display(self.slot_machine.winner_paid)
     else:
       self.ui.winner_paid_led.clear()
+
+  def stop(self):
+
+    for display in self.ui.reel_displays:
+      display.clear()
+
+    self.ui.amount_bet_led.clear()
+    self.ui.winner_paid_led.clear()
+    self.ui.credits_led.clear()
 
   def update(self):
     """ Update one iteration of game play """

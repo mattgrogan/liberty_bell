@@ -3,6 +3,7 @@ import Tkinter as tk
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
 
+from components.gui_1306 import GUI_1306
 from components.gui_1351 import GUI_1351
 from components.gui_button import GUI_Button
 from components.gui_buzzer import GUI_Buzzer
@@ -59,6 +60,8 @@ class Gui(tk.Tk):
     for i, disp in enumerate(self.reel_displays):
       disp.grid(row=0, column=i)
 
+    self.menu_display = GUI_1306(frame)
+
     self.spin_button = GUI_Button(
         "Spin", frame, text="Spin", command=self.controller.handle_spin)
     self.up_button = GUI_Button(
@@ -79,6 +82,7 @@ class Gui(tk.Tk):
     self.up_button.grid(row=0, column=3)
     self.down_button.grid(row=0, column=2)
     self.menu_button.grid(row=0, column=1)
+    self.menu_display.grid(row=0, column=0)
 
     self.reel1_button.grid(row=1, column=0)
     self.reel2_button.grid(row=1, column=1)

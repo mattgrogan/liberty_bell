@@ -19,6 +19,10 @@ class GUI_1351(tk.Label, object):
 
     self.update_image()
 
+  def clear(self):
+    self._image = Image.new("RGB", (self.width, self.height), color="#000000")
+    self.update_image()
+
   def update_image(self):
     """ Write image to the screen """
 

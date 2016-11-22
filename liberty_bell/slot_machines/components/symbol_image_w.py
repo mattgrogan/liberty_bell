@@ -21,10 +21,10 @@ class Symbol_Image_W(object):
   def load_image(self):
     """ Load the image from the file """
 
-    try:
-      png = Image.open(self.path)
-    except:
-      png = Image.new("RGB", (self.width, self.height), "#FF0000")
+    #try:
+    png = Image.open(self.path)
+    #except:
+    #  png = Image.new("RGB", (self.width, self.height), "#FF0000")
 
     if png.mode == "RGBA":
       # Fill the alpha channel with white

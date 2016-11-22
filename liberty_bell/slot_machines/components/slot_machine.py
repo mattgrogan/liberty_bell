@@ -1,11 +1,11 @@
 import random
 import time
 
-from config import Config
-from pay_table import Pay_Table
-from payline import Payline
-from reel import Reel
-from spin_result import Spin_Result
+from liberty_bell.config import Config
+from liberty_bell.slot_machines.components.pay_table import Pay_Table
+from liberty_bell.slot_machines.components.payline import Payline
+from liberty_bell.slot_machines.components.reel import Reel
+from liberty_bell.slot_machines.components.spin_result import Spin_Result
 
 
 class Slot_Machine(object):

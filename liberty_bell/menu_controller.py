@@ -1,5 +1,3 @@
-
-
 class Menu_Controller(object):
 
   def __init__(self, ui):

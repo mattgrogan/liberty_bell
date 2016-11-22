@@ -3,12 +3,15 @@ from __future__ import division
 import time
 
 import RPi.GPIO as gpio
-from components.button import Button
-from components.buzzer import Buzzer
-from components.numeric_display_adapter import Numeric_Display_Adapter
-from components.ssd1306_display_adapter import SSD1306_Display_Adapter
-from components.ssd1351_display_adapter import SSD1351_Display_Adapter
-from config import Config
+from liberty_bell.components.button import Button
+from liberty_bell.components.buzzer import Buzzer
+from liberty_bell.components.numeric_display_adapter import \
+    Numeric_Display_Adapter
+from liberty_bell.components.ssd1306_display_adapter import \
+    SSD1306_Display_Adapter
+from liberty_bell.components.ssd1351_display_adapter import \
+    SSD1351_Display_Adapter
+from liberty_bell.config import Config
 
 
 class Rpi_UI(object):

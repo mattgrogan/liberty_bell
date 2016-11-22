@@ -1,9 +1,9 @@
 import os.path as p
 
-from components.payline import Payline
-from components.slot_machine import Slot_Machine
-from components.symbol import Symbol
-from components.symbol_image_w import Symbol_Image_W
+from liberty_bell.slot_machines.components.payline import Payline
+from liberty_bell.slot_machines.components.slot_machine import Slot_Machine
+from liberty_bell.slot_machines.components.symbol import Symbol
+from liberty_bell.slot_machines.components.symbol_image_w import Symbol_Image_W
 
 HEIGHT = 128
 WIDTH = 128
@@ -16,15 +16,15 @@ class Gold_Award_Symbols(object):
     """ Initialize the symbols for this game """
 
     current_dir = p.dirname(p.abspath(__file__))
-    icon_dir = p.normpath(p.join(current_dir, "../icons"))
+    icon_dir = p.normpath(p.join(current_dir, "../icons/"))
 
-    lemon_path = p.join(icon_dir, "lemon_96x96-32.png")
-    cherry_path = p.join(icon_dir, "cherry_96x96-32.png")
-    orange_path = p.join(icon_dir, "orange_96x96-32.png")
-    plum_path = p.join(icon_dir, "plum_96x96-32.png")
-    bell_path = p.join(icon_dir, "bell_96x96-32.png")
-    gold_path = p.join(icon_dir, "gold bar_96x96-32.png")
-    bar_path = p.join(icon_dir, "bar_96x96-32.png")
+    lemon_path = p.join(icon_dir, "Lemon_96x96-32.png")
+    cherry_path = p.join(icon_dir, "Cherry_96x96-32.png")
+    orange_path = p.join(icon_dir, "Orange_96x96-32.png")
+    plum_path = p.join(icon_dir, "Plum_96x96-32.png")
+    bell_path = p.join(icon_dir, "Bell_96x96-32.png")
+    gold_path = p.join(icon_dir, "Gold Bar_96x96-32.png")
+    bar_path = p.join(icon_dir, "Bar_96x96-32.png")
 
     lemon = Symbol_Image_W(lemon_path, WIDTH, HEIGHT)
     cherry = Symbol_Image_W(cherry_path, WIDTH, HEIGHT)

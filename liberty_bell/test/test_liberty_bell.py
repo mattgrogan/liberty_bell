@@ -2,16 +2,16 @@ from __future__ import print_function
 
 import pytest
 
-import liberty_bell
-from liberty_bell.mock import Mock_Observer, Mock_Random
+from liberty_bell.slot_machines.liberty_bell_machine import (Liberty_Bell_Machine,
+                                                             Liberty_Bell_Symbols)
 
-symbols = liberty_bell.Liberty_Bell_Symbols()
+symbols = Liberty_Bell_Symbols()
 
 
 def test_liberty_bell_machine():
 
   # Create the machine
-  slot = liberty_bell.Liberty_Bell_Machine()
+  slot = Liberty_Bell_Machine()
 
   payout_table = slot.payout_table
 

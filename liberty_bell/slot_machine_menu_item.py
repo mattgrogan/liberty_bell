@@ -24,6 +24,9 @@ class Slot_Machine_Menu_Item(object):
     self.update_button_state()
     self.update_display()
 
+  def handle_menu(self):
+    return None
+
   def update_button_state(self):
 
     self.ui.menu_button.enabled = self.slot_machine.can_spin
@@ -45,6 +48,10 @@ class Slot_Machine_Menu_Item(object):
       self.ui.winner_paid_led.display(self.slot_machine.winner_paid)
     else:
       self.ui.winner_paid_led.clear()
+
+  def start(self):
+    self.update_button_state()
+    self.update_display()
 
   def stop(self):
 

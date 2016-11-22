@@ -5,7 +5,10 @@ import sys
 import pytest
 
 from liberty_bell.main_controller import Main_Controller
+from liberty_bell.mock import Mock_Observer, Mock_Random
 from liberty_bell.slot_machine_menu_item import Slot_Machine_Menu_Item
+from liberty_bell.slot_machines.components.payline import Payline
+from liberty_bell.slot_machines.components.symbol import Symbol
 from liberty_bell.slot_machines.gold_award_machine import Gold_Award_Machine
 from liberty_bell.slot_machines.liberty_bell_machine import (Liberty_Bell_Machine,
                                                              Slot_Machine)
@@ -20,9 +23,9 @@ def test_slot_machine():
   assert slot_machine.name == "Slot Machine"
 
   # Test initialization
-  slot_machine.initialize(credits=15, bet=1)
-  assert slot_machine.credits == 15
-  assert slot_machine.bet == 1
+  slot_machine.credits == 15
+  slot_machine.bet == 1
+  slot_machine.max_bet = 10
 
   # Test spin with no reels
   with pytest.raises(Exception):
@@ -44,26 +47,15 @@ def test_slot_machine():
   assert slot_machine.bet == 1
 
   # Test that you cannot bet more than your credits
-  slot_machine.initialize(credits=2)
-  slot_machine.increment_bet()
-  with pytest.raises(ValueError):
-    slot_machine.increment_bet()
-
-  # Test that the bet change event is fired
-  mock_increment = mock.Mock_Observer()
-  slot_machine.initialize(credits=100, bet=1)
-  slot_machine.register(Events.BET_CHANGED,
-                        mock_increment, mock_increment.observe)
-
-  assert mock_increment.fired == False
-  slot_machine.increment_bet()
-  assert mock_increment.fired == True
-  assert mock_increment.message == 2
+  slot_machine.credits = 2
+  slot_machine.increment_bet()  # bet=2
+  slot_machine.increment_bet()  # bet=3 (nope!)
+  assert slot_machine.bet == 2
 
 
 def test_machine_betting():
 
-  mock_random = mock.Mock_Random()
+  mock_random = Mock_Random()
   slot_machine = Slot_Machine(randomizer=mock_random)
 
   symbols = []
@@ -74,60 +66,18 @@ def test_machine_betting():
 
   reels = []
   for j in range(3):
-    slot_machine.add_reel("Reel %i" % j, symbols)
+    slot_machine.add_reel(symbols)
 
   assert len(slot_machine.reels) == 3
-
-  # Don't forget we have to initialize and put some money in!
-  with pytest.raises(AssertionError):
-    spin_result = slot_machine.spin()
-
-  # Set up the observers
-  observe_credits = mock.Mock_Observer()
-  slot_machine.register(Events.CREDITS_CHANGED,
-                        observe_credits, observe_credits.observe)
-  observe_payout = mock.Mock_Observer()
-  slot_machine.register(Events.PAYOUT,
-                        observe_payout, observe_payout.observe)
-  observe_place_bet = mock.Mock_Observer()
-  slot_machine.register(Events.PLACE_BET,
-                        observe_place_bet, observe_place_bet.observe)
-
-  slot_machine.initialize(credits=100, bet=1)
-  assert observe_credits.fired == True
-  observe_credits.reset()
-  assert observe_payout.fired == False
-  assert observe_place_bet.fired == False
-
-  spin_result = slot_machine.spin()
-  assert slot_machine.credits == 99
-  assert spin_result.winner_paid == 0
-
-  # Events
-  assert observe_credits.fired == True
-  assert observe_credits.message == 99
-  assert observe_payout.fired == False
-  assert observe_place_bet.fired == True
-  assert observe_place_bet.message == 1
-
-  observe_credits.reset()
-  observe_payout.reset()
-  observe_place_bet.reset()
-
-  slot_machine.increment_bet()
-  spin_result == slot_machine.spin()
-  assert slot_machine.credits == 97
-
-  assert observe_place_bet.fired == True
-  assert observe_place_bet.message == 2
 
 
 def test_reel():
 
   # The reels will move through this sequence of stops
-  mock_random = mock.Mock_Random(sequence=[0, 1, 0, 2])
+  mock_random = Mock_Random(sequence=[0, 1, 0, 2])
   slot_machine = Slot_Machine(randomizer=mock_random)
-  slot_machine.initialize(credits=100, bet=1)
+  slot_machine.credits = 100
+  slot_machine.bet = 1
 
   symbols = []
   for i in range(3):
@@ -135,21 +85,21 @@ def test_reel():
 
   reels = []
   for j in range(3):
-    slot_machine.add_reel("Reel %i" % j, symbols)
+    slot_machine.add_reel(symbols)
 
   assert len(slot_machine.reels[0].stops) == 3
   assert len(slot_machine.reels[1].stops) == 3
   assert len(slot_machine.reels[2].stops) == 3
 
-  spin_result = slot_machine.spin()
-  assert spin_result.reels[0] == symbols[0]
-  assert spin_result.reels[1] == symbols[1]
-  assert spin_result.reels[2] == symbols[0]
+  slot_machine.spin()
+  assert slot_machine.spin_result.reels[0] == symbols[0]
+  assert slot_machine.spin_result.reels[1] == symbols[1]
+  assert slot_machine.spin_result.reels[2] == symbols[0]
 
-  spin_result = slot_machine.spin()
-  assert spin_result.reels[0] == symbols[2]
-  assert spin_result.reels[1] == symbols[0]
-  assert spin_result.reels[2] == symbols[1]
+  slot_machine.spin()
+  assert slot_machine.spin_result.reels[0] == symbols[2]
+  assert slot_machine.spin_result.reels[1] == symbols[0]
+  assert slot_machine.spin_result.reels[2] == symbols[1]
 
 
 def test_payout():
@@ -163,9 +113,10 @@ def test_payout():
                  2, 2, 2,
                  ]
 
-  mock_random = mock.Mock_Random(sequence=winning_seq)
+  mock_random = Mock_Random(sequence=winning_seq)
   slot_machine = Slot_Machine(randomizer=mock_random)
-  slot_machine.initialize(credits=100, bet=1)
+  slot_machine.credits = 100
+  slot_machine.bet = 1
 
   symbols = []
   for i in range(3):
@@ -173,18 +124,7 @@ def test_payout():
 
   reels = []
   for j in range(3):
-    slot_machine.add_reel("Reel %i" % j, symbols)
-
-  # Set up the observers
-  observe_credits = mock.Mock_Observer()
-  slot_machine.register(Events.CREDITS_CHANGED,
-                        observe_credits, observe_credits.observe)
-  observe_payout = mock.Mock_Observer()
-  slot_machine.register(Events.PAYOUT,
-                        observe_payout, observe_payout.observe)
-  observe_place_bet = mock.Mock_Observer()
-  slot_machine.register(Events.PLACE_BET,
-                        observe_place_bet, observe_place_bet.observe)
+    slot_machine.add_reel(symbols)
 
   # Add paylines
   # First symbol, three times, pays three
@@ -200,14 +140,11 @@ def test_payout():
   expected_credits = 100
 
   for result in expected_results:
-    spin_result = slot_machine.spin()
-    assert spin_result.winner_paid == result
+    slot_machine.spin()
+    slot_machine.eval_spin()
+    assert slot_machine.winner_paid == result
     expected_credits = expected_credits - 1 + result
-    # Check events
     assert slot_machine.credits == expected_credits
-    assert observe_payout.fired == True
-    assert observe_payout.message == result
-    observe_payout.reset()
 
 
 def test_losing_paylines():
@@ -221,9 +158,10 @@ def test_losing_paylines():
                 2, 1, 1,
                 ]
 
-  mock_random = mock.Mock_Random(sequence=losing_seq)
+  mock_random = Mock_Random(sequence=losing_seq)
   slot_machine = Slot_Machine(randomizer=mock_random)
-  slot_machine.initialize(credits=100, bet=1)
+  slot_machine.credits = 100
+  slot_machine.bet = 1
 
   symbols = []
   for i in range(3):
@@ -231,103 +169,4 @@ def test_losing_paylines():
 
   reels = []
   for j in range(3):
-    slot_machine.add_reel("Reel %i" % j, symbols)
-
-  # Set up the observers
-  observe_credits = mock.Mock_Observer()
-  slot_machine.register(Events.CREDITS_CHANGED,
-                        observe_credits, observe_credits.observe)
-  observe_payout = mock.Mock_Observer()
-  slot_machine.register(Events.PAYOUT,
-                        observe_payout, observe_payout.observe)
-  observe_place_bet = mock.Mock_Observer()
-  slot_machine.register(Events.PLACE_BET,
-                        observe_place_bet, observe_place_bet.observe)
-
-  # Add paylines
-  # First symbol, three times, pays three
-  slot_machine.payout_table.append(Payline({symbols[0]: 3}, 3))
-
-  # Second symbol, three times, pays two
-  slot_machine.payout_table.append(Payline({symbols[1]: 3}, 2))
-
-  # Third symbol, three times, pays one
-  slot_machine.payout_table.append(Payline({symbols[2]: 2}, 1))
-
-  expected_credits = 100
-
-  for i in range(len(losing_seq) / 3):
-    spin_result = slot_machine.spin()
-    assert spin_result.winner_paid == 0
-    expected_credits = expected_credits - 1
-    assert slot_machine.credits == expected_credits
-
-    # Check events
-    assert observe_payout.fired == False
-    assert observe_credits.fired == True
-    assert observe_place_bet.fired == True
-    observe_payout.reset()
-    observe_credits.reset()
-    observe_place_bet.reset()
-
-
-def test_ui():
-
-  ui = Slot_UI()
-
-  observe_spin = mock.Mock_Observer()
-  ui.register(Events.SPIN,
-              observe_spin, observe_spin.observe)
-
-  observe_increment_bet = mock.Mock_Observer()
-  ui.register(Events.INCREMENT_BET,
-              observe_increment_bet, observe_increment_bet.observe)
-
-  observe_decrement_bet = mock.Mock_Observer()
-  ui.register(Events.DECREMENT_BET,
-              observe_decrement_bet, observe_decrement_bet.observe)
-
-  ui.on_spin_press()
-
-  assert observe_spin.fired == True
-  assert observe_increment_bet.fired == False
-  assert observe_decrement_bet.fired == False
-
-  observe_spin.reset()
-  observe_increment_bet.reset()
-  observe_decrement_bet.reset()
-
-  ui.on_decrement_bet_press()
-
-  assert observe_spin.fired == False
-  assert observe_increment_bet.fired == False
-  assert observe_decrement_bet.fired == True
-
-  observe_spin.reset()
-  observe_increment_bet.reset()
-  observe_decrement_bet.reset()
-
-  ui.on_increment_bet_press()
-
-  assert observe_spin.fired == False
-  assert observe_increment_bet.fired == True
-  assert observe_decrement_bet.fired == False
-
-  observe_spin.reset()
-  observe_increment_bet.reset()
-  observe_decrement_bet.reset()
-
-
-def test_line_scroller():
-  slot_machine = slot_machines.Liberty_Bell_Machine()
-  winning_symbol = slot_machine.symbols.LIBERTY_BELL
-
-  for reel in range(len(slot_machine.reels)):
-    slot_machine.reels[reel].reset(required_spins=((reel + 1) ** 2))
-
-  scroller = slot_machine.reels[0].get_scroller(winning_symbol)
-
-  for scroll in scroller:
-    print(scroller.slot_reel.get_current_symbol())
-
-  assert False
+    slot_machine.add_reel(symbols)

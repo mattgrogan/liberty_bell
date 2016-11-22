@@ -1,41 +1,13 @@
+from liberty_bell.menu import Menu
 
 
-class Option_Controller(object):
+class Option_Controller(Menu):
 
-  def __init__(self, parent, ui):
+  def __init__(self, parent, ui, *args, **kwargs):
+    super(Option_Controller, self).__init__(*args, **kwargs)
 
     self.parent = parent
     self.ui = ui
-
-    self._options = []
-    self._options_dict = {}
-
-    self._current_index = 0
-
-  @property
-  def current_item(self):
-
-    if len(self._options) == 0:
-      raise ValueError("You must add menu items to the controller")
-    else:
-      return self._options[self._current_index]
-
-  def move(self, step=1):
-
-    self._current_index += step
-
-    if self._current_index >= len(self._options):
-      self._current_index = 0
-    elif self._current_index < 0:
-      self._current_index = len(self._options) - 1
-
-  def append(self, option):
-    option.parent = self
-    self._options.append(option)
-    self._options_dict[option.name] = option
-
-  def __getitem__(self, key):
-    return self._options_dict[key]
 
   def start(self):
 

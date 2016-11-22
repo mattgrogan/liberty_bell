@@ -28,8 +28,11 @@ class GUI_1306(tk.Label, object):
 
     self.update_image()
 
-  def clear(self):
+  def blank(self):
     self._image = Image.new("RGB", (self.width, self.height), color="#000000")
+
+  def clear(self):
+    self.blank()
     self.update_image()
 
   def update_image(self):

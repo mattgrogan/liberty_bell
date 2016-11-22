@@ -1,4 +1,7 @@
 import time
+from itertools import cycle
+
+from liberty_bell.option_toggle import Option_Toggle
 
 
 class Slot_Machine_Menu_Item(object):
@@ -7,6 +10,14 @@ class Slot_Machine_Menu_Item(object):
 
     self.ui = ui
     self.slot_machine = slot_machine
+
+    # Create game play options
+    self.autoplay = Option_Toggle("Autoplay", self, self.ui, False)
+    self.return_to_game = self
+
+    option_items = [self.autoplay, self.return_to_game]
+
+    self.options = cycle(option_items)
 
   @property
   def name(self):
@@ -25,7 +36,7 @@ class Slot_Machine_Menu_Item(object):
     self.update_display()
 
   def handle_menu(self):
-    return None
+    return next(self.options)
 
   def update_button_state(self):
 
@@ -103,5 +114,9 @@ class Slot_Machine_Menu_Item(object):
     else:
       self.update_button_state()
       self.update_display()
+
+      if self.autoplay.value:
+        # TODO: Give a pause and allow player to enter the menu again
+        self.handle_input("SPIN")
 
     return requested_delay_ms

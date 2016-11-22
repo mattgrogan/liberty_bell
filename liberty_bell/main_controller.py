@@ -64,6 +64,7 @@ class Main_Controller(object):
     if menu_item is not None:
       self.current_item.stop()
       self.current_item = menu_item
+      self.current_item.start()
     else:
       self.current_item.stop()
       self.move()

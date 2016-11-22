@@ -1,7 +1,7 @@
 import itertools
 
-from slot_game_controller import Slot_Game_Controller
-from slot_machines import Liberty_Bell_Machine
+from liberty_bell.slot_game_controller import Slot_Game_Controller
+from liberty_bell.slot_machines import Liberty_Bell_Machine
 
 
 class Slot_Machine_Menu_Item(object):

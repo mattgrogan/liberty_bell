@@ -3,11 +3,11 @@ import Tkinter as tk
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
 
-from components.gui_1306 import GUI_1306
-from components.gui_1351 import GUI_1351
-from components.gui_button import GUI_Button
-from components.gui_buzzer import GUI_Buzzer
-from components.gui_numeric_display import GUI_Numeric_Display
+from liberty_bell.components.gui_1306 import GUI_1306
+from liberty_bell.components.gui_1351 import GUI_1351
+from liberty_bell.components.gui_button import GUI_Button
+from liberty_bell.components.gui_buzzer import GUI_Buzzer
+from liberty_bell.components.gui_numeric_display import GUI_Numeric_Display
 
 
 class Gui(tk.Tk):

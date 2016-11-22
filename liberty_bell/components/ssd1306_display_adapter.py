@@ -4,7 +4,7 @@ import time
 
 from PIL import Image, ImageDraw, ImageFont
 
-from ssd1306_display import SSD1306_Display
+from liberty_bell.components.ssd1306_display import SSD1306_Display
 
 dir = os.path.dirname(__file__)
 #FONT_PATH = os.path.join(dir, '../fonts/VCR_OSD_MONO_1.001.ttf')

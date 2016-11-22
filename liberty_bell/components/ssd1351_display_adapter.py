@@ -1,7 +1,7 @@
 """ This module holds code for all displays """
 import time
 
-from ssd1351_display import SSD1351_Display
+from liberty_bell.components.ssd1351_display import SSD1351_Display
 
 
 class SSD1351_Display_Adapter(object):

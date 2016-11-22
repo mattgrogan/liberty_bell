@@ -1,9 +1,9 @@
 import os.path as p
 
-from components.payline import Payline
-from components.slot_machine import Slot_Machine
-from components.symbol import Symbol
-from components.symbol_image_w import Symbol_Image_W
+from liberty_bell.slot_machines.components.payline import Payline
+from liberty_bell.slot_machines.components.slot_machine import Slot_Machine
+from liberty_bell.slot_machines.components.symbol import Symbol
+from liberty_bell.slot_machines.components.symbol_image_w import Symbol_Image_W
 
 HEIGHT = 128
 WIDTH = 128

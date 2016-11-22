@@ -1,16 +1,17 @@
 class Option_Toggle(object):
 
-  def __init__(self, name, parent, ui, default):
+  def __init__(self, name, ui, default):
 
     self.name = name
-    self.parent = parent
+    self.parent = None
     self.ui = ui
     self.value = default
+    self.has_options = True
 
   def start(self):
 
     self.ui.menu_button.enabled = True
-    self.ui.spin_button.enabled = False
+    self.ui.spin_button.enabled = True
     self.ui.up_button.enabled = True
     self.ui.down_button.enabled = True
 
@@ -36,10 +37,9 @@ class Option_Toggle(object):
   def handle_input(self, command):
     if command in ["UP", "DOWN"]:
       self.toggle()
-
-  def handle_menu(self):
-    # Delegate back to parent
-    return self.parent.handle_menu()
+      return self
+    if command in ["MENU", "SPIN"]:
+      return self.parent
 
   def update(self):
     self.update_display()

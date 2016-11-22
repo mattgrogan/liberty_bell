@@ -28,6 +28,8 @@ class Main_Controller(object):
 
   def move(self, step=1):
 
+    self.current_item.stop()
+
     self._current_index += step
 
     if self._current_index >= len(self.menu_items):
@@ -37,38 +39,40 @@ class Main_Controller(object):
 
     self._current_item = self.menu_items[self._current_index]
 
+    self.current_item.start()
+
+  def handle_input(self, command):
+
+    next_item = self.current_item.handle_input(command)
+
+    if next_item is None:
+      self.move()
+
+    if next_item != self.current_item:
+      self.current_item.stop()
+      self.current_item = next_item
+      self.current_item.start()
+
   def handle_spin(self, message=None):
-    self.current_item.handle_input("SPIN")
+    self.handle_input("SPIN")
 
   def handle_up(self, message=None):
-    self.current_item.handle_input("UP")
+    self.handle_input("UP")
 
   def handle_down(self, message=None):
-    self.current_item.handle_input("DOWN")
+    self.handle_input("DOWN")
 
   def handle_b1(self, message=None):
-    self.current_item.handle_input("B1")
+    self.handle_input("B1")
 
   def handle_b2(self, message=None):
-    self.current_item.handle_input("B2")
+    self.handle_input("B2")
 
   def handle_b3(self, message=None):
-    self.current_item.handle_input("B3")
+    self.handle_input("B3")
 
   def handle_menu(self, message=None):
-    """ Menu is a special case. If the current item returns a menu, we'll use
-    it. Otherwise, skip to the next item """
-
-    menu_item = self.current_item.handle_menu()
-
-    if menu_item is not None:
-      self.current_item.stop()
-      self.current_item = menu_item
-      self.current_item.start()
-    else:
-      self.current_item.stop()
-      self.move()
-      self.current_item.start()
+    self.handle_input("MENU")
 
   def run(self):
     return self.current_item.update()

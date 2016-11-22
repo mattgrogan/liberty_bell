@@ -1,6 +1,8 @@
 import time
 from itertools import cycle
 
+from liberty_bell.option_controller import Option_Controller
+from liberty_bell.option_return import Option_Return
 from liberty_bell.option_toggle import Option_Toggle
 
 
@@ -11,13 +13,10 @@ class Slot_Machine_Menu_Item(object):
     self.ui = ui
     self.slot_machine = slot_machine
 
-    # Create game play options
-    self.autoplay = Option_Toggle("Autoplay", self, self.ui, False)
-    self.return_to_game = self
-
-    option_items = [self.autoplay, self.return_to_game]
-
-    self.options = cycle(option_items)
+    self.options = Option_Controller(self, ui)
+    self.options.append(Option_Toggle("Autoplay", self.ui, False))
+    self.options.append(Option_Toggle("Option2", self.ui, False))
+    self.options.append(Option_Return("Exit Game", self.ui))
 
   @property
   def name(self):
@@ -25,18 +24,19 @@ class Slot_Machine_Menu_Item(object):
 
   def handle_input(self, command):
 
+    if command == "MENU":
+      return self.options
     if command == "UP":
       self.slot_machine.increment_bet()
     if command == "DOWN":
       self.slot_machine.decrement_bet()
     if command == "SPIN":
-      result = self.slot_machine.spin()
+      self.slot_machine.spin()
 
     self.update_button_state()
     self.update_display()
 
-  def handle_menu(self):
-    return next(self.options)
+    return self
 
   def update_button_state(self):
 
@@ -51,6 +51,10 @@ class Slot_Machine_Menu_Item(object):
     self.ui.reel3_button.enabled = False
 
   def update_display(self):
+
+    self.ui.menu_display.blank()
+    self.ui.menu_display.text(self.name)
+    self.ui.menu_display.update()
 
     self.ui.credits_led.display(self.slot_machine.credits)
     self.ui.amount_bet_led.display(self.slot_machine.bet)
@@ -115,7 +119,7 @@ class Slot_Machine_Menu_Item(object):
       self.update_button_state()
       self.update_display()
 
-      if self.autoplay.value:
+      if self.options["Autoplay"].value:
         # TODO: Give a pause and allow player to enter the menu again
         self.handle_input("SPIN")
 

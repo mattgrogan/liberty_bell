@@ -54,7 +54,7 @@ class Slot_Machine_Menu_Item(object):
 
     self.ui.menu_display.blank()
     self.ui.menu_display.text(self.name)
-    self.ui.menu_display.update()
+    self.ui.menu_display.display()
 
     self.ui.credits_led.display(self.slot_machine.credits)
     self.ui.amount_bet_led.display(self.slot_machine.bet)

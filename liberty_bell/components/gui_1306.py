@@ -44,6 +44,9 @@ class GUI_1306(tk.Label, object):
     self.configure(image=tkimage)
     self.update()
 
+  def display(self):
+    self.update_image()
+
   def text(self, text, x=0, y=10, font_size=FONT_SIZE):
     """ Draw text on the screen """
 

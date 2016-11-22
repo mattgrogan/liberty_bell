@@ -62,9 +62,11 @@ class SSD1306_Display_Adapter(object):
     font = ImageFont.truetype(FONT_PATH, font_size)
     lines = textwrap.wrap(text, width=14)
 
+    draw = ImageDraw.Draw(self.image)
+
     for line in lines:
       width, height = font.getsize(line)
-      self.draw.text((x, y_text), line, font=font, fill=255)
+      draw.text((x, y_text), line, font=font, fill=255)
       y_text += height
 
   def test(self):
@@ -75,8 +77,10 @@ class SSD1306_Display_Adapter(object):
   def clear(self):
     """ Clear the display """
 
-    self.image = Image.new('1', (self.width, self.height))
-    self.draw = ImageDraw.Draw(self.image)
+    self.blank()
 
     self._oled.clear_buffer()
     self._oled.write_buffer()
+
+  def blank(self):
+    self.image = Image.new('1', (self.width, self.height))

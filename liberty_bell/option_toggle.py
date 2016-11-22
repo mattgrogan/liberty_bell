@@ -29,7 +29,7 @@ class Option_Toggle(object):
 
     self.ui.menu_display.blank()
     self.ui.menu_display.text(message)
-    self.ui.menu_display.update()
+    self.ui.menu_display.display()
 
   def toggle(self):
     self.value = not self.value

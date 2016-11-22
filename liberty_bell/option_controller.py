@@ -26,7 +26,7 @@ class Option_Controller(Menu):
     message = "Game Options: %s" % self.current_item.name
     self.ui.menu_display.blank()
     self.ui.menu_display.text(message)
-    self.ui.menu_display.update()
+    self.ui.menu_display.display()
 
   def stop(self):
     self.ui.menu_display.clear()

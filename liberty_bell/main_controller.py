@@ -8,7 +8,6 @@ class Main_Controller(object):
     self._current_index = 0
     self._current_item = None
     self.menu_items = []
-    self.menu_controller = None
 
   @property
   def current_item(self):
@@ -36,6 +35,8 @@ class Main_Controller(object):
     elif self._current_index < 0:
       self._current_index = len(self.menu_items) - 1
 
+    self._current_item = self.menu_items[self._current_index]
+
   def handle_spin(self, message=None):
     self.current_item.handle_input("SPIN")
 
@@ -55,14 +56,18 @@ class Main_Controller(object):
     self.current_item.handle_input("B3")
 
   def handle_menu(self, message=None):
-    if self.current_item.name == "Menu":
-      # If we're in the menu, go ahead and delegate
-      self.current_item.handle_input("MENU")
-    else:
-      # Stop the current item and move into the menu
+    """ Menu is a special case. If the current item returns a menu, we'll use
+    it. Otherwise, skip to the next item """
+
+    menu_item = self.current_item.handle_menu()
+
+    if menu_item is not None:
       self.current_item.stop()
-      self.menu_controller.start(self.current_item)
-      self.current_item = self.menu_controller
+      self.current_item = menu_item
+    else:
+      self.current_item.stop()
+      self.move()
+      self.current_item.start()
 
   def run(self):
     return self.current_item.update()

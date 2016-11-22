@@ -27,8 +27,6 @@ if __name__ == '__main__':
     from liberty_bell.ui.gui import Gui
     ui = Gui(controller)
 
-  controller.menu_controller = Menu_Controller(ui)
-
   liberty_bell = Slot_Machine_Menu_Item(Liberty_Bell_Machine(), ui)
   gold_award = Slot_Machine_Menu_Item(Gold_Award_Machine(), ui)
   controller.add_menu_item(liberty_bell)

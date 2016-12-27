@@ -1,0 +1,5 @@
+#!/bin/bash
+
+
+cd /home/pi/github/liberty_bell
+python -m liberty_bell.main

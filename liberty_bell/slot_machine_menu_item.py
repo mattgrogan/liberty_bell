@@ -31,6 +31,7 @@ class Slot_Machine_Menu_Item(object):
     if command == "DOWN":
       self.slot_machine.decrement_bet()
     if command == "SPIN":
+      self.ui.buzzer.button_tone()
       self.slot_machine.spin()
 
     self.update_button_state()

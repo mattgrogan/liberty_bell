@@ -40,27 +40,26 @@ class Main_Controller(object):
     self._current_state = "STATE_NONE"
     self.ui = None  # This is set later, needs a nice refactoring
 
-    self.autoplay = False
-
   def toggle_autoplay(self, action, caller):
     print "Received action %s on %s" % (action, caller.label)
     message = "Autoplay: "
 
+    autoplay = self._current_item.options["AUTOPLAY"]
+
     if action == "ACTION_LABEL":
-      message += "ON" if self.autoplay else "OFF"
+      message += "ON" if autoplay else "OFF"
       self.ui.menu_display.blank()
       self.ui.menu_display.text(message)
       self.ui.menu_display.display()
 
     if action == "ACTION_DISPLAY":
-      message += "OFF" if self.autoplay else "ON" + "\nPress SPIN"
+      message += "OFF" if autoplay else "ON" + "\nPress SPIN"
       self.ui.menu_display.blank()
       self.ui.menu_display.text(message, color=(0, 255, 0))
       self.ui.menu_display.display()
 
     if action == "ACTION_TRIGGER":
-      self.autoplay = not self.autoplay
-      print "Autoplay is %s" % self.autoplay
+      self._current_item.options["AUTOPLAY"] = not autoplay
       self._menu.navigate_to("PARENT")
 
   def handle_action(self, action, caller):

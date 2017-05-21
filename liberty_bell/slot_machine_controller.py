@@ -7,6 +7,8 @@ class Slot_Machine_Controller(object):
 
     self.ui = ui
     self.slot_machine = slot_machine
+    self.options = {}
+    self.options["AUTOPLAY"] = False
 
   @property
   def name(self):
@@ -21,8 +23,9 @@ class Slot_Machine_Controller(object):
     if command == "DOWN":
       self.slot_machine.decrement_bet()
     if command == "SPIN":
-      self.ui.buzzer.button_tone()
-      self.slot_machine.spin()
+      if self.slot_machine.can_spin:
+        self.ui.buzzer.button_tone()
+        self.slot_machine.spin()
 
     self.update_button_state()
     self.update_display()
@@ -110,8 +113,8 @@ class Slot_Machine_Controller(object):
       self.update_button_state()
       self.update_display()
 
-      # if self.options["Autoplay"].value:
-      # TODO: Give a pause and allow player to enter the menu again
-      #  self.handle_input("SPIN")
+      if self.options["AUTOPLAY"]:
+        # TODO: Give a pause and allow player to enter the menu again
+        self.handle_input("SPIN")
 
     return requested_delay_ms

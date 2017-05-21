@@ -6,3 +6,6 @@ class GUI_Buzzer(object):
 
   def lose_tone(self):
     pass
+
+  def button_tone(self):
+    pass

@@ -22,16 +22,19 @@ if __name__ == '__main__':
 
   if args.output == "rpi":
     from liberty_bell.ui.rpi import Rpi_UI
-    ui = Rpi_UI(controller)
+    ui = Rpi_UI()
   elif args.output == "gui":
     from liberty_bell.ui.gui import Gui
-    ui = Gui(controller)
+    ui = Gui()
 
   liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), ui)
   gold_award = Slot_Machine_Controller(Gold_Award_Machine(), ui)
 
   controller.add_games([liberty_bell, gold_award])
   controller.ui = ui
+  ui.attach(controller.handle_input)
+  ui.run_callback = controller.run
+  ui.ready()
 
   try:
     ui.mainloop()

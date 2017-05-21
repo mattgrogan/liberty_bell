@@ -69,7 +69,7 @@ class Main_Controller(object):
     if action == "ACTION_LABEL":
       message = caller.label
       self.ui.menu_display.blank()
-      self.ui.menu_display.text(message)
+      self.ui.menu_display.menu_text(message)
       self.ui.menu_display.display()
 
   def buy_credits(self, amount, action, caller):
@@ -170,29 +170,10 @@ class Main_Controller(object):
     self.ui.reel2_button.enabled = False
     self.ui.reel3_button.enabled = False
 
-  def handle_spin(self, message=None):
-    self.handle_input("SPIN")
-
-  def handle_up(self, message=None):
-    self.handle_input("UP")
-
-  def handle_down(self, message=None):
-    self.handle_input("DOWN")
-
-  def handle_b1(self, message=None):
-    self.handle_input("B1")
-
-  def handle_b2(self, message=None):
-    self.handle_input("B2")
-
-  def handle_b3(self, message=None):
-    self.handle_input("B3")
-
-  def handle_menu(self, message=None):
-    self.handle_input("MENU")
-
   def run(self):
     if self._current_state == "STATE_PLAY":
-      return self._current_item.update()
+      requested_delay_ms = self._current_item.update()
     else:
-      return 10
+      requested_delay_ms = 10
+
+    self.ui.schedule_next(requested_delay_ms)

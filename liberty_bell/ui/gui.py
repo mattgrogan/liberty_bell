@@ -9,14 +9,17 @@ from liberty_bell.components.gui_button import GUI_Button
 from liberty_bell.components.gui_buzzer import GUI_Buzzer
 from liberty_bell.components.gui_numeric_display import GUI_Numeric_Display
 
+from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
 
-class Gui(tk.Tk):
 
-  def __init__(self, controller):
+class Gui(tk.Tk, Liberty_Bell_UI):
+
+  def __init__(self):
 
     tk.Tk.__init__(self, None, None)
 
-    self.controller = controller
+    self.start_observer()
+    self.run_callback = None
 
     frame = tk.Frame(self, pady=10)
     frame.grid(row=1, column=0, sticky=tk.E)
@@ -40,9 +43,8 @@ class Gui(tk.Tk):
     self.credits_led.grid(row=3, column=0)
     self.amount_bet_led.grid(row=5, column=0)
 
-    #self.bind("<Enter>", controller.handle_spin)
-    self.bind("<Up>", controller.handle_up)
-    self.bind("<Down>", controller.handle_down)
+    self.bind("<Up>", lambda: self.handle_input("UP"))
+    self.bind("<Down>", lambda: self.handle_input("DOWN"))
 
     self.blank_image = Image.new(
         "RGB", (128, 128), color="#000000")
@@ -63,20 +65,20 @@ class Gui(tk.Tk):
     self.menu_display = GUI_1306(frame)
 
     self.spin_button = GUI_Button(
-        "Spin", frame, text="Spin", command=self.controller.handle_spin)
+        "Spin", frame, text="Spin", command=lambda: self.handle_input("SPIN"))
     self.up_button = GUI_Button(
-        "Up", frame, text="Up", command=self.controller.handle_up)
+        "Up", frame, text="Up", command=lambda: self.handle_input("UP"))
     self.down_button = GUI_Button(
-        "Down", frame, text="Down", command=self.controller.handle_down)
+        "Down", frame, text="Down", command=lambda: self.handle_input("DOWN"))
     self.menu_button = GUI_Button(
-        "Menu", frame, text="Menu", command=self.controller.handle_menu)
+        "Menu", frame, text="Menu", command=lambda: self.handle_input("MENU"))
 
     self.reel1_button = GUI_Button(
-        "Reel1", disp_frame, text="Reel 1", command=self.controller.handle_b1)
+        "Reel1", disp_frame, text="Reel 1", command=lambda: self.handle_input("B1"))
     self.reel2_button = GUI_Button(
-        "Reel2", disp_frame, text="Reel 2", command=self.controller.handle_b2)
+        "Reel2", disp_frame, text="Reel 2", command=lambda: self.handle_input("B2"))
     self.reel3_button = GUI_Button(
-        "Reel3", disp_frame, text="Reel 3", command=self.controller.handle_b3)
+        "Reel3", disp_frame, text="Reel 3", command=lambda: self.handle_input("B3"))
 
     self.spin_button.grid(row=0, column=4)
     self.up_button.grid(row=0, column=3)
@@ -90,12 +92,14 @@ class Gui(tk.Tk):
 
     self.buzzer = GUI_Buzzer()
 
-    self.after(0, self.start)
+  def handle_input(self, command):
+    self.notify(command)
 
-  def start(self):
+  def ready(self):
+    self.after(0, self.run_callback)
 
-    requested_delay_ms = self.controller.run()
-    self.after(requested_delay_ms, self.start)
+  def schedule_next(self, requested_delay_ms):
+    self.after(requested_delay_ms, self.run_callback)
 
   def shutdown(self):
     pass

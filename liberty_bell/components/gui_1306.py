@@ -63,3 +63,28 @@ class GUI_1306(tk.Label, object):
       y_text += height
 
     self.update_image()
+
+  def menu_text(self, text, up=False, down=False, child=False):
+    """ Trying to draw better..."""
+
+    y = 0
+
+    headline = "MENU"
+
+    font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
+    headline_size_x, headline_size_y = font.getsize(headline)
+
+    draw = ImageDraw.Draw(self._image)
+
+    y += headline_size_y
+
+    # Draw a white background for the headline
+    draw.rectangle((0, 0, self.width, headline_size_y), fill=(255, 255, 255))
+    draw.text((0, 0), headline, font=font, fill=(0, 0, 0))
+
+    # Draw the text
+    lines = textwrap.wrap(text, width=14)
+    for line in lines:
+      width, height = font.getsize(line)
+      draw.text((0, y), line, font=font, fill=(255, 255, 255))
+      y += height

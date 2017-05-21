@@ -1,4 +1,3 @@
-from functools import partial
 
 
 class Menu_Engine(object):
@@ -8,9 +7,6 @@ class Menu_Engine(object):
     self.current_item = initial_item
     self.prev_item = None
     self.last_invoked_item = None
-
-  def parent(self):
-    return self.current_item.parent_item
 
   def navigate(self, target_item):
     """ Navigate to the target item """
@@ -22,6 +18,7 @@ class Menu_Engine(object):
 
   def navigate_to(self, direction):
     """ Navigate UP, DOWN, PARENT, CHILD  """
+
     if direction == "PARENT":
       self.navigate(self.current_item.parent_item)
     elif direction == "CHILD":

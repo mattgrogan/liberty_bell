@@ -9,27 +9,59 @@ class Main_Controller(object):
 
   def __init__(self):
 
-    self.top_menu = MenuItem("Press MENU to Exit", self.handle_action)
+    root_menu = MenuItem("Press MENU to Return", self.handle_action)
 
+    # Add credits
     buy_credits = MenuItem("Buy Credits...", self.handle_action)
-    buy_1_credit = MenuItem("Buy 1 credit", partial(self.buy_credits, 1))
-    buy_10_credits = MenuItem("Buy 10 credits", partial(self.buy_credits, 10))
-    buy_100_credits = MenuItem(
-        "Buy 100 credits", partial(self.buy_credits, 100))
+    buy_1 = MenuItem("Buy 1 credit", partial(self.buy_credits, 1))
+    buy_10 = MenuItem("Buy 10 credits", partial(self.buy_credits, 10))
+    buy_100 = MenuItem("Buy 100 credits", partial(self.buy_credits, 100))
+    buy_credits.add_child(buy_1)
+    buy_credits.add_child(buy_10)
+    buy_credits.add_child(buy_100)
 
-    self.game_menu = MenuItem("Select Game...", self.handle_action)
+    # Add various games
+    game_menu = MenuItem("Select Game...", self.handle_action)
 
-    self.top_menu.add_child(buy_credits)
-    buy_credits.add_child(buy_1_credit)
-    buy_1_credit.add_next(buy_10_credits)
-    buy_10_credits.add_next(buy_100_credits)
+    # Add options
+    options = MenuItem("Options...", self.handle_action)
+    autoplay = MenuItem("Toggle Autoplay", self.toggle_autoplay)
+    options.add_child(autoplay)
 
-    buy_credits.add_next(self.game_menu)
+    root_menu.add_child(buy_credits)
+    root_menu.add_child(game_menu)
+    root_menu.add_child(options)
+
+    self.root_menu = root_menu
+    self.game_menu = game_menu
 
     self._menu = Menu_Engine(buy_credits)
     self.menu_default = buy_credits
     self._current_state = "STATE_NONE"
     self.ui = None  # This is set later, needs a nice refactoring
+
+    self.autoplay = False
+
+  def toggle_autoplay(self, action, caller):
+    print "Received action %s on %s" % (action, caller.label)
+    message = "Autoplay: "
+
+    if action == "ACTION_LABEL":
+      message += "ON" if self.autoplay else "OFF"
+      self.ui.menu_display.blank()
+      self.ui.menu_display.text(message)
+      self.ui.menu_display.display()
+
+    if action == "ACTION_DISPLAY":
+      message += "OFF" if self.autoplay else "ON" + "\nPress SPIN"
+      self.ui.menu_display.blank()
+      self.ui.menu_display.text(message, color=(0, 255, 0))
+      self.ui.menu_display.display()
+
+    if action == "ACTION_TRIGGER":
+      self.autoplay = not self.autoplay
+      print "Autoplay is %s" % self.autoplay
+      self._menu.navigate_to("PARENT")
 
   def handle_action(self, action, caller):
 
@@ -92,7 +124,7 @@ class Main_Controller(object):
       self.ui.menu_display.display()
     if action == "ACTION_TRIGGER":
       self._current_item = game
-      self._menu.navigate(self.top_menu)
+      self._menu.navigate(self.root_menu)
       self.current_state = "STATE_PLAY"
 
   def handle_input(self, command):
@@ -117,7 +149,7 @@ class Main_Controller(object):
           self._current_item.start()
     elif self._current_state == "STATE_MENU":
       if command == "MENU":
-        if self._menu.current_item == self.top_menu:
+        if self._menu.current_item == self.root_menu:
           print "lets play"
           self._current_state = "STATE_PLAY"
         else:

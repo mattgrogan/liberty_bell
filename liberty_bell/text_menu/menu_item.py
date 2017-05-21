@@ -11,12 +11,16 @@ class MenuItem(object):
     self.child_item = None
 
   def add_next(self, item):
-    self.next_item = item
-    item.prev_item = self
-    item.parent_item = self.parent_item
-    return item
+    if self.next_item is None:
+      self.next_item = item
+      item.prev_item = self
+      item.parent_item = self.parent_item
+    else:
+      self.next_item.add_next(item)
 
   def add_child(self, item):
-    self.child_item = item
-    item.parent_item = self
-    return item
+    if self.child_item is None:
+      self.child_item = item
+      item.parent_item = self
+    else:
+      self.child_item.add_next(item)

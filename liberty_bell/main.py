@@ -29,8 +29,9 @@ if __name__ == '__main__':
 
   liberty_bell = Slot_Machine_Menu_Item(Liberty_Bell_Machine(), ui)
   gold_award = Slot_Machine_Menu_Item(Gold_Award_Machine(), ui)
-  controller.append(liberty_bell)
-  controller.append(gold_award)
+
+  controller.add_games([liberty_bell, gold_award])
+  controller.ui = ui
 
   try:
     ui.mainloop()

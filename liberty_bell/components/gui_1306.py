@@ -47,7 +47,7 @@ class GUI_1306(tk.Label, object):
   def display(self):
     self.update_image()
 
-  def text(self, text, x=0, y=10, font_size=FONT_SIZE):
+  def text(self, text, x=0, y=10, font_size=FONT_SIZE, color=(255, 0, 255)):
     """ Draw text on the screen """
 
     y_text = y
@@ -59,7 +59,7 @@ class GUI_1306(tk.Label, object):
 
     for line in lines:
       width, height = font.getsize(line)
-      draw.text((x, y_text), line, font=font, fill=255)
+      draw.text((x, y_text), line, font=font, fill=color)
       y_text += height
 
     self.update_image()

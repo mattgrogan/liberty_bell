@@ -9,17 +9,22 @@ class Main_Controller(object):
 
   def __init__(self):
 
-    self.top_menu = MenuItem("Return", self.handle_action)
-    buy_credits = MenuItem("Buy Credits", self.handle_action)
+    self.top_menu = MenuItem("Press MENU to Exit", self.handle_action)
+
+    buy_credits = MenuItem("Buy Credits...", self.handle_action)
     buy_1_credit = MenuItem("Buy 1 credit", partial(self.buy_credits, 1))
     buy_10_credits = MenuItem("Buy 10 credits", partial(self.buy_credits, 10))
     buy_100_credits = MenuItem(
         "Buy 100 credits", partial(self.buy_credits, 100))
 
+    self.game_menu = MenuItem("Select Game...", self.handle_action)
+
     self.top_menu.add_child(buy_credits)
     buy_credits.add_child(buy_1_credit)
     buy_1_credit.add_next(buy_10_credits)
     buy_10_credits.add_next(buy_100_credits)
+
+    buy_credits.add_next(self.game_menu)
 
     self._menu = Menu_Engine(buy_credits)
     self.menu_default = buy_credits
@@ -47,7 +52,7 @@ class Main_Controller(object):
       self.ui.menu_display.display()
 
     if action == "ACTION_DISPLAY":
-      message = caller.label
+      message = caller.label + "\nPress SPIN"
       self.ui.menu_display.blank()
       self.ui.menu_display.text(message, color=(0, 255, 0))
       self.ui.menu_display.display()
@@ -62,8 +67,33 @@ class Main_Controller(object):
     self._current_item = self._games[0]
     self._current_state = "STATE_PLAY"
 
-  def switch_game(self):
-    pass
+    # Create the game menu items
+    top_game = MenuItem(games[0].slot_machine.name,
+                        partial(self.switch_game, games[0]))
+
+    self.game_menu.add_child(top_game)
+
+    for i in range(len(games)):
+      top_game.add_next(
+          MenuItem(games[i].slot_machine.name, partial(self.switch_game, games[i])))
+
+  def switch_game(self, game, action, caller):
+    print "Received action %s from '%s' for %s" % (action, caller.label, game)
+
+    if action == "ACTION_LABEL":
+      message = caller.label
+      self.ui.menu_display.blank()
+      self.ui.menu_display.text(message, color=(255, 255, 255))
+      self.ui.menu_display.display()
+    if action == "ACTION_DISPLAY":
+      message = caller.label + "\nPress SPIN"
+      self.ui.menu_display.blank()
+      self.ui.menu_display.text(message, color=(0, 255, 0))
+      self.ui.menu_display.display()
+    if action == "ACTION_TRIGGER":
+      self._current_item = game
+      self._menu.navigate(self.top_menu)
+      self.current_state = "STATE_PLAY"
 
   def handle_input(self, command):
     print command

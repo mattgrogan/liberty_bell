@@ -67,13 +67,14 @@ class SSD1351_Display_Adapter(object):
   def write_line(self, data):
     """ Add row to the display """
 
-    color_data = []
-
-    for pixel in data:
-      r, g, b = pixel
-      color_data.append(color565(r, g, b))
-
-    self._oled.write_line(color_data)
+    # color_data = []
+    #
+    # for pixel in data:
+    #   r, g, b = pixel
+    #   #color_data.append(color565(r, g, b))
+    #
+    # self._oled.write_line(color_data)
+    self._oled.write_line(data)
 
 
 def color565(red, green=None, blue=None):

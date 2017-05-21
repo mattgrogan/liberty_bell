@@ -116,4 +116,6 @@ class Rpi_UI(object):
     while True:
       self.detect_event()
       requested_delay_ms = self.controller.run()
-      time.sleep(requested_delay_ms / 1000.0)
+      # TODO: There should be a way to communicate sleep time, to prevent 100% cpu utilization
+      #time.sleep(requested_delay_ms / 1000.0)
+      #time.sleep(0.001)

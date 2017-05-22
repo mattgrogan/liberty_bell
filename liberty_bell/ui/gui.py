@@ -11,6 +11,8 @@ from liberty_bell.components.gui_numeric_display import GUI_Numeric_Display
 
 from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
 
+from liberty_bell.ui.menu_display import Menu_Display
+
 
 class Gui(tk.Tk, Liberty_Bell_UI):
 
@@ -62,7 +64,8 @@ class Gui(tk.Tk, Liberty_Bell_UI):
     for i, disp in enumerate(self.reel_displays):
       disp.grid(row=0, column=i)
 
-    self.menu_display = GUI_1306(frame)
+    menu_display_driver = GUI_1306(frame)
+    self.menu_display = Menu_Display(menu_display_driver)
 
     self.spin_button = GUI_Button(
         "Spin", frame, text="Spin", command=lambda: self.handle_input("SPIN"))
@@ -84,7 +87,7 @@ class Gui(tk.Tk, Liberty_Bell_UI):
     self.up_button.grid(row=0, column=3)
     self.down_button.grid(row=0, column=2)
     self.menu_button.grid(row=0, column=1)
-    self.menu_display.grid(row=0, column=0)
+    menu_display_driver.grid(row=0, column=0)
 
     self.reel1_button.grid(row=1, column=0)
     self.reel2_button.grid(row=1, column=1)

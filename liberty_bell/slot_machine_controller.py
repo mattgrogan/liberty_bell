@@ -46,9 +46,9 @@ class Slot_Machine_Controller(object):
 
   def update_display(self):
 
-    self.ui.menu_display.blank()
-    self.ui.menu_display.text(self.name)
-    self.ui.menu_display.display()
+    self.ui.menu_display.clear()
+    self.ui.menu_display.add_wrapped_text(self.name)
+    self.ui.menu_display.flush()
 
     self.ui.credits_led.display(self.slot_machine.credits)
     self.ui.amount_bet_led.display(self.slot_machine.bet)

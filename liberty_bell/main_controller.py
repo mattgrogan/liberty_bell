@@ -48,15 +48,15 @@ class Main_Controller(object):
 
     if action == "ACTION_LABEL":
       message += "ON" if autoplay else "OFF"
-      self.ui.menu_display.blank()
-      self.ui.menu_display.text(message)
-      self.ui.menu_display.display()
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_line(message)
+      self.ui.menu_display.flush()
 
     if action == "ACTION_DISPLAY":
-      message += "OFF" if autoplay else "ON" + "\nPress SPIN"
-      self.ui.menu_display.blank()
-      self.ui.menu_display.text(message, color=(0, 255, 0))
-      self.ui.menu_display.display()
+      message = "Press SPIN to Save"
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_menu_text(message, headline="CONFIRM?")
+      self.ui.menu_display.flush()
 
     if action == "ACTION_TRIGGER":
       self._current_item.options["AUTOPLAY"] = not autoplay
@@ -68,9 +68,9 @@ class Main_Controller(object):
 
     if action == "ACTION_LABEL":
       message = caller.label
-      self.ui.menu_display.blank()
-      self.ui.menu_display.menu_text(message)
-      self.ui.menu_display.display()
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_menu_text(message)
+      self.ui.menu_display.flush()
 
   def buy_credits(self, amount, action, caller):
 
@@ -78,15 +78,15 @@ class Main_Controller(object):
 
     if action == "ACTION_LABEL":
       message = caller.label
-      self.ui.menu_display.blank()
-      self.ui.menu_display.text(message)
-      self.ui.menu_display.display()
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_line(message)
+      self.ui.menu_display.flush()
 
     if action == "ACTION_DISPLAY":
       message = caller.label + "\nPress SPIN"
-      self.ui.menu_display.blank()
-      self.ui.menu_display.text(message, color=(0, 255, 0))
-      self.ui.menu_display.display()
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_line(message, color=(0, 255, 0))
+      self.ui.menu_display.flush()
 
     if action == "ACTION_TRIGGER":
       self._current_item.slot_machine.credits += amount
@@ -113,14 +113,14 @@ class Main_Controller(object):
 
     if action == "ACTION_LABEL":
       message = caller.label
-      self.ui.menu_display.blank()
+      self.ui.menu_display.clear()
       self.ui.menu_display.text(message, color=(255, 255, 255))
-      self.ui.menu_display.display()
+      self.ui.menu_display.flush()
     if action == "ACTION_DISPLAY":
       message = caller.label + "\nPress SPIN"
-      self.ui.menu_display.blank()
+      self.ui.menu_display.clear()
       self.ui.menu_display.text(message, color=(0, 255, 0))
-      self.ui.menu_display.display()
+      self.ui.menu_display.flush()
     if action == "ACTION_TRIGGER":
       self._current_item = game
       self._menu.navigate(self.root_menu)

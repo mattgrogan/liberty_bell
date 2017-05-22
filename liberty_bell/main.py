@@ -9,6 +9,8 @@ from liberty_bell.slot_machines.gold_award_machine import Gold_Award_Machine
 from liberty_bell.slot_machines.liberty_bell_machine import \
     Liberty_Bell_Machine
 
+from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
+
 if __name__ == '__main__':
 
   parser = argparse.ArgumentParser(description="Liberty Bell")
@@ -27,12 +29,14 @@ if __name__ == '__main__':
     from liberty_bell.ui.gui import Gui
     ui = Gui()
 
-  liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), ui)
-  gold_award = Slot_Machine_Controller(Gold_Award_Machine(), ui)
+  main_ui = Liberty_Bell_UI(ui)
+
+  liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), main_ui)
+  gold_award = Slot_Machine_Controller(Gold_Award_Machine(), main_ui)
 
   controller.add_games([liberty_bell, gold_award])
-  controller.ui = ui
-  ui.attach(controller.handle_input)
+  controller.ui = main_ui
+  controller.ui.attach(controller.handle_input)
   ui.run_callback = controller.run
   ui.ready()
 

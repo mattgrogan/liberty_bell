@@ -176,4 +176,4 @@ class Main_Controller(object):
     else:
       requested_delay_ms = 10
 
-    self.ui.schedule_next(requested_delay_ms)
+    self.ui.concrete_ui.schedule_next(requested_delay_ms)

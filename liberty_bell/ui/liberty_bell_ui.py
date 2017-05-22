@@ -1,19 +1,36 @@
+from liberty_bell.ui.menu_display import Menu_Display
+
+
 class Liberty_Bell_UI(object):
 
-  def __init__(self, ui_factory):
+  def __init__(self, concrete_ui):
 
-    self.spin_button = ui_factory.spin_button()
-    self.up_button = ui_factory.up_button()
-    self.down_button = ui_factory.down_button()
-    self.menu_button = ui_factory.menu_button()
+    concrete_ui.initialize(callback=self.notify)
 
-    self.display_1 = ui_factory.display_1()
-    self.display_2 = ui_factory.display_2()
-    self.display_3 = ui_factory.display_3()
+    self.concrete_ui = concrete_ui
 
-    self.menu_display = ui_factory.menu_display()
+    self.spin_button = concrete_ui.spin_button
+    self.up_button = concrete_ui.up_button
+    self.down_button = concrete_ui.down_button
+    self.menu_button = concrete_ui.menu_button
 
-  def start_observer(self):
+    self.reel1_button = concrete_ui.reel1_button
+    self.reel2_button = concrete_ui.reel2_button
+    self.reel3_button = concrete_ui.reel3_button
+
+    self.display_1 = concrete_ui.display_1
+    self.display_2 = concrete_ui.display_2
+    self.display_3 = concrete_ui.display_3
+    self.reel_displays = [self.display_1, self.display_2, self.display_3]
+
+    self.credits_led = concrete_ui.credits_led
+    self.winner_paid_led = concrete_ui.winner_paid_led
+    self.amount_bet_led = concrete_ui.amount_bet_led
+
+    self.menu_display = Menu_Display(concrete_ui.menu_display_driver)
+
+    self.buzzer = concrete_ui.buzzer
+
     self._observers = []
 
   def attach(self, observer):

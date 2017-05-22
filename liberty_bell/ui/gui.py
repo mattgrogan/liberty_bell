@@ -9,19 +9,15 @@ from liberty_bell.components.gui_button import GUI_Button
 from liberty_bell.components.gui_buzzer import GUI_Buzzer
 from liberty_bell.components.gui_numeric_display import GUI_Numeric_Display
 
-from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
 
-from liberty_bell.ui.menu_display import Menu_Display
-
-
-class Gui(tk.Tk, Liberty_Bell_UI):
+class Gui(tk.Tk):
 
   def __init__(self):
 
     tk.Tk.__init__(self, None, None)
 
-    self.start_observer()
-    self.run_callback = None
+  def initialize(self, callback):
+    self.callback = callback
 
     frame = tk.Frame(self, pady=10)
     frame.grid(row=1, column=0, sticky=tk.E)
@@ -64,39 +60,36 @@ class Gui(tk.Tk, Liberty_Bell_UI):
     for i, disp in enumerate(self.reel_displays):
       disp.grid(row=0, column=i)
 
-    menu_display_driver = GUI_1306(frame)
-    self.menu_display = Menu_Display(menu_display_driver)
+    self.menu_display_driver = GUI_1306(frame)
+    #self.menu_display = Menu_Display(menu_display_driver)
 
     self.spin_button = GUI_Button(
-        "Spin", frame, text="Spin", command=lambda: self.handle_input("SPIN"))
+        "Spin", frame, text="Spin", command=lambda: self.callback("SPIN"))
     self.up_button = GUI_Button(
-        "Up", frame, text="Up", command=lambda: self.handle_input("UP"))
+        "Up", frame, text="Up", command=lambda: self.callback("UP"))
     self.down_button = GUI_Button(
-        "Down", frame, text="Down", command=lambda: self.handle_input("DOWN"))
+        "Down", frame, text="Down", command=lambda: self.callback("DOWN"))
     self.menu_button = GUI_Button(
-        "Menu", frame, text="Menu", command=lambda: self.handle_input("MENU"))
+        "Menu", frame, text="Menu", command=lambda: self.callback("MENU"))
 
     self.reel1_button = GUI_Button(
-        "Reel1", disp_frame, text="Reel 1", command=lambda: self.handle_input("B1"))
+        "Reel1", disp_frame, text="Reel 1", command=lambda: self.callback("B1"))
     self.reel2_button = GUI_Button(
-        "Reel2", disp_frame, text="Reel 2", command=lambda: self.handle_input("B2"))
+        "Reel2", disp_frame, text="Reel 2", command=lambda: self.callback("B2"))
     self.reel3_button = GUI_Button(
-        "Reel3", disp_frame, text="Reel 3", command=lambda: self.handle_input("B3"))
+        "Reel3", disp_frame, text="Reel 3", command=lambda: self.callback("B3"))
 
     self.spin_button.grid(row=0, column=4)
     self.up_button.grid(row=0, column=3)
     self.down_button.grid(row=0, column=2)
     self.menu_button.grid(row=0, column=1)
-    menu_display_driver.grid(row=0, column=0)
+    self.menu_display_driver.grid(row=0, column=0)
 
     self.reel1_button.grid(row=1, column=0)
     self.reel2_button.grid(row=1, column=1)
     self.reel3_button.grid(row=1, column=2)
 
     self.buzzer = GUI_Buzzer()
-
-  def handle_input(self, command):
-    self.notify(command)
 
   def ready(self):
     self.after(0, self.run_callback)

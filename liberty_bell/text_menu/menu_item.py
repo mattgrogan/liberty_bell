@@ -24,3 +24,12 @@ class MenuItem(object):
       item.parent_item = self
     else:
       self.child_item.add_next(item)
+
+  def label(self):
+    self.command.label()
+
+  def display(self):
+    self.command.display()
+
+  def trigger(self):
+    self.command.trigger()

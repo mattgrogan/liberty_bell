@@ -47,7 +47,7 @@ class Menu_Engine(object):
         self.execute_callback_action("ACTION_TRIGGER")
 
   def execute_callback_action(self, action):
-    self.current_item.callback(action, self.current_item)
+    self.current_item.execute_callback_action(action)
 
   def render(self):
     pass

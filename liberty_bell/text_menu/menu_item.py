@@ -1,9 +1,11 @@
 class MenuItem(object):
 
-  def __init__(self, label, callback):
+  def __init__(self, command_name, label, callback, params=None):
 
+    self.command_name = command_name
     self.label = label
     self.callback = callback
+    self.params = params
 
     self.next_item = None
     self.prev_item = None
@@ -25,11 +27,5 @@ class MenuItem(object):
     else:
       self.child_item.add_next(item)
 
-  def label(self):
-    self.command.label()
-
-  def display(self):
-    self.command.display()
-
-  def trigger(self):
-    self.command.trigger()
+  def execute_callback_action(self, action):
+    self.callback(self.command_name, action, self.label, self.params)

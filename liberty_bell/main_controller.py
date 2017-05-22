@@ -9,23 +9,25 @@ class Main_Controller(object):
 
   def __init__(self):
 
-    root_menu = MenuItem("Press MENU to Return", self.handle_action)
+    root_menu = MenuItem(
+        "UPDATE_DISPLAY", "Press MENU to Return", self.execute_cmd)
 
     # Add credits
-    buy_credits = MenuItem("Buy Credits...", self.handle_action)
-    buy_1 = MenuItem("Buy 1 credit", partial(self.buy_credits, 1))
-    buy_10 = MenuItem("Buy 10 credits", partial(self.buy_credits, 10))
-    buy_100 = MenuItem("Buy 100 credits", partial(self.buy_credits, 100))
+    buy_credits = MenuItem(
+        "UPDATE_DISPLAY", "Buy Credits", self.execute_cmd)
+    buy_1 = MenuItem("BUY_CREDITS", "Buy 1 Credit", self.execute_cmd, 1)
+    buy_10 = MenuItem("BUY_CREDITS", "Buy 10 Credits", self.execute_cmd, 10)
+    buy_100 = MenuItem("BUY_CREDITS", "Buy 100 Credits", self.execute_cmd, 100)
     buy_credits.add_child(buy_1)
     buy_credits.add_child(buy_10)
     buy_credits.add_child(buy_100)
 
     # Add various games
-    game_menu = MenuItem("Select Game...", self.handle_action)
+    game_menu = MenuItem("UPDATE_DISPLAY", "Select Game", self.switch_game)
 
     # Add options
-    options = MenuItem("Options...", self.handle_action)
-    autoplay = MenuItem("Toggle Autoplay", self.toggle_autoplay)
+    options = MenuItem("UPDATE_DISPLAY", "Options", self.execute_cmd)
+    autoplay = MenuItem("TOGGLE_AUTOPLAY", "Toggle Autoplay", self.execute_cmd)
     options.add_child(autoplay)
 
     root_menu.add_child(buy_credits)
@@ -40,57 +42,15 @@ class Main_Controller(object):
     self._current_state = "STATE_NONE"
     self.ui = None  # This is set later, needs a nice refactoring
 
-  def toggle_autoplay(self, action, caller):
-    print "Received action %s on %s" % (action, caller.label)
-    message = "Autoplay: "
+  def execute_cmd(self, command_name, action, label, params=None):
+    """ Obtain a command from the current item and execute it """
 
-    autoplay = self._current_item.options["AUTOPLAY"]
+    print "Calling %s action %s label %s params %s" % (command_name, action, label, params)
 
-    if action == "ACTION_LABEL":
-      message += "ON" if autoplay else "OFF"
-      self.ui.menu_display.clear()
-      self.ui.menu_display.add_line(message)
-      self.ui.menu_display.flush()
-
-    if action == "ACTION_DISPLAY":
-      message = "Press SPIN to Save"
-      self.ui.menu_display.clear()
-      self.ui.menu_display.add_menu_text(message, headline="CONFIRM?")
-      self.ui.menu_display.flush()
+    cmd = self._current_item.get_command(command_name, label, params)
+    cmd.execute(action)
 
     if action == "ACTION_TRIGGER":
-      self._current_item.options["AUTOPLAY"] = not autoplay
-      self._menu.navigate_to("PARENT")
-
-  def handle_action(self, action, caller):
-
-    print "Received action %s on %s" % (action, caller.label)
-
-    if action == "ACTION_LABEL":
-      message = caller.label
-      self.ui.menu_display.clear()
-      self.ui.menu_display.add_menu_text(message)
-      self.ui.menu_display.flush()
-
-  def buy_credits(self, amount, action, caller):
-
-    print "Received action %s from '%s' for %s" % (action, caller.label, amount)
-
-    if action == "ACTION_LABEL":
-      message = caller.label
-      self.ui.menu_display.clear()
-      self.ui.menu_display.add_line(message)
-      self.ui.menu_display.flush()
-
-    if action == "ACTION_DISPLAY":
-      message = caller.label + "\nPress SPIN"
-      self.ui.menu_display.clear()
-      self.ui.menu_display.add_line(message)
-      self.ui.menu_display.flush()
-
-    if action == "ACTION_TRIGGER":
-      self._current_item.slot_machine.credits += amount
-      self._current_item.update_display()
       self._menu.navigate_to("PARENT")
 
   def add_games(self, games):
@@ -99,30 +59,29 @@ class Main_Controller(object):
     self._current_state = "STATE_PLAY"
 
     # Create the game menu items
-    top_game = MenuItem(games[0].slot_machine.name,
-                        partial(self.switch_game, games[0]))
+    top_game = MenuItem("SWITCH_GAME", games[
+                        0].slot_machine.name, self.switch_game, games[0])
 
     self.game_menu.add_child(top_game)
 
     for i in range(len(games)):
       top_game.add_next(
-          MenuItem(games[i].slot_machine.name, partial(self.switch_game, games[i])))
+          MenuItem("SWITCH_GAME", games[i].slot_machine.name, self.switch_game, games[i]))
 
-  def switch_game(self, game, action, caller):
-    print "Received action %s from '%s' for %s" % (action, caller.label, game)
+  def switch_game(self, command_name, action, label, params=None):
 
     if action == "ACTION_LABEL":
-      message = caller.label
+      message = label
       self.ui.menu_display.clear()
       self.ui.menu_display.add_line(message)
       self.ui.menu_display.flush()
     if action == "ACTION_DISPLAY":
-      message = caller.label + "\nPress SPIN"
+      message = label + "\nPress SPIN"
       self.ui.menu_display.clear()
       self.ui.menu_display.add_line(message)
       self.ui.menu_display.flush()
     if action == "ACTION_TRIGGER":
-      self._current_item = game
+      self._current_item = params
       self._menu.navigate(self.root_menu)
       self.current_state = "STATE_PLAY"
 

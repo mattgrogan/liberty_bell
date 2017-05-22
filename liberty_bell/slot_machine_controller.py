@@ -1,6 +1,75 @@
 import time
 
 
+class Buy_Credits_Cmd(object):
+
+  def __init__(self, ui, slot_machine, controller, amount):
+    self.ui = ui
+    self.slot_machine = slot_machine
+    self.controller = controller
+    self.amount = amount
+
+  def execute(self, action):
+
+    if action == "ACTION_LABEL":
+      message = "Buy %i credit(s)" % self.amount
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_line(message)
+      self.ui.menu_display.flush()
+
+    if action == "ACTION_DISPLAY":
+      message = "Buying %i Press SPIN" % self.amount
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_line(message)
+      self.ui.menu_display.flush()
+
+    if action == "ACTION_TRIGGER":
+      self.slot_machine.credits += self.amount
+      self.controller.update_display()
+
+
+class Toggle_Autoplay_Cmd(object):
+
+  def __init__(self, ui, controller):
+    self.ui = ui
+    self.controller = controller
+
+  def execute(self, action):
+    message = "Autoplay: "
+
+    autoplay = self.controller.options["AUTOPLAY"]
+
+    if action == "ACTION_LABEL":
+      message += "ON" if autoplay else "OFF"
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_line(message)
+      self.ui.menu_display.flush()
+
+    if action == "ACTION_DISPLAY":
+      message = "Press SPIN to Save"
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_menu_text(message, headline="CONFIRM?")
+      self.ui.menu_display.flush()
+
+    if action == "ACTION_TRIGGER":
+      self.controller.options["AUTOPLAY"] = not autoplay
+
+
+class Update_Display_Cmd(object):
+
+  def __init__(self, ui, text):
+    self.ui = ui
+    self.text = text
+
+  def execute(self, action):
+    print "Received action %s from '%s'" % (action, self.text)
+
+    if action == "ACTION_LABEL":
+      self.ui.menu_display.clear()
+      self.ui.menu_display.add_menu_text(self.text)
+      self.ui.menu_display.flush()
+
+
 class Slot_Machine_Controller(object):
 
   def __init__(self, slot_machine, ui):
@@ -13,6 +82,17 @@ class Slot_Machine_Controller(object):
   @property
   def name(self):
     return self.slot_machine.name
+
+  def get_command(self, command_name, label, params=None):
+
+    if command_name == "BUY_CREDITS":
+      cmd = Buy_Credits_Cmd(self.ui, self.slot_machine, self, params)
+    elif command_name == "TOGGLE_AUTOPLAY":
+      cmd = Toggle_Autoplay_Cmd(self.ui, self)
+    elif command_name == "UPDATE_DISPLAY":
+      cmd = Update_Display_Cmd(self.ui, label)
+
+    return cmd
 
   def handle_input(self, command):
 

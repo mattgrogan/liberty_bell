@@ -85,7 +85,7 @@ class Main_Controller(object):
     if action == "ACTION_DISPLAY":
       message = caller.label + "\nPress SPIN"
       self.ui.menu_display.clear()
-      self.ui.menu_display.add_line(message, color=(0, 255, 0))
+      self.ui.menu_display.add_line(message)
       self.ui.menu_display.flush()
 
     if action == "ACTION_TRIGGER":
@@ -114,12 +114,12 @@ class Main_Controller(object):
     if action == "ACTION_LABEL":
       message = caller.label
       self.ui.menu_display.clear()
-      self.ui.menu_display.text(message, color=(255, 255, 255))
+      self.ui.menu_display.add_line(message)
       self.ui.menu_display.flush()
     if action == "ACTION_DISPLAY":
       message = caller.label + "\nPress SPIN"
       self.ui.menu_display.clear()
-      self.ui.menu_display.text(message, color=(0, 255, 0))
+      self.ui.menu_display.add_line(message)
       self.ui.menu_display.flush()
     if action == "ACTION_TRIGGER":
       self._current_item = game

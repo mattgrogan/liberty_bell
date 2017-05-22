@@ -114,7 +114,7 @@ class Slot_Machine_Controller(object):
 
   def update_button_state(self):
 
-    self.ui.menu_button.enabled = self.slot_machine.can_spin
+    self.ui.menu_button.enabled = not self.slot_machine.is_spinning
 
     self.ui.spin_button.enabled = self.slot_machine.can_spin
     self.ui.up_button.enabled = self.slot_machine.can_increase_bet

@@ -55,13 +55,12 @@ class Gui(tk.Tk):
     self.display_2 = GUI_1351(disp_frame)
     self.display_3 = GUI_1351(disp_frame)
 
-    self.reel_displays = [self.display_1, self.display_2, self.display_3]
+    reel_displays = [self.display_1, self.display_2, self.display_3]
 
-    for i, disp in enumerate(self.reel_displays):
+    for i, disp in enumerate(reel_displays):
       disp.grid(row=0, column=i)
 
     self.menu_display_driver = GUI_1306(frame)
-    #self.menu_display = Menu_Display(menu_display_driver)
 
     self.spin_button = GUI_Button(
         "Spin", frame, text="Spin", command=lambda: self.callback("SPIN"))

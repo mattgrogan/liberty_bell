@@ -176,7 +176,7 @@ class Main_Controller(object):
 
         self.ui.concrete_ui.schedule_next(requested_delay_ms)
 
-    def mainloop(self):
+    def start(self):
         self.ui.concrete_ui.mainloop()
 
     def shutdown(self):

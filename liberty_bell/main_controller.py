@@ -3,152 +3,181 @@ from functools import partial
 from liberty_bell.text_menu.menu_engine import Menu_Engine
 from liberty_bell.text_menu.menu_item import MenuItem
 
+from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
+
+from liberty_bell.slot_machine_controller import Slot_Machine_Controller
+from liberty_bell.slot_machines.gold_award_machine import Gold_Award_Machine
+from liberty_bell.slot_machines.liberty_bell_machine import \
+    Liberty_Bell_Machine
+
 
 class State_Play(object):
-  """ This state handles all playing games """
+    """ This state handles all playing games """
 
-  def __init__(self, controller):
-    self.controller = controller
+    def __init__(self, controller):
+        self.controller = controller
 
-  def handle_input(self, command):
-    """ Handle input from the UI """
+    def handle_input(self, command):
+        """ Handle input from the UI """
 
-    if command == "MENU":
-      self.controller.enter_menu()
-      # Pass the menu command onwards
-      # self.controller.handle_input("MENU")
-    else:
-      self.controller._current_item.handle_input(command)
+        if command == "MENU":
+            self.controller.enter_menu()
+            # Pass the menu command onwards
+            # self.controller.handle_input("MENU")
+        else:
+            self.controller._current_item.handle_input(command)
 
 
 class State_Menu(object):
 
-  def __init__(self, controller):
-    self.controller = controller
+    def __init__(self, controller):
+        self.controller = controller
 
-  def handle_input(self, command):
-    if command == "MENU":
-      if self.controller._menu.current_item == self.controller.root_menu:
-        self.controller.enter_play()
-      else:
-        self.controller._menu.navigate_to("PARENT")
-    elif command == "SPIN":
-      self.controller._menu.invoke()
-    elif command == "DOWN":
-      self.controller._menu.navigate_to("DOWN")
-    elif command == "UP":
-      self.controller._menu.navigate_to("UP")
+    def handle_input(self, command):
+        if command == "MENU":
+            if self.controller._menu.current_item == self.controller.root_menu:
+                self.controller.enter_play()
+            else:
+                self.controller._menu.navigate_to("PARENT")
+        elif command == "SPIN":
+            self.controller._menu.invoke()
+        elif command == "DOWN":
+            self.controller._menu.navigate_to("DOWN")
+        elif command == "UP":
+            self.controller._menu.navigate_to("UP")
 
 
 class Main_Controller(object):
-  """ This is the main controller for the game. """
+    """ This is the main controller for the game. """
 
-  def __init__(self):
+    def __init__(self, ui_type):
 
-    root_menu = MenuItem(
-        "UPDATE_DISPLAY", "Press MENU to Return", self.execute_cmd)
+        self.ui = Liberty_Bell_UI(ui_type)
 
-    # Add credits
-    buy_credits = MenuItem(
-        "UPDATE_DISPLAY", "Buy Credits", self.execute_cmd)
-    buy_1 = MenuItem("BUY_CREDITS", "Buy 1 Credit", self.execute_cmd, 1)
-    buy_10 = MenuItem("BUY_CREDITS", "Buy 10 Credits", self.execute_cmd, 10)
-    buy_100 = MenuItem("BUY_CREDITS", "Buy 100 Credits", self.execute_cmd, 100)
-    buy_credits.add_child(buy_1)
-    buy_credits.add_child(buy_10)
-    buy_credits.add_child(buy_100)
+        root_menu = MenuItem(
+            "UPDATE_DISPLAY", "Press MENU to Return", self.execute_cmd)
 
-    # Add various games
-    game_menu = MenuItem("UPDATE_DISPLAY", "Select Game", self.switch_game)
+        # Add credits
+        buy_credits = MenuItem(
+            "UPDATE_DISPLAY", "Buy Credits", self.execute_cmd)
+        buy_1 = MenuItem("BUY_CREDITS", "Buy 1 Credit", self.execute_cmd, 1)
+        buy_10 = MenuItem("BUY_CREDITS", "Buy 10 Credits",
+                          self.execute_cmd, 10)
+        buy_100 = MenuItem("BUY_CREDITS", "Buy 100 Credits",
+                           self.execute_cmd, 100)
+        buy_credits.add_child(buy_1)
+        buy_credits.add_child(buy_10)
+        buy_credits.add_child(buy_100)
 
-    # Add options
-    options = MenuItem("UPDATE_DISPLAY", "Options", self.execute_cmd)
-    autoplay = MenuItem("TOGGLE_AUTOPLAY", "Toggle Autoplay", self.execute_cmd)
-    options.add_child(autoplay)
+        # Add various games
+        game_menu = MenuItem("UPDATE_DISPLAY", "Select Game", self.switch_game)
 
-    root_menu.add_child(buy_credits)
-    root_menu.add_child(game_menu)
-    root_menu.add_child(options)
+        # Add options
+        options = MenuItem("UPDATE_DISPLAY", "Options", self.execute_cmd)
+        autoplay = MenuItem("TOGGLE_AUTOPLAY",
+                            "Toggle Autoplay", self.execute_cmd)
+        options.add_child(autoplay)
 
-    self.root_menu = root_menu
-    self.game_menu = game_menu
+        root_menu.add_child(buy_credits)
+        root_menu.add_child(game_menu)
+        root_menu.add_child(options)
 
-    self._menu = Menu_Engine(buy_credits)
-    self.menu_default = buy_credits
-    self.state_play = State_Play(self)
-    self.state_menu = State_Menu(self)
-    self._current_state = None
-    self.ui = None  # This is set later, needs a nice refactoring
+        self.root_menu = root_menu
+        self.game_menu = game_menu
 
-  def enter_menu(self):
-    self._current_state = self.state_menu
-    self.enable_buttons()
-    self._menu.navigate(self.menu_default)
+        self._menu = Menu_Engine(buy_credits)
+        self.menu_default = buy_credits
+        self.state_play = State_Play(self)
+        self.state_menu = State_Menu(self)
+        self._current_state = None
 
-  def enter_play(self):
-    self._current_state = self.state_play
+        self.add_games()
 
-  def execute_cmd(self, command_name, action, label, params=None):
-    """ Obtain a command from the current item and execute it """
+        self.ui.attach(self.handle_input)
 
-    print "Calling %s action %s label %s params %s" % (command_name, action, label, params)
+        self.ui.set_callback(self.run)
+        self.ui.ready()
 
-    cmd = self._current_item.get_command(command_name, label, params)
-    cmd.execute(action)
+    def enter_menu(self):
+        self._current_state = self.state_menu
+        self.enable_buttons()
+        self._menu.navigate(self.menu_default)
 
-    if action == "ACTION_TRIGGER":
-      self._menu.navigate_to("PARENT")
+    def enter_play(self):
+        self._current_state = self.state_play
 
-  def add_games(self, games):
-    self._games = games
-    self._current_item = self._games[0]
-    self.enter_play()
+    def execute_cmd(self, command_name, action, label, params=None):
+        """ Obtain a command from the current item and execute it """
 
-    # Create the game menu items
-    top_game = MenuItem("SWITCH_GAME", games[
-                        0].slot_machine.name, self.switch_game, games[0])
+        print "Calling %s action %s label %s params %s" % (command_name, action, label, params)
 
-    self.game_menu.add_child(top_game)
+        cmd = self._current_item.get_command(command_name, label, params)
+        cmd.execute(action)
 
-    for i in range(len(games)):
-      top_game.add_next(
-          MenuItem("SWITCH_GAME", games[i].slot_machine.name, self.switch_game, games[i]))
+        if action == "ACTION_TRIGGER":
+            self._menu.navigate_to("PARENT")
 
-  def switch_game(self, command_name, action, label, params=None):
+    def add_games(self):
 
-    if action == "ACTION_LABEL":
-      message = label
-      self.ui.menu_display.clear()
-      self.ui.menu_display.add_line(message)
-      self.ui.menu_display.flush()
-    if action == "ACTION_DISPLAY":
-      message = label + "\nPress SPIN"
-      self.ui.menu_display.clear()
-      self.ui.menu_display.add_line(message)
-      self.ui.menu_display.flush()
-    if action == "ACTION_TRIGGER":
-      self._current_item = params
-      self._menu.navigate(self.root_menu)
-      self.enter_play()
+        liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), self.ui)
+        gold_award = Slot_Machine_Controller(Gold_Award_Machine(), self.ui)
 
-  def handle_input(self, command):
+        games = [liberty_bell, gold_award]
+        self._games = games
+        self._current_item = self._games[0]
+        self.enter_play()
 
-    self._current_state.handle_input(command)
+        # Create the game menu items
+        top_game = MenuItem("SWITCH_GAME", games[
+                            0].slot_machine.name, self.switch_game, games[0])
 
-  def enable_buttons(self):
-    self.ui.menu_button.enabled = True
-    self.ui.spin_button.enabled = True
-    self.ui.up_button.enabled = True
-    self.ui.down_button.enabled = True
+        self.game_menu.add_child(top_game)
 
-    self.ui.reel1_button.enabled = False
-    self.ui.reel2_button.enabled = False
-    self.ui.reel3_button.enabled = False
+        for i in range(len(games)):
+            top_game.add_next(
+                MenuItem("SWITCH_GAME", games[i].slot_machine.name, self.switch_game, games[i]))
 
-  def run(self):
-    if self._current_state == self.state_play:
-      requested_delay_ms = self._current_item.update()
-    else:
-      requested_delay_ms = 10
+    def switch_game(self, command_name, action, label, params=None):
 
-    self.ui.concrete_ui.schedule_next(requested_delay_ms)
+        if action == "ACTION_LABEL":
+            message = label
+            self.ui.menu_display.clear()
+            self.ui.menu_display.add_line(message)
+            self.ui.menu_display.flush()
+        if action == "ACTION_DISPLAY":
+            message = label + "\nPress SPIN"
+            self.ui.menu_display.clear()
+            self.ui.menu_display.add_line(message)
+            self.ui.menu_display.flush()
+        if action == "ACTION_TRIGGER":
+            self._current_item = params
+            self._menu.navigate(self.root_menu)
+            self.enter_play()
+
+    def handle_input(self, command):
+
+        self._current_state.handle_input(command)
+
+    def enable_buttons(self):
+        self.ui.menu_button.enabled = True
+        self.ui.spin_button.enabled = True
+        self.ui.up_button.enabled = True
+        self.ui.down_button.enabled = True
+
+        self.ui.reel1_button.enabled = False
+        self.ui.reel2_button.enabled = False
+        self.ui.reel3_button.enabled = False
+
+    def run(self):
+        if self._current_state == self.state_play:
+            requested_delay_ms = self._current_item.update()
+        else:
+            requested_delay_ms = 10
+
+        self.ui.concrete_ui.schedule_next(requested_delay_ms)
+
+    def mainloop(self):
+        self.ui.concrete_ui.mainloop()
+
+    def shutdown(self):
+        self.ui.concrete_ui.shutdown()

@@ -9,38 +9,25 @@ from liberty_bell.slot_machines.gold_award_machine import Gold_Award_Machine
 from liberty_bell.slot_machines.liberty_bell_machine import \
     Liberty_Bell_Machine
 
-from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
 
 if __name__ == '__main__':
 
-  parser = argparse.ArgumentParser(description="Liberty Bell")
-  parser.add_argument("-output", required=False, choices=[
-                      "gui", "rpi"], default="rpi")
-  parser.add_argument("-t", action="store_true")
+    parser = argparse.ArgumentParser(description="Liberty Bell")
 
-  args = parser.parse_args()
+    parser.add_argument("-output",
+                        required=False,
+                        choices=["gui", "rpi"],
+                        default="rpi")
 
-  controller = Main_Controller()
+    parser.add_argument("-t", action="store_true")
 
-  if args.output == "rpi":
-    from liberty_bell.ui.rpi import Rpi_UI
-    ui = Rpi_UI()
-  elif args.output == "gui":
-    from liberty_bell.ui.gui import Gui
-    ui = Gui()
+    args = parser.parse_args()
 
-  main_ui = Liberty_Bell_UI(ui)
+    controller = Main_Controller(ui_type=args.output)
 
-  liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), main_ui)
-  gold_award = Slot_Machine_Controller(Gold_Award_Machine(), main_ui)
+    controller.ui.attach(controller.handle_input)
 
-  controller.add_games([liberty_bell, gold_award])
-  controller.ui = main_ui
-  controller.ui.attach(controller.handle_input)
-  ui.run_callback = controller.run
-  ui.ready()
-
-  try:
-    ui.mainloop()
-  finally:
-    ui.shutdown()
+    try:
+        controller.mainloop()
+    finally:
+        controller.shutdown()

@@ -10,6 +10,8 @@ from liberty_bell.slot_machines.gold_award_machine import Gold_Award_Machine
 from liberty_bell.slot_machines.liberty_bell_machine import \
     Liberty_Bell_Machine
 
+from liberty_bell.menu_controller import Liberty_Bell_Menu
+
 
 class State_Play(object):
     """ This state handles all playing games """
@@ -53,40 +55,13 @@ class Main_Controller(object):
     def __init__(self, ui_type):
 
         self.ui = Liberty_Bell_UI(ui_type)
+        self.menu = Liberty_Bell_Menu(self)
 
-        root_menu = MenuItem(
-            "UPDATE_DISPLAY", "Press MENU to Return", self.execute_cmd)
+        self.root_menu = self.menu.root_menu
+        self.game_menu = self.menu.game_menu
 
-        # Add credits
-        buy_credits = MenuItem(
-            "UPDATE_DISPLAY", "Buy Credits", self.execute_cmd)
-        buy_1 = MenuItem("BUY_CREDITS", "Buy 1 Credit", self.execute_cmd, 1)
-        buy_10 = MenuItem("BUY_CREDITS", "Buy 10 Credits",
-                          self.execute_cmd, 10)
-        buy_100 = MenuItem("BUY_CREDITS", "Buy 100 Credits",
-                           self.execute_cmd, 100)
-        buy_credits.add_child(buy_1)
-        buy_credits.add_child(buy_10)
-        buy_credits.add_child(buy_100)
+        self._menu = self.menu.menu
 
-        # Add various games
-        game_menu = MenuItem("UPDATE_DISPLAY", "Select Game", self.switch_game)
-
-        # Add options
-        options = MenuItem("UPDATE_DISPLAY", "Options", self.execute_cmd)
-        autoplay = MenuItem("TOGGLE_AUTOPLAY",
-                            "Toggle Autoplay", self.execute_cmd)
-        options.add_child(autoplay)
-
-        root_menu.add_child(buy_credits)
-        root_menu.add_child(game_menu)
-        root_menu.add_child(options)
-
-        self.root_menu = root_menu
-        self.game_menu = game_menu
-
-        self._menu = Menu_Engine(buy_credits)
-        self.menu_default = buy_credits
         self.state_play = State_Play(self)
         self.state_menu = State_Menu(self)
         self._current_state = None
@@ -101,7 +76,7 @@ class Main_Controller(object):
     def enter_menu(self):
         self._current_state = self.state_menu
         self.enable_buttons()
-        self._menu.navigate(self.menu_default)
+        self.menu.enter_menu()
 
     def enter_play(self):
         self._current_state = self.state_play

@@ -1,10 +1,11 @@
 from liberty_bell.text_menu.menu_engine import Menu_Engine
-from liberty_bell.text_menu.menu_item import MenuItem
+from liberty_bell.text_menu.menu_item import MenuItem, MenuItemCmd
 
 class Switch_Game_Cmd(object):
 
-    def __init__(self, ui, label, game):
+    def __init__(self, ui, controller, label, game):
         self.ui = ui
+        self.controller = controller
         self.label = label
         self.game = game
 
@@ -21,9 +22,9 @@ class Switch_Game_Cmd(object):
             self.ui.menu_display.add_line(message)
             self.ui.menu_display.flush()
         if action == "ACTION_TRIGGER":
-            self._current_item = params
-            self._menu.navigate(self.root_menu)
-            self.enter_play()
+            self.controller._current_item = self.game
+            self.controller.menu.navigate(self.controller.root_menu)
+            self.controller.enter_play()
 
 
 class Liberty_Bell_Menu(object):
@@ -68,6 +69,9 @@ class Liberty_Bell_Menu(object):
 
         self.menu = Menu_Engine(self.menu_default)
 
+    def navigate(self, to):
+        self.menu.navigate(to)
+
     def enter_menu(self):
 
 
@@ -85,10 +89,14 @@ class Liberty_Bell_Menu(object):
         self.ui.reel3_button.enabled = False
 
     def add_game(self, name, game):
-        game = MenuItem("SWITCH_GAME", name, self.controller.switch_game, game)
+
+        game_cmd = Switch_Game_Cmd(self.ui, self.controller, name, game)
+        game = MenuItemCmd("SWITCH_GAME", name, game_cmd, game)
         self.game_menu.add_child(game)
 
     def get_command(self, command_name, label, params=None):
+
+        print "WARNING: IN GET COMMAND ********************"
 
         if command_name == "SWITCH_GAME":
             cmd = Switch_Game_Cmd(self.ui, self.controller, label, game=params)

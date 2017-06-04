@@ -29,3 +29,11 @@ class MenuItem(object):
 
   def execute_callback_action(self, action):
     self.callback(self.command_name, action, self.label, self.params)
+
+class MenuItemCmd(MenuItem):
+
+    def execute_callback_action(self, action):
+      self.execute(action)
+
+    def execute(self, action):
+      self.callback.execute(action)

@@ -1,12 +1,13 @@
 #!/usr/bin/python
 from __future__ import absolute_import
-import argparse
+
+from argparse import ArgumentParser
 from liberty_bell.main_controller import Main_Controller
 
 if __name__ == '__main__':
 
-    # Determine which type of user interface to present
-    parser = argparse.ArgumentParser(description="Liberty Bell")
+    # Arguments determine which type of ui to present
+    parser = ArgumentParser(description="Liberty Bell")
     parser.add_argument("-output",
                         required=False,
                         choices=["gui", "rpi"],

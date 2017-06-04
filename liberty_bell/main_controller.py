@@ -23,8 +23,6 @@ class State_Play(object):
 
         if command == "MENU":
             self.controller.enter_menu()
-            # Pass the menu command onwards
-            # self.controller.handle_input("MENU")
         else:
             self.controller._current_item.handle_input(command)
 
@@ -54,7 +52,7 @@ class Main_Controller(object):
     def __init__(self, ui_type):
 
         self.ui = Liberty_Bell_UI(ui_type)
-        self.menu = Liberty_Bell_Menu(self)
+        self.menu = Liberty_Bell_Menu(self, self.ui)
 
         self.root_menu = self.menu.root_menu
         self.game_menu = self.menu.game_menu
@@ -74,7 +72,6 @@ class Main_Controller(object):
 
     def enter_menu(self):
         self._current_state = self.state_menu
-        self.enable_buttons()
         self.menu.enter_menu()
 
     def enter_play(self):
@@ -84,6 +81,8 @@ class Main_Controller(object):
         """ Obtain a command from the current item and execute it """
 
         print "Calling %s action %s label %s params %s" % (command_name, action, label, params)
+
+        # TODO: The menu should already have the command. Just execute it.
 
         cmd = self._current_item.get_command(command_name, label, params)
         cmd.execute(action)
@@ -124,16 +123,6 @@ class Main_Controller(object):
     def handle_input(self, command):
 
         self._current_state.handle_input(command)
-
-    def enable_buttons(self):
-        self.ui.menu_button.enabled = True
-        self.ui.spin_button.enabled = True
-        self.ui.up_button.enabled = True
-        self.ui.down_button.enabled = True
-
-        self.ui.reel1_button.enabled = False
-        self.ui.reel2_button.enabled = False
-        self.ui.reel3_button.enabled = False
 
     def run(self):
         if self._current_state == self.state_play:

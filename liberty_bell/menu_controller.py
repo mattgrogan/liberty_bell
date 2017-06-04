@@ -28,9 +28,10 @@ class Switch_Game_Cmd(object):
 
 class Liberty_Bell_Menu(object):
 
-    def __init__(self, controller):
+    def __init__(self, controller, ui):
 
         self.controller = controller
+        self.ui = ui
 
         root_menu = MenuItem(
             "UPDATE_DISPLAY", "Press MENU to Return", self.controller.execute_cmd)
@@ -71,6 +72,17 @@ class Liberty_Bell_Menu(object):
 
 
         self.menu.navigate(self.menu_default)
+        self.enable_buttons()
+
+    def enable_buttons(self):
+        self.ui.menu_button.enabled = True
+        self.ui.spin_button.enabled = True
+        self.ui.up_button.enabled = True
+        self.ui.down_button.enabled = True
+
+        self.ui.reel1_button.enabled = False
+        self.ui.reel2_button.enabled = False
+        self.ui.reel3_button.enabled = False
 
     def add_game(self, name, game):
         game = MenuItem("SWITCH_GAME", name, self.controller.switch_game, game)

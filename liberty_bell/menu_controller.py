@@ -49,7 +49,6 @@ class Liberty_Bell_Menu(object):
         buy_credits.add_child(buy_100)
 
         # Add various games
-        #game_menu = MenuItem("UPDATE_DISPLAY", "Select Game", self.controller.switch_game)
         game_cmd = Switch_Game_Cmd(self.ui, self.controller, "Switch Game")
         game_menu = MenuItemCmd("SWITCH_GAME", "Select Game", game_cmd)
 

@@ -22,9 +22,8 @@ class Switch_Game_Cmd(object):
             self.ui.menu_display.add_line(message)
             self.ui.menu_display.flush()
         if action == "ACTION_TRIGGER":
-            self.controller._current_item = self.game
             self.controller.menu.navigate(self.controller.root_menu)
-            self.controller.enter_play()
+            self.controller.enter_play(self.game)
 
 
 class Liberty_Bell_Menu(object):

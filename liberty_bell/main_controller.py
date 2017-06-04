@@ -98,9 +98,8 @@ class Main_Controller(object):
         gold_award = Slot_Machine_Controller(Gold_Award_Machine(), self.ui)
 
         games = [liberty_bell, gold_award]
+        # TODO: Do we even need a list of games?
         self._games = games
-        #self._current_item = self._games[0]
-        #self.enter_play()
 
         self.enter_play(liberty_bell)
 

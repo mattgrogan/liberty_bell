@@ -1,6 +1,5 @@
 from functools import partial
 
-from liberty_bell.text_menu.menu_item import MenuItem
 
 from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
 
@@ -74,7 +73,10 @@ class Main_Controller(object):
         self._current_state = self.state_menu
         self.menu.enter_menu()
 
-    def enter_play(self):
+    def enter_play(self, game=None):
+        if game is not None:
+            self._current_item = game
+
         self._current_state = self.state_play
 
     def execute_cmd(self, command_name, action, label, params=None):
@@ -97,8 +99,10 @@ class Main_Controller(object):
 
         games = [liberty_bell, gold_award]
         self._games = games
-        self._current_item = self._games[0]
-        self.enter_play()
+        #self._current_item = self._games[0]
+        #self.enter_play()
+
+        self.enter_play(liberty_bell)
 
         for i in range(len(games)):
             self.menu.add_game(games[i].slot_machine.name, games[i])

@@ -67,13 +67,14 @@ class Liberty_Bell_Menu(object):
 
         self.menu = Menu_Engine(self.menu_default)
 
-
-
-
     def enter_menu(self):
 
 
         self.menu.navigate(self.menu_default)
+
+    def add_game(self, name, game):
+        game = MenuItem("SWITCH_GAME", name, self.controller.switch_game, game)
+        self.game_menu.add_child(game)
 
     def get_command(self, command_name, label, params=None):
 

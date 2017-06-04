@@ -1,6 +1,5 @@
 from functools import partial
 
-from liberty_bell.text_menu.menu_engine import Menu_Engine
 from liberty_bell.text_menu.menu_item import MenuItem
 
 from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
@@ -102,15 +101,8 @@ class Main_Controller(object):
         self._current_item = self._games[0]
         self.enter_play()
 
-        # Create the game menu items
-        top_game = MenuItem("SWITCH_GAME", games[
-                            0].slot_machine.name, self.switch_game, games[0])
-
-        self.game_menu.add_child(top_game)
-
         for i in range(len(games)):
-            top_game.add_next(
-                MenuItem("SWITCH_GAME", games[i].slot_machine.name, self.switch_game, games[i]))
+            self.menu.add_game(games[i].slot_machine.name, games[i])
 
     def switch_game(self, command_name, action, label, params=None):
 

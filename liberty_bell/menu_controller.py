@@ -3,7 +3,7 @@ from liberty_bell.text_menu.menu_item import MenuItem, MenuItemCmd
 
 class Switch_Game_Cmd(object):
 
-    def __init__(self, ui, controller, label, game):
+    def __init__(self, ui, controller, label, game=None):
         self.ui = ui
         self.controller = controller
         self.label = label
@@ -50,7 +50,9 @@ class Liberty_Bell_Menu(object):
         buy_credits.add_child(buy_100)
 
         # Add various games
-        game_menu = MenuItem("UPDATE_DISPLAY", "Select Game", self.controller.switch_game)
+        #game_menu = MenuItem("UPDATE_DISPLAY", "Select Game", self.controller.switch_game)
+        game_cmd = Switch_Game_Cmd(self.ui, self.controller, "Switch Game")
+        game_menu = MenuItemCmd("SWITCH_GAME", "Select Game", game_cmd)
 
         # Add options
         options = MenuItem("UPDATE_DISPLAY", "Options", self.controller.execute_cmd)

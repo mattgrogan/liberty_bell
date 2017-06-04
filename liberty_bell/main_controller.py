@@ -103,23 +103,6 @@ class Main_Controller(object):
         for i in range(len(games)):
             self.menu.add_game(games[i].slot_machine.name, games[i])
 
-    def switch_game(self, command_name, action, label, params=None):
-
-        if action == "ACTION_LABEL":
-            message = label
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_line(message)
-            self.ui.menu_display.flush()
-        if action == "ACTION_DISPLAY":
-            message = label + "\nPress SPIN"
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_line(message)
-            self.ui.menu_display.flush()
-        if action == "ACTION_TRIGGER":
-            self._current_item = params
-            self._menu.navigate(self.root_menu)
-            self.enter_play()
-
     def handle_input(self, command):
 
         self._current_state.handle_input(command)

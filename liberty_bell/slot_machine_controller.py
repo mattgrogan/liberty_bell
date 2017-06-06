@@ -55,6 +55,7 @@ class Toggle_Autoplay_Cmd(object):
         if action == "ACTION_TRIGGER":
             # self.controller.menu.navigate(self.controller.root_menu)
             self.controller.options["AUTOPLAY"] = not autoplay
+            self.controller.enter_ready()
 
 # TODO: Move this to UI
 
@@ -136,6 +137,31 @@ class ReadyState(object):
         return 100  # Return the requested delay
 
 
+class AutoplayState(object):
+
+    def __init__(self, ui, controller):
+        self.ui = ui
+        self.controller = controller
+        self.ticks = 0
+        self.max_ticks = 5
+
+    def update(self):
+
+        requested_delay_ms = 1000
+
+        msg = "Autoplay in %s" % (self.max_ticks - self.ticks)
+
+        self.ui.menu_display.add_line(msg, (0, 28))
+        self.ui.menu_display.flush()
+
+        self.ticks += 1
+
+        if self.ticks > self.max_ticks:
+            self.controller.enter_spin()
+
+        return requested_delay_ms
+
+
 class Slot_Machine_Controller(object):
 
     def __init__(self, slot_machine, ui):
@@ -202,7 +228,7 @@ class Slot_Machine_Controller(object):
         self.ui.menu_display.add_line(
             "1 CR = $%0.2f" % self.slot_machine.denomination)
         self.ui.menu_display.add_line("Cash: $%.2f" % (
-            self.slot_machine.denomination * credits), (0, 20))
+            self.slot_machine.denomination * credits), (0, 12))
         self.ui.menu_display.flush()
 
     def update_display(self):
@@ -232,10 +258,14 @@ class Slot_Machine_Controller(object):
 
     def enter_spin(self):
         """ Enter the spinning state """
-        self.update_button_state()
-        self.update_display()
+
         self.ui.buzzer.button_tone()
         self.slot_machine.spin()
+
+        # These have to happen after spin!
+        self.update_button_state()
+        self.update_display()
+
         self.state = SpinningState(self.ui, self, self.slot_machine)
 
     def eval(self):
@@ -264,7 +294,8 @@ class Slot_Machine_Controller(object):
 
         if self.options["AUTOPLAY"]:
             # TODO: Give a pause and allow player to enter the menu again
-            self.handle_input("SPIN")
+            # self.handle_input("SPIN")
+            self.state = AutoplayState(self.ui, self)
 
     def update(self):
         """ Update one iteration of game play """

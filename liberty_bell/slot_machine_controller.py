@@ -130,11 +130,22 @@ class Slot_Machine_Controller(object):
         self.ui.reel2_button.enabled = False
         self.ui.reel3_button.enabled = False
 
-    def update_display(self):
+    def update_menu_display(self, credits=None):
+        """ Update the credit and cash amounts on the menu display """
+
+        if credits is None:
+            credits = self.slot_machine.credits
 
         self.ui.menu_display.clear()
-        self.ui.menu_display.add_wrapped_text(self.name)
+        self.ui.menu_display.add_line(
+            "1 CR = $%0.2f" % self.slot_machine.denomination)
+        self.ui.menu_display.add_line("Cash: $%.2f" % (
+            self.slot_machine.denomination * credits), (0, 20))
         self.ui.menu_display.flush()
+
+    def update_display(self):
+
+        self.update_menu_display()
 
         self.ui.credits_led.display(self.slot_machine.credits)
         self.ui.amount_bet_led.display(self.slot_machine.bet)
@@ -185,6 +196,7 @@ class Slot_Machine_Controller(object):
 
                     for i, credits in enumerate(range(starting_credits + 1, ending_credits + 1)):
                         self.ui.credits_led.display(credits)
+                        self.update_menu_display(credits=credits)
                         self.ui.winner_paid_led.display(i + 1)
                         self.ui.buzzer.increment_tone()
                         time.sleep(0.10)

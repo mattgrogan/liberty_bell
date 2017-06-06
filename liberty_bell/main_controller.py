@@ -33,16 +33,16 @@ class State_Menu(object):
 
     def handle_input(self, command):
         if command == "MENU":
-            if self.controller._menu.current_item == self.controller.root_menu:
+            if self.controller.menu.at_root:
                 self.controller.enter_play()
             else:
-                self.controller._menu.navigate_to("PARENT")
+                self.controller.menu.navigate_to("PARENT")
         elif command == "SPIN":
-            self.controller._menu.invoke()
+            self.controller.menu.invoke()
         elif command == "DOWN":
-            self.controller._menu.navigate_to("DOWN")
+            self.controller.menu.navigate_to("DOWN")
         elif command == "UP":
-            self.controller._menu.navigate_to("UP")
+            self.controller.menu.navigate_to("UP")
 
 
 class Main_Controller(object):
@@ -52,11 +52,6 @@ class Main_Controller(object):
 
         self.ui = Liberty_Bell_UI(ui_type)
         self.menu = Liberty_Bell_Menu(self, self.ui)
-
-        self.root_menu = self.menu.root_menu
-        self.game_menu = self.menu.game_menu
-
-        self._menu = self.menu.menu
 
         self.state_play = State_Play(self)
         self.state_menu = State_Menu(self)

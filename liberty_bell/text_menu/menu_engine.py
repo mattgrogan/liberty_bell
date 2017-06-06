@@ -8,6 +8,12 @@ class Menu_Engine(object):
         self.prev_item = None
         self.last_invoked_item = None
 
+    @property
+    def at_root(self):
+        """ Return True if this is the root item """
+
+        return self.current_item.parent_item == None
+
     def navigate(self, target_item):
         """ Navigate to the target item """
 

@@ -4,6 +4,7 @@ from liberty_bell.text_menu.menu_item import MenuItem, MenuItemCmd
 # TODO: Move this to some UI
 from liberty_bell.slot_machine_controller import Update_Display_Cmd
 
+
 class Switch_Game_Cmd(object):
 
     def __init__(self, ui, controller, label, game=None):
@@ -25,7 +26,7 @@ class Switch_Game_Cmd(object):
             self.ui.menu_display.add_line(message)
             self.ui.menu_display.flush()
         if action == "ACTION_TRIGGER":
-            self.controller.menu.navigate(self.controller.root_menu)
+            self.controller.menu.navigate(self.controller.menu.root_menu)
             self.controller.enter_play(self.game)
 
 
@@ -39,32 +40,12 @@ class Liberty_Bell_Menu(object):
         root_cmd = Update_Display_Cmd(self.ui, "Press Menu to Return")
         root_menu = MenuItemCmd(root_cmd)
 
-
-        # Add credits
-        #buy_credits = MenuItem(
-        #    "UPDATE_DISPLAY", "Buy Credits", self.controller.execute_cmd)
-        #buy_1 = MenuItem("BUY_CREDITS", "Buy 1 Credit", self.controller.execute_cmd, 1)
-        # buy_10 = MenuItem("BUY_CREDITS", "Buy 10 Credits",
-        #                   self.controller.execute_cmd, 10)
-        # buy_100 = MenuItem("BUY_CREDITS", "Buy 100 Credits",
-        #                    self.controller.execute_cmd, 100)
-        # buy_credits.add_child(buy_1)
-        # buy_credits.add_child(buy_10)
-        # buy_credits.add_child(buy_100)
-
-        # Add various games
         game_cmd = Switch_Game_Cmd(self.ui, self.controller, "Switch Game")
         game_menu = MenuItemCmd(game_cmd)
 
-        # Add options
         options_cmd = Update_Display_Cmd(self.ui, "Game Options")
         opts_menu = MenuItemCmd(options_cmd)
 
-        #autoplay = MenuItem("TOGGLE_AUTOPLAY",
-        #                    "Toggle Autoplay", self.controller.execute_cmd)
-        #options.add_child(autoplay)
-
-        #root_menu.add_child(buy_credits)
         root_menu.add_child(game_menu)
         root_menu.add_child(opts_menu)
 
@@ -78,6 +59,16 @@ class Liberty_Bell_Menu(object):
 
     def navigate(self, to):
         self.menu.navigate(to)
+
+    def navigate_to(self, dir):
+        self.menu.navigate_to(dir)
+
+    def invoke(self):
+        self.menu.invoke()
+
+    @property
+    def at_root(self):
+        return self.menu.at_root
 
     def enter_menu(self):
         self.menu.navigate(self.menu_default)

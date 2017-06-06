@@ -73,6 +73,25 @@ class Update_Display_Cmd(object):
             self.ui.menu_display.flush()
 
 
+class PayoutAnimation(object):
+    """ Tick up the amounts paid """
+
+    def __init__(self, ui, controller, credits_from, credits_to):
+
+        self.ui = ui
+        self.controller = controller
+        self.credits_from = credits_from
+        self.credits_to = credits_to
+
+    def execute(self):
+        for i, credits in enumerate(range(self.credits_from + 1, self.credits_to + 1)):
+            self.ui.credits_led.display(credits)
+            self.controller.update_menu_display(credits=credits)
+            self.ui.winner_paid_led.display(i + 1)
+            self.ui.buzzer.increment_tone()
+            time.sleep(0.10)
+
+
 class Slot_Machine_Controller(object):
 
     def __init__(self, slot_machine, ui):
@@ -100,8 +119,6 @@ class Slot_Machine_Controller(object):
 
     def handle_input(self, command):
 
-        if command == "MENU":
-            return self.options
         if command == "UP":
             self.slot_machine.increment_bet()
         if command == "DOWN":
@@ -191,15 +208,11 @@ class Slot_Machine_Controller(object):
 
                 if winner:
                     # Do a nice animation =)
-                    starting_credits = self.slot_machine.prev_credits
-                    ending_credits = self.slot_machine.credits
+                    start = self.slot_machine.prev_credits
+                    end = self.slot_machine.credits
 
-                    for i, credits in enumerate(range(starting_credits + 1, ending_credits + 1)):
-                        self.ui.credits_led.display(credits)
-                        self.update_menu_display(credits=credits)
-                        self.ui.winner_paid_led.display(i + 1)
-                        self.ui.buzzer.increment_tone()
-                        time.sleep(0.10)
+                    payout_anim = PayoutAnimation(self.ui, self, start, end)
+                    payout_anim.execute()
 
                 else:
                     self.ui.buzzer.lose_tone()

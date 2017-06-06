@@ -14,13 +14,13 @@ class Buy_Credits_Cmd(object):
         if action == "ACTION_LABEL":
             message = "Buy %i credit(s)" % self.amount
             self.ui.menu_display.clear()
-            self.ui.menu_display.add_line(message)
+            self.ui.menu_display.add_menu_text(message)
             self.ui.menu_display.flush()
 
         if action == "ACTION_DISPLAY":
             message = "Buying %i Press SPIN" % self.amount
             self.ui.menu_display.clear()
-            self.ui.menu_display.add_line(message)
+            self.ui.menu_display.add_menu_text(message)
             self.ui.menu_display.flush()
 
         if action == "ACTION_TRIGGER":
@@ -42,11 +42,11 @@ class Toggle_Autoplay_Cmd(object):
         if action == "ACTION_LABEL":
             message += "ON" if autoplay else "OFF"
             self.ui.menu_display.clear()
-            self.ui.menu_display.add_line(message)
+            self.ui.menu_display.add_menu_text(message)
             self.ui.menu_display.flush()
 
         if action == "ACTION_DISPLAY":
-            message = "Press SPIN to Save"
+            message += "ON" if not autoplay else "OFF"
             self.ui.menu_display.clear()
             self.ui.menu_display.add_menu_text(message, headline="CONFIRM?")
             self.ui.menu_display.flush()
@@ -110,6 +110,8 @@ class Slot_Machine_Controller(object):
             if self.slot_machine.can_spin:
                 self.ui.buzzer.button_tone()
                 self.slot_machine.spin()
+            else:
+                self.options["AUTOPLAY"] = False
 
         self.update_button_state()
         self.update_display()

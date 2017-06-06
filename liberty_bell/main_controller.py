@@ -1,6 +1,3 @@
-from functools import partial
-
-
 from liberty_bell.ui.liberty_bell_ui import Liberty_Bell_UI
 
 from liberty_bell.slot_machine_controller import Slot_Machine_Controller
@@ -11,7 +8,7 @@ from liberty_bell.slot_machines.liberty_bell_machine import \
 from liberty_bell.menu_controller import Liberty_Bell_Menu
 
 
-class State_Play(object):
+class StatePlay(object):
     """ This state handles all playing games """
 
     def __init__(self, controller):
@@ -26,7 +23,7 @@ class State_Play(object):
             self.controller._current_item.handle_input(command)
 
 
-class State_Menu(object):
+class StateMenu(object):
 
     def __init__(self, controller):
         self.controller = controller
@@ -45,7 +42,7 @@ class State_Menu(object):
             self.controller.menu.navigate_to("UP")
 
 
-class Main_Controller(object):
+class MainController(object):
     """ This is the main controller for the game. """
 
     def __init__(self, ui_type):
@@ -53,9 +50,10 @@ class Main_Controller(object):
         self.ui = Liberty_Bell_UI(ui_type)
         self.menu = Liberty_Bell_Menu(self, self.ui)
 
-        self.state_play = State_Play(self)
-        self.state_menu = State_Menu(self)
+        self.state_play = StatePlay(self)
+        self.state_menu = StateMenu(self)
         self._current_state = None
+        self._current_item = None
 
         self.add_games()
 

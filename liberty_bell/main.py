@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 
 from argparse import ArgumentParser
-from liberty_bell.main_controller import Main_Controller
+from liberty_bell.main_controller import MainController
 
 if __name__ == '__main__':
 
@@ -16,7 +16,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Instantiate the controller
-    controller = Main_Controller(ui_type=args.output)
+    controller = MainController(ui_type=args.output)
 
     try:
         controller.start()

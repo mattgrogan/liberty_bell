@@ -71,6 +71,7 @@ class MainController(object):
             self._current_item = game
 
         self._current_state = self.state_play
+        self._current_item.start()
 
     def add_games(self):
 

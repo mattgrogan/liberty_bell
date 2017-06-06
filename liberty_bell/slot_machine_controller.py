@@ -1,4 +1,5 @@
 import time
+import copy
 
 
 class Buy_Credits_Cmd(object):
@@ -92,6 +93,49 @@ class PayoutAnimation(object):
             time.sleep(0.10)
 
 
+class SpinningState(object):
+
+    def __init__(self, ui, controller, slot_machine):
+        self.ui = ui
+        self.controller = controller
+        self.slot_machine = slot_machine
+
+        self.active = False
+
+    def update(self):
+        """ Animate the reels.
+
+        self.active indicates if any reels are spinning
+
+        """
+
+        requested_delay_ms = 0
+
+        self.active = False
+
+        for i, reel in enumerate(self.slot_machine.reels):
+            try:
+                line = reel.next_line()
+                self.active = True
+                self.ui.reel_displays[i].write_line(line)
+            except StopIteration:
+                pass
+
+        if not self.active:
+            self.controller.eval()
+
+        return requested_delay_ms
+
+
+class ReadyState(object):
+
+    def __init__(self):
+        pass
+
+    def update(self):
+        return 100  # Return the requested delay
+
+
 class Slot_Machine_Controller(object):
 
     def __init__(self, slot_machine, ui):
@@ -113,6 +157,8 @@ class Slot_Machine_Controller(object):
 
         self.user_opts.append(Toggle_Autoplay_Cmd(self.ui, self))
 
+        self.enter_ready()
+
     @property
     def name(self):
         return self.slot_machine.name
@@ -125,8 +171,7 @@ class Slot_Machine_Controller(object):
             self.slot_machine.decrement_bet()
         if command == "SPIN":
             if self.slot_machine.can_spin:
-                self.ui.buzzer.button_tone()
-                self.slot_machine.spin()
+                self.enter_spin()
             else:
                 self.options["AUTOPLAY"] = False
 
@@ -185,47 +230,45 @@ class Slot_Machine_Controller(object):
         self.ui.winner_paid_led.clear()
         self.ui.credits_led.clear()
 
+    def enter_spin(self):
+        """ Enter the spinning state """
+        self.update_button_state()
+        self.update_display()
+        self.ui.buzzer.button_tone()
+        self.slot_machine.spin()
+        self.state = SpinningState(self.ui, self, self.slot_machine)
+
+    def eval(self):
+        """ Evaluate the spin"""
+
+        winner = self.slot_machine.eval_spin()
+
+        if winner:
+            # Do a nice animation =)
+            start = self.slot_machine.prev_credits
+            end = self.slot_machine.credits
+
+            payout_anim = PayoutAnimation(self.ui, self, start, end)
+            payout_anim.execute()
+
+        else:
+            self.ui.buzzer.lose_tone()
+
+        self.enter_ready()
+
+    def enter_ready(self):
+        """ Enter the ready for spin state """
+        self.update_button_state()
+        self.update_display()
+        self.state = ReadyState()
+
+        if self.options["AUTOPLAY"]:
+            # TODO: Give a pause and allow player to enter the menu again
+            self.handle_input("SPIN")
+
     def update(self):
         """ Update one iteration of game play """
 
-        requested_delay_ms = 100
-
-        if self.slot_machine.is_spinning:
-            # Is the animation still running?
-            animation_running = False
-
-            for i, reel in enumerate(self.slot_machine.reels):
-                try:
-                    line = reel.next_line()
-                    animation_running = True
-                    self.ui.reel_displays[i].write_line(line)
-                    requested_delay_ms = 0
-                except StopIteration:
-                    pass
-
-            if not animation_running:
-                winner = self.slot_machine.eval_spin()
-
-                if winner:
-                    # Do a nice animation =)
-                    start = self.slot_machine.prev_credits
-                    end = self.slot_machine.credits
-
-                    payout_anim = PayoutAnimation(self.ui, self, start, end)
-                    payout_anim.execute()
-
-                else:
-                    self.ui.buzzer.lose_tone()
-
-                self.update_button_state()
-                self.update_display()
-
-        else:
-            self.update_button_state()
-            self.update_display()
-
-            if self.options["AUTOPLAY"]:
-                # TODO: Give a pause and allow player to enter the menu again
-                self.handle_input("SPIN")
+        requested_delay_ms = self.state.update()
 
         return requested_delay_ms

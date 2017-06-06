@@ -97,14 +97,11 @@ class Main_Controller(object):
         liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), self.ui)
         gold_award = Slot_Machine_Controller(Gold_Award_Machine(), self.ui)
 
-        games = [liberty_bell, gold_award]
-        # TODO: Do we even need a list of games?
-        self._games = games
+        self.menu.add_game(liberty_bell.slot_machine.name, liberty_bell)
+        self.menu.add_game(gold_award.slot_machine.name, gold_award)
 
+        # Default to liberty bell
         self.enter_play(liberty_bell)
-
-        for i in range(len(games)):
-            self.menu.add_game(games[i].slot_machine.name, games[i])
 
     def handle_input(self, command):
 
@@ -119,6 +116,7 @@ class Main_Controller(object):
         self.ui.concrete_ui.schedule_next(requested_delay_ms)
 
     def start(self):
+        # TODO: Remove references to concrete_ui
         self.ui.concrete_ui.mainloop()
 
     def shutdown(self):

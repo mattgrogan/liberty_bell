@@ -54,7 +54,7 @@ class Toggle_Autoplay_Cmd(object):
     if action == "ACTION_TRIGGER":
       self.controller.options["AUTOPLAY"] = not autoplay
 
-
+# TODO: Move this to UI
 class Update_Display_Cmd(object):
 
   def __init__(self, ui, text):
@@ -78,6 +78,17 @@ class Slot_Machine_Controller(object):
     self.slot_machine = slot_machine
     self.options = {}
     self.options["AUTOPLAY"] = False
+
+    self.user_opts = []
+
+    # Options for purchasing credits
+    self.user_opts.append(Buy_Credits_Cmd(self.ui, self.slot_machine, self, 1))
+    self.user_opts.append(Buy_Credits_Cmd(self.ui, self.slot_machine, self, 10))
+    self.user_opts.append(Buy_Credits_Cmd(self.ui, self.slot_machine, self, 100))
+
+    self.user_opts.append(Toggle_Autoplay_Cmd(self.ui, self))
+
+
 
   @property
   def name(self):

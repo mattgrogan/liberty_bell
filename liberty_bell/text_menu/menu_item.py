@@ -32,8 +32,17 @@ class MenuItem(object):
 
 class MenuItemCmd(MenuItem):
 
+    def __init__(self, command):
+        self.command = command
+
+        self.next_item = None
+        self.prev_item = None
+        self.parent_item = None
+        self.child_item = None
+
     def execute_callback_action(self, action):
+      print "MenuItemCmd::execute_callback_action"
       self.execute(action)
 
     def execute(self, action):
-      self.callback.execute(action)
+      self.command.execute(action)

@@ -79,19 +79,6 @@ class Main_Controller(object):
 
         self._current_state = self.state_play
 
-    def execute_cmd(self, command_name, action, label, params=None):
-        """ Obtain a command from the current item and execute it """
-
-        print "Calling %s action %s label %s params %s" % (command_name, action, label, params)
-
-        # TODO: The menu should already have the command. Just execute it.
-
-        cmd = self._current_item.get_command(command_name, label, params)
-        cmd.execute(action)
-
-        if action == "ACTION_TRIGGER":
-            self._menu.navigate_to("PARENT")
-
     def add_games(self):
 
         liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), self.ui)

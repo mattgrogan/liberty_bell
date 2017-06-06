@@ -151,7 +151,7 @@ class AutoplayState(object):
 
         msg = "Autoplay in %s" % (self.max_ticks - self.ticks)
 
-        self.ui.menu_display.add_line(msg, (0, 28))
+        self.ui.menu_display.add_line_nbr(msg, 2)
         self.ui.menu_display.flush()
 
         self.ticks += 1
@@ -224,11 +224,17 @@ class Slot_Machine_Controller(object):
         if credits is None:
             credits = self.slot_machine.credits
 
+        line1 = "1 CR = $%0.2f" % self.slot_machine.denomination
+        line2 = "Cash: $%.2f" % (self.slot_machine.denomination * credits)
+        line3 = "  GOOD LUCK"
+
         self.ui.menu_display.clear()
-        self.ui.menu_display.add_line(
-            "1 CR = $%0.2f" % self.slot_machine.denomination)
-        self.ui.menu_display.add_line("Cash: $%.2f" % (
-            self.slot_machine.denomination * credits), (0, 12))
+        self.ui.menu_display.add_line_nbr(line1, 0)
+        self.ui.menu_display.add_line_nbr(line2, 1)
+
+        if self.slot_machine.is_spinning:
+            self.ui.menu_display.add_line_nbr(line3, 3, inverse=True)
+
         self.ui.menu_display.flush()
 
     def update_display(self):

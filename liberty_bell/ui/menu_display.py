@@ -59,6 +59,12 @@ class Menu_Display(object):
 
         return (width, height)
 
+    def add_line_nbr(self, line, line_num, inverse=False):
+        """ Add the first line """
+        width, height = self.font.getsize(line)
+        y = height * line_num
+        self.add_line(line, (0, y), inverse)
+
     def add_wrapped_text(self, text, loc=(0, 0)):
 
         x, y = loc

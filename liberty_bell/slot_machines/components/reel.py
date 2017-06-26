@@ -1,6 +1,8 @@
 import copy
 import random
 
+from liberty_bell.slot_machines.components.reel_image import ReelImage
+
 
 class Reel(object):
     """ A slot machine reel  """
@@ -41,22 +43,35 @@ class Reel(object):
 
         self.current_symbol.image.reset()
 
-    def spin(self):
+    def spin(self, min_spins=None):
         """ Spin the reel and return a random result """
 
+        if min_spins is None:
+            min_spins = self.index
+
+        # Randomly choose a winning symbol
         self.winning_symbol = self.randomizer.choice(self.stops)
-        self.current_spin = 0
+
+        print "Reel %s Winning symbol %s" % (self.name, self.winning_symbol)
+
+        # Calculate the minimum number of stops
+        min_stops = min_spins * len(self.stops)
+
+        spin_stops = []
+
+        # Get each stop for the minimum number of spins
+        for i in range(min_stops):
+            self.advance()
+            spin_stops.append(self.current_symbol)
+
+        # Now iterate until we find the winning symbol
+        while self.current_symbol != self.winning_symbol:
+            self.advance()
+            spin_stops.append(self.current_symbol)
+
+        self.spin_image = ReelImage(spin_stops)
 
     def next_line(self):
         """ Get the next line from the symbol """
 
-        try:
-            line = self.current_symbol.image.next_line()
-        except StopIteration:
-            if self.current_symbol == self.winning_symbol and self.current_spin >= self.min_spins:
-                raise StopIteration  # reached the end
-            else:
-                self.advance()
-                line = self.current_symbol.image.next_line()
-
-        return line
+        return self.spin_image.next_line()

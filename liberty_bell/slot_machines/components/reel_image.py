@@ -37,18 +37,27 @@ class ReelImage(object):
             width, height = stop.image.image.size
             y += height
 
+        self.pix = self.image.load()
+
+        self.rows = {}
+
+        for row in range(self.reel_height):
+            row_data = []
+
+            for i in range(self.reel_width):
+                    row_data.append(self.pix[i, row])
+
+            self.rows[row] = row_data
+
+
+
     def next_line(self):
         """ Extract a single row from the image """
 
         if self.current_row >= self.reel_height:
             raise StopIteration()
 
-        self.pix = self.image.load()
-
-        row_data = []
-
-        for i in range(self.reel_width):
-            row_data.append(self.pix[i,self.current_row])
+        row_data = self.rows[self.current_row]
 
         self.current_row += 1
 

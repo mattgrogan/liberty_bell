@@ -46,8 +46,11 @@ class Reel(object):
     def spin(self, min_spins=None):
         """ Spin the reel and return a random result """
 
+        # TODO: This can be changed to "skip symbol" logic instead
+        # for example, skip 3 horseshoes before landing on the winning symbol
+
         if min_spins is None:
-            min_spins = self.index
+            min_spins = self.index + 1
 
         # Randomly choose a winning symbol
         self.winning_symbol = self.randomizer.choice(self.stops)

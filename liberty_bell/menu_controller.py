@@ -7,9 +7,10 @@ from liberty_bell.slot_machine_controller import Update_Display_Cmd
 
 class Switch_Game_Cmd(object):
 
-    def __init__(self, ui, controller, label, game=None):
+    def __init__(self, ui, controller, menu, label, game=None):
         self.ui = ui
         self.controller = controller
+        self.menu = menu
         self.label = label
         self.game = game
 
@@ -26,6 +27,7 @@ class Switch_Game_Cmd(object):
             self.ui.menu_display.add_menu_text(message)
             self.ui.menu_display.flush()
         if action == "ACTION_TRIGGER":
+            self.menu.build_opts_menu(self.game)
             self.controller.menu.navigate(self.controller.menu.root_menu)
             self.controller.enter_play(self.game)
 
@@ -40,7 +42,8 @@ class Liberty_Bell_Menu(object):
         root_cmd = Update_Display_Cmd(self.ui, "Press Menu to Return")
         root_menu = MenuItemCmd(root_cmd)
 
-        game_cmd = Switch_Game_Cmd(self.ui, self.controller, "Switch Game")
+        game_cmd = Switch_Game_Cmd(
+            self.ui, self.controller, self, "Switch Game")
         game_menu = MenuItemCmd(game_cmd)
 
         options_cmd = Update_Display_Cmd(self.ui, "Game Options")
@@ -84,12 +87,16 @@ class Liberty_Bell_Menu(object):
         self.ui.reel2_button.enabled = False
         self.ui.reel3_button.enabled = False
 
-    def add_game(self, name, game):
-        game_cmd = Switch_Game_Cmd(self.ui, self.controller, name, game)
-        game_menu = MenuItemCmd(game_cmd)
-        self.game_menu.add_child(game_menu)
+    def build_opts_menu(self, game):
+        """ Set up the user options menu. Must be called after game is set. """
 
-        # Add the options
+        self.opts_menu.clear_children()
+
         for opt in game.user_opts:
             cmd = MenuItemCmd(opt)
             self.opts_menu.add_child(cmd)
+
+    def add_game(self, name, game):
+        game_cmd = Switch_Game_Cmd(self.ui, self.controller, self, name, game)
+        game_menu = MenuItemCmd(game_cmd)
+        self.game_menu.add_child(game_menu)

@@ -82,6 +82,7 @@ class MainController(object):
         self.menu.add_game(gold_award.slot_machine.name, gold_award)
 
         # Default to liberty bell
+        self.menu.build_opts_menu(liberty_bell)
         self.enter_play(liberty_bell)
 
     def handle_input(self, command):

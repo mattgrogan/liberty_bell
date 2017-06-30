@@ -40,6 +40,8 @@ class Toggle_Autoplay_Cmd(object):
 
         autoplay = self.controller.options["AUTOPLAY"]
 
+        print "Autoplay: %s" % action
+
         if action == "ACTION_LABEL":
             message += "ON" if autoplay else "OFF"
             self.ui.menu_display.clear()
@@ -54,6 +56,7 @@ class Toggle_Autoplay_Cmd(object):
 
         if action == "ACTION_TRIGGER":
             # self.controller.menu.navigate(self.controller.root_menu)
+            print "Triggering autoplay to %s" % (not autoplay)
             self.controller.options["AUTOPLAY"] = not autoplay
             self.controller.enter_ready()
 
@@ -294,13 +297,13 @@ class Slot_Machine_Controller(object):
 
     def enter_ready(self):
         """ Enter the ready for spin state """
+
+        print "In enter_ready() for %s" % self.slot_machine.name
         self.update_button_state()
         self.update_display()
         self.state = ReadyState()
 
         if self.options["AUTOPLAY"]:
-            # TODO: Give a pause and allow player to enter the menu again
-            # self.handle_input("SPIN")
             self.state = AutoplayState(self.ui, self)
 
     def update(self):

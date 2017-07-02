@@ -7,6 +7,8 @@ class ReelImage(object):
     def __init__(self, stops):
         """ Pass reel to get the images """
 
+        print "Building image with %i stops" % len(stops)
+
         self.stops = stops    # The slot machine reel holds an image for each symbol
 
         self.current_row = 0

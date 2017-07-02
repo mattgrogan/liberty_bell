@@ -31,6 +31,7 @@ class Menu_Display(object):
     def clear(self):
 
         self._image = Image.new("1", self.size, color="#000000")
+        self._draw = ImageDraw.Draw(self._image)
 
     def flush(self):
         """ Write to the hardware """
@@ -42,7 +43,8 @@ class Menu_Display(object):
         of the line """
 
         # Obtain drawing object
-        draw = ImageDraw.Draw(self._image)
+        #draw = ImageDraw.Draw(self._image)
+        draw = self._draw
 
         x, y = loc
         width, height = self.font.getsize(line)

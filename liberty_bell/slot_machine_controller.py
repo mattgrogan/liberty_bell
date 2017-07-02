@@ -91,8 +91,8 @@ class PayoutAnimation(object):
     def execute(self):
         for i, credits in enumerate(range(self.credits_from + 1, self.credits_to + 1)):
             self.ui.credits_led.display(credits)
-            self.controller.update_menu_display(credits=credits)
             self.ui.winner_paid_led.display(i + 1)
+            self.controller.update_menu_display(credits=credits)
             self.ui.buzzer.increment_tone()
             time.sleep(0.10)
 

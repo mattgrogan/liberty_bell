@@ -48,10 +48,10 @@ class SSD1306_Display_Adapter(object):
 
     self.display()
 
-  def display(self):
+  def display(self, image):
     """ Write the image to the screen """
 
-    self._oled.load_image(self.image)
+    self._oled.load_image(image)
     self._oled.write_buffer()
 
   def text(self, text, x=0, y=10, font_size=FONT_SIZE):

@@ -55,9 +55,10 @@ class SpinningState(object):
         self.slot_machine.spin()
 
         import random
-        self.r1.spin(3, random.randint(0, self.r1.orig_h))
-        self.r2.spin(4, random.randint(0, self.r2.orig_h))
-        self.r3.spin(5, random.randint(0, self.r3.orig_h))
+        self.r1.spin(3, self.slot_machine.reels[0].winning_stop)
+        self.r2.spin(4, self.slot_machine.reels[1].winning_stop)
+        self.r3.spin(5, self.slot_machine.reels[2].winning_stop)
+
 
         print "end init"
 

@@ -14,6 +14,7 @@ class Reel(object):
         self.name = "Reel %i" % (index + 1)
         self.stops = copy.deepcopy(stops)
 
+        self.winning_stop = None
         self.winning_symbol = None
 
         self.randomizer = randomizer
@@ -29,7 +30,9 @@ class Reel(object):
     def spin(self, min_spins=None):
         """ Spin the reel and return a random result """
 
+        self.winning_stop = self.randomizer.choice(range(len(self.stops)))
+
         # Randomly choose a winning symbol
-        self.winning_symbol = self.randomizer.choice(self.stops)
+        self.winning_symbol = self.stops[self.winning_stop]
 
         print "Reel %s Winning symbol %s" % (self.name, self.winning_symbol)

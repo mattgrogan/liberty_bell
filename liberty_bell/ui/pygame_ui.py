@@ -123,8 +123,10 @@ class Reel(object):
     def blit(self):
         self.screen_surface.blit(self.get_view(), (0, 0))
 
-    def spin(self, revolutions, stop_row):
+    def spin(self, revolutions, stop):
         """ Spin for a certain amount of time. Duration in milliseconds """
+
+        stop_row = self.reel_image.stop_locs[stop]
 
         if not self.is_spinning:
             self.reel_stepper.set_target(pos=self.rect.top, tgt=stop_row, revs=revolutions)

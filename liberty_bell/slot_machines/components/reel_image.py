@@ -7,29 +7,36 @@ class ReelImage(object):
     def __init__(self, stops):
         """ Pass reel to get the images """
 
-        print "Building image with %i stops" % len(stops)
-
         self.stops = stops    # The slot machine reel holds an image for each symbol
+        self.image = None
 
-        self.current_row = 0
+        self.w = 0     # The width of the entire reel image
+        self.h = 0     # The height of the entire reel image
 
-        self.reel_width = 0      # The width of the entire reel image
-        self.reel_height = 0     # The height of the entire reel image
+        self.calculate_height()
+        self.stitch_image()
 
-        # Determine the reel height
+        #self.image.show()
+
+    def calculate_height(self):
+        """ Loop through the stops to determine the overall image dimensions """
+
         for stop in self.stops:
             # Extract the dimensions from the reel stop images
             img = stop.image.image
             width, height = img.size
 
             # The entire width will be the maximum of any of the images
-            self.reel_width = max(self.reel_width, width)
+            self.w = max(self.w, width)
 
             # Increment the height for each image
-            self.reel_height += height
+            self.h += height
+
+    def stitch_image(self):
+        """ Stitch the image into one long image """
 
         # Stitch the image together
-        self.image = Image.new("RGB", (self.reel_width, self.reel_height))
+        self.image = Image.new("RGB", (self.w, self.h))
 
         x = 0
         y = 0
@@ -38,29 +45,3 @@ class ReelImage(object):
             self.image.paste(stop.image.image, (x, y))
             width, height = stop.image.image.size
             y += height
-
-        self.pix = self.image.load()
-
-        self.rows = {}
-
-        for row in range(self.reel_height):
-            row_data = []
-
-            for i in range(self.reel_width):
-                    row_data.append(self.pix[i, row])
-
-            self.rows[row] = row_data
-
-
-
-    def next_line(self):
-        """ Extract a single row from the image """
-
-        if self.current_row >= self.reel_height:
-            raise StopIteration()
-
-        row_data = self.rows[self.current_row]
-
-        self.current_row += 1
-
-        return row_data

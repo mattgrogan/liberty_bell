@@ -12,8 +12,8 @@ class Liberty_Bell_UI(object):
 
         self.concrete_ui = concrete_ui
 
-        screen = pygame.display.set_mode(WIN_SIZE)
-        screen.fill(pygame.Color(255,255,255))
+        self.screen = pygame.display.set_mode(WIN_SIZE)
+        self.screen.fill(pygame.Color(255,255,255))
 
         pygame.display.init()
         pygame.display.update()
@@ -26,11 +26,6 @@ class Liberty_Bell_UI(object):
         self.reel1_button = concrete_ui.reel1_button
         self.reel2_button = concrete_ui.reel2_button
         self.reel3_button = concrete_ui.reel3_button
-
-        #self.display_1 = concrete_ui.display_1
-        #self.display_2 = concrete_ui.display_2
-        #self.display_3 = concrete_ui.display_3
-        #self.reel_displays = [self.display_1, self.display_2, self.display_3]
 
         self.credits_led = concrete_ui.credits_led
         self.winner_paid_led = concrete_ui.winner_paid_led

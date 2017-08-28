@@ -119,10 +119,13 @@ class SpinningState(object):
         self.active = False
 
         for i, reel in enumerate(self.slot_machine.reels):
+            reel.get_image()
+            pass
             try:
-                line = reel.next_line()
-                self.active = True
+                #line = reel.next_line()
+                #self.active = True
                 #self.ui.reel_displays[i].write_line(line)
+                raise StopIteration
             except StopIteration:
                 pass
 

@@ -3,9 +3,6 @@ import platform
 
 import Tkinter as tk
 
-import PIL.Image as Image
-import PIL.ImageTk as ImageTk
-
 from liberty_bell.components.gui_button import GUI_Button
 from liberty_bell.components.gui_buzzer import GUI_Buzzer
 from liberty_bell.components.gui_numeric_display import GUI_Numeric_Display

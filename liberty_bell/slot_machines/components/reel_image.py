@@ -9,6 +9,7 @@ class ReelImage(object):
 
         self.stops = stops    # The slot machine reel holds an image for each symbol
         self.image = None
+        self.stop_locs = [0]
 
         self.w = 0     # The width of the entire reel image
         self.h = 0     # The height of the entire reel image
@@ -31,6 +32,9 @@ class ReelImage(object):
 
             # Increment the height for each image
             self.h += height
+
+            # Add this as a stop
+            self.stop_locs.append(self.h)
 
     def stitch_image(self):
         """ Stitch the image into one long image """

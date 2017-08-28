@@ -16,7 +16,7 @@ class Liberty_Bell_UI(object):
         self.screen.fill(pygame.Color(255,255,255))
 
         pygame.display.init()
-        pygame.display.update()
+        pygame.display.flip()
 
         self.spin_button = concrete_ui.spin_button
         self.up_button = concrete_ui.up_button
@@ -30,8 +30,6 @@ class Liberty_Bell_UI(object):
         self.credits_led = concrete_ui.credits_led
         self.winner_paid_led = concrete_ui.winner_paid_led
         self.amount_bet_led = concrete_ui.amount_bet_led
-
-        #self.menu_display = Menu_Display(concrete_ui.menu_display_driver)
 
         self.buzzer = concrete_ui.buzzer
 

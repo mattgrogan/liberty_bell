@@ -1,6 +1,21 @@
 import time
 import copy
 
+import pygame
+from pygame.locals import *
+
+from liberty_bell.ui.pygame_ui import Reel
+
+view_size = (128, 300)
+win_size = (800, 480)
+
+reel1_loc = (100, 100)
+reel2_loc = (258, 100)
+reel3_loc = (416, 100)
+
+background_color = Color('white')
+
+
 
 class Buy_Credits_Cmd(object):
 
@@ -178,6 +193,8 @@ class Slot_Machine_Controller(object):
         self.options = {}
         self.options["AUTOPLAY"] = False
 
+        self.r1 = None
+
         self.user_opts = []
 
         # Options for purchasing credits
@@ -272,6 +289,12 @@ class Slot_Machine_Controller(object):
     def enter_spin(self):
         """ Enter the spinning state """
 
+        self.r1 = Reel(self.slot_machine.reels[0].get_image(), self.ui.screen, reel1_loc, view_size)
+        self.r1.blit()
+        pygame.display.flip()
+        import random
+        self.r1.spin(3, random.randint(0, self.r1.orig_h))
+
         self.ui.buzzer.button_tone()
         self.slot_machine.spin()
 
@@ -312,6 +335,15 @@ class Slot_Machine_Controller(object):
 
     def update(self):
         """ Update one iteration of game play """
+
+        if self.r1:
+            dirty_rects = []
+
+            dirty_rects.append(self.r1.update())
+            #dirty_rects.append(r2.update())
+            #dirty_rects.append(r3.update())
+            pygame.display.update(dirty_rects)
+
 
         requested_delay_ms = self.state.update()
 

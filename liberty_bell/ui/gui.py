@@ -1,3 +1,8 @@
+import os
+import platform
+
+
+import pygame
 import Tkinter as tk
 
 import PIL.Image as Image
@@ -9,6 +14,7 @@ from liberty_bell.components.gui_button import GUI_Button
 from liberty_bell.components.gui_buzzer import GUI_Buzzer
 from liberty_bell.components.gui_numeric_display import GUI_Numeric_Display
 
+WIN_SIZE = (800, 480)
 
 class Gui(tk.Tk):
 
@@ -20,7 +26,21 @@ class Gui(tk.Tk):
         self.callback = callback
 
         frame = tk.Frame(self, pady=10)
-        frame.grid(row=1, column=0, sticky=tk.E)
+        frame.grid(row=0, column=0, sticky=tk.E)
+
+        pygame_embed = tk.Frame(frame, width = 800, height = 480)
+        pygame_embed.grid(row=0, column=0, sticky=tk.E)
+
+        os.environ['SDL_WINDOWID'] = str(pygame_embed.winfo_id())
+        if platform.system == "Windows":
+            os.environ['SDL_VIDEODRIVER'] = 'windib'
+
+        screen = pygame.display.set_mode(WIN_SIZE)
+
+        screen.fill(pygame.Color(255,255,255))
+
+        pygame.display.init()
+        pygame.display.update()
 
         led_frame = tk.Frame(self, padx=10, pady=10)
         led_frame.grid(row=0, column=1, sticky=tk.E)
@@ -41,35 +61,35 @@ class Gui(tk.Tk):
         self.credits_led.grid(row=3, column=0)
         self.amount_bet_led.grid(row=5, column=0)
 
-        self.bind("<Up>", lambda: self.handle_input("UP"))
-        self.bind("<Down>", lambda: self.handle_input("DOWN"))
+        #self.bind("<Up>", lambda: self.handle_input("UP"))
+        #self.bind("<Down>", lambda: self.handle_input("DOWN"))
 
-        self.blank_image = Image.new(
-            "RGB", (128, 128), color="#000000")
-        self.blank_image = ImageTk.PhotoImage(self.blank_image)
+        #self.blank_image = Image.new(
+        #    "RGB", (128, 128), color="#000000")
+        #self.blank_image = ImageTk.PhotoImage(self.blank_image)
 
         disp_frame = tk.Frame(self, padx=10, pady=10)
-        disp_frame.grid(row=0, column=0)
+        disp_frame.grid(row=1, column=0)
 
-        self.display_1 = GUI_1351(disp_frame)
-        self.display_2 = GUI_1351(disp_frame)
-        self.display_3 = GUI_1351(disp_frame)
+        self.display_1 = GUI_1351(frame)
+        self.display_2 = GUI_1351(frame)
+        self.display_3 = GUI_1351(frame)
 
-        reel_displays = [self.display_1, self.display_2, self.display_3]
+        #reel_displays = [self.display_1, self.display_2, self.display_3]
 
-        for i, disp in enumerate(reel_displays):
-            disp.grid(row=0, column=i)
+        #for i, disp in enumerate(reel_displays):
+            #disp.grid(row=0, column=i)
 
         self.menu_display_driver = GUI_1306(frame)
 
         self.spin_button = GUI_Button(
-            "Spin", frame, text="Spin", command=lambda: self.callback("SPIN"))
+            "Spin", disp_frame, text="Spin", command=lambda: self.callback("SPIN"))
         self.up_button = GUI_Button(
-            "Up", frame, text="Up", command=lambda: self.callback("UP"))
+            "Up", disp_frame, text="Up", command=lambda: self.callback("UP"))
         self.down_button = GUI_Button(
-            "Down", frame, text="Down", command=lambda: self.callback("DOWN"))
+            "Down", disp_frame, text="Down", command=lambda: self.callback("DOWN"))
         self.menu_button = GUI_Button(
-            "Menu", frame, text="Menu", command=lambda: self.callback("MENU"))
+            "Menu", disp_frame, text="Menu", command=lambda: self.callback("MENU"))
 
         self.reel1_button = GUI_Button(
             "Reel1", disp_frame, text="Reel 1", command=lambda: self.callback("B1"))
@@ -78,11 +98,11 @@ class Gui(tk.Tk):
         self.reel3_button = GUI_Button(
             "Reel3", disp_frame, text="Reel 3", command=lambda: self.callback("B3"))
 
-        self.spin_button.grid(row=0, column=4)
-        self.up_button.grid(row=0, column=3)
-        self.down_button.grid(row=0, column=2)
-        self.menu_button.grid(row=0, column=1)
-        self.menu_display_driver.grid(row=0, column=0)
+        self.spin_button.grid(row=2, column=3)
+        self.up_button.grid(row=2, column=2)
+        self.down_button.grid(row=2, column=1)
+        self.menu_button.grid(row=2, column=0)
+        #self.menu_display_driver.grid(row=0, column=0)
 
         self.reel1_button.grid(row=1, column=0)
         self.reel2_button.grid(row=1, column=1)

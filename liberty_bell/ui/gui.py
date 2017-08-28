@@ -61,12 +61,12 @@ class Gui(tk.Tk):
         self.credits_led.grid(row=3, column=0)
         self.amount_bet_led.grid(row=5, column=0)
 
-        #self.bind("<Up>", lambda: self.handle_input("UP"))
-        #self.bind("<Down>", lambda: self.handle_input("DOWN"))
+        self.bind("<Up>", lambda: self.handle_input("UP"))
+        self.bind("<Down>", lambda: self.handle_input("DOWN"))
 
-        #self.blank_image = Image.new(
+        # self.blank_image = Image.new(
         #    "RGB", (128, 128), color="#000000")
-        #self.blank_image = ImageTk.PhotoImage(self.blank_image)
+        # self.blank_image = ImageTk.PhotoImage(self.blank_image)
 
         disp_frame = tk.Frame(self, padx=10, pady=10)
         disp_frame.grid(row=1, column=0)
@@ -75,12 +75,12 @@ class Gui(tk.Tk):
         self.display_2 = GUI_1351(frame)
         self.display_3 = GUI_1351(frame)
 
-        #reel_displays = [self.display_1, self.display_2, self.display_3]
+        reel_displays = [self.display_1, self.display_2, self.display_3]
 
         #for i, disp in enumerate(reel_displays):
-            #disp.grid(row=0, column=i)
+        #    disp.grid(row=0, column=i)
 
-        self.menu_display_driver = GUI_1306(frame)
+        #self.menu_display_driver = GUI_1306(frame)
 
         self.spin_button = GUI_Button(
             "Spin", disp_frame, text="Spin", command=lambda: self.callback("SPIN"))

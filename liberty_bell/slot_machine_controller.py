@@ -14,15 +14,15 @@ class Buy_Credits_Cmd(object):
 
         if action == "ACTION_LABEL":
             message = "Buy %i credit(s)" % self.amount
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_menu_text(message)
-            self.ui.menu_display.flush()
+            #self.ui.menu_display.clear()
+            #self.ui.menu_display.add_menu_text(message)
+            #self.ui.menu_display.flush()
 
         if action == "ACTION_DISPLAY":
             message = "Buying %i Press SPIN" % self.amount
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_menu_text(message)
-            self.ui.menu_display.flush()
+            #self.ui.menu_display.clear()
+            #self.ui.menu_display.add_menu_text(message)
+            #self.ui.menu_display.flush()
 
         if action == "ACTION_TRIGGER":
             self.slot_machine.credits += self.amount
@@ -44,15 +44,15 @@ class Toggle_Autoplay_Cmd(object):
 
         if action == "ACTION_LABEL":
             message += "ON" if autoplay else "OFF"
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_menu_text(message)
-            self.ui.menu_display.flush()
+            #self.ui.menu_display.clear()
+            #self.ui.menu_display.add_menu_text(message)
+            #self.ui.menu_display.flush()
 
         if action == "ACTION_DISPLAY":
             message += "ON" if not autoplay else "OFF"
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_menu_text(message, headline="CONFIRM?")
-            self.ui.menu_display.flush()
+            #self.ui.menu_display.clear()
+            #self.ui.menu_display.add_menu_text(message, headline="CONFIRM?")
+            #self.ui.menu_display.flush()
 
         if action == "ACTION_TRIGGER":
             # self.controller.menu.navigate(self.controller.root_menu)
@@ -73,9 +73,10 @@ class Update_Display_Cmd(object):
         print "Received action %s from '%s'" % (action, self.text)
 
         if action == "ACTION_LABEL":
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_menu_text(self.text)
-            self.ui.menu_display.flush()
+            #self.ui.menu_display.clear()
+            #self.ui.menu_display.add_menu_text(self.text)
+            #self.ui.menu_display.flush()
+            pass
 
 
 class PayoutAnimation(object):
@@ -154,8 +155,8 @@ class AutoplayState(object):
 
         msg = "Autoplay in %s" % (self.max_ticks - self.ticks)
 
-        self.ui.menu_display.add_line_nbr(msg, 2)
-        self.ui.menu_display.flush()
+        #self.ui.menu_display.add_line_nbr(msg, 2)
+        #self.ui.menu_display.flush()
 
         self.ticks += 1
 
@@ -231,14 +232,14 @@ class Slot_Machine_Controller(object):
         line2 = "Cash: $%.2f" % (self.slot_machine.denomination * credits)
         line3 = "  GOOD LUCK"
 
-        self.ui.menu_display.clear()
-        self.ui.menu_display.add_line_nbr(line1, 0)
-        self.ui.menu_display.add_line_nbr(line2, 1)
+        #self.ui.menu_display.clear()
+        #self.ui.menu_display.add_line_nbr(line1, 0)
+        #self.ui.menu_display.add_line_nbr(line2, 1)
 
-        if self.slot_machine.is_spinning:
-            self.ui.menu_display.add_line_nbr(line3, 3, inverse=True)
+        #if self.slot_machine.is_spinning:
+            #self.ui.menu_display.add_line_nbr(line3, 3, inverse=True)
 
-        self.ui.menu_display.flush()
+        #self.ui.menu_display.flush()
 
     def update_display(self):
 

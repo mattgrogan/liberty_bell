@@ -29,7 +29,7 @@ class Liberty_Bell_UI(object):
         self.winner_paid_led = concrete_ui.winner_paid_led
         self.amount_bet_led = concrete_ui.amount_bet_led
 
-        self.menu_display = Menu_Display(concrete_ui.menu_display_driver)
+        #self.menu_display = Menu_Display(concrete_ui.menu_display_driver)
 
         self.buzzer = concrete_ui.buzzer
 

@@ -18,14 +18,14 @@ class Switch_Game_Cmd(object):
 
         if action == "ACTION_LABEL":
             message = self.label
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_menu_text(message)
-            self.ui.menu_display.flush()
+            #self.ui.menu_display.clear()
+            #self.ui.menu_display.add_menu_text(message)
+            #self.ui.menu_display.flush()
         if action == "ACTION_DISPLAY":
             message = self.label + " Press SPIN"
-            self.ui.menu_display.clear()
-            self.ui.menu_display.add_menu_text(message)
-            self.ui.menu_display.flush()
+            #self.ui.menu_display.clear()
+            #self.ui.menu_display.add_menu_text(message)
+            #self.ui.menu_display.flush()
         if action == "ACTION_TRIGGER":
             self.menu.build_opts_menu(self.game)
             self.controller.menu.navigate(self.controller.menu.root_menu)

@@ -12,13 +12,13 @@ if __name__ == '__main__':
                         required=False,
                         choices=["gui", "rpi"],
                         default="rpi")
-    parser.add_argument("-t", action="store_true")
+
     args = parser.parse_args()
 
     # Instantiate the controller
     controller = MainController(ui_type=args.output)
 
-    try:
-        controller.start()
-    finally:
-        controller.shutdown()
+    #try:
+    controller.start()
+    #finally:
+    #    controller.shutdown()

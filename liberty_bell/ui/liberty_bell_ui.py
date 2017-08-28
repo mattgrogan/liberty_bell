@@ -67,6 +67,3 @@ class Liberty_Bell_UI(object):
     def ready(self):
         # This is a hack and needs to be removed
         self.concrete_ui.ready()
-
-    def set_callback(self, callback):
-        self.concrete_ui.run_callback = callback

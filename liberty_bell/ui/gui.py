@@ -80,11 +80,5 @@ class Gui(tk.Tk):
 
         self.buzzer = GUI_Buzzer()
 
-    def ready(self):
-        self.after(0, self.run_callback)
-
-    def schedule_next(self, requested_delay_ms):
-        self.after(requested_delay_ms, self.run_callback)
-
     def shutdown(self):
         pass

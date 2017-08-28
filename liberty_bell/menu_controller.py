@@ -1,9 +1,6 @@
 from liberty_bell.text_menu.menu_engine import Menu_Engine
 from liberty_bell.text_menu.menu_item import MenuItem, MenuItemCmd
 
-# TODO: Move this to some UI
-from liberty_bell.slot_machine_controller import Update_Display_Cmd
-
 
 class Switch_Game_Cmd(object):
 

@@ -5,7 +5,11 @@ from liberty_bell.slot_machines.gold_award_machine import Gold_Award_Machine
 from liberty_bell.slot_machines.liberty_bell_machine import \
     Liberty_Bell_Machine
 
-from liberty_bell.menu_controller import Liberty_Bell_Menu
+#from liberty_bell.menu_controller import Liberty_Bell_Menu
+
+
+import pygame
+FPS = 60
 
 
 class StatePlay(object):
@@ -48,58 +52,23 @@ class MainController(object):
     def __init__(self, ui_type):
 
         self.ui = Liberty_Bell_UI(ui_type)
-        self.menu = Liberty_Bell_Menu(self, self.ui)
-
-        self.state_play = StatePlay(self)
-        self.state_menu = StateMenu(self)
-        self._current_state = None
-        self._current_item = None
-
-        self.add_games()
+        self.clock = pygame.time.Clock()
+        self.game = Slot_Machine_Controller(Liberty_Bell_Machine(), self.ui)
 
         self.ui.attach(self.handle_input)
 
-        self.ui.set_callback(self.run)
-        self.ui.ready()
-
-    def enter_menu(self):
-        self._current_state = self.state_menu
-        self.menu.enter_menu()
-
-    def enter_play(self, game=None):
-        if game is not None:
-            self._current_item = game
-
-        self._current_state = self.state_play
-        self._current_item.start()
-
-    def add_games(self):
-
-        liberty_bell = Slot_Machine_Controller(Liberty_Bell_Machine(), self.ui)
-        gold_award = Slot_Machine_Controller(Gold_Award_Machine(), self.ui)
-
-        self.menu.add_game(liberty_bell.slot_machine.name, liberty_bell)
-        self.menu.add_game(gold_award.slot_machine.name, gold_award)
-
-        # Default to liberty bell
-        self.menu.build_opts_menu(liberty_bell)
-        self.enter_play(liberty_bell)
-
     def handle_input(self, command):
 
-        self._current_state.handle_input(command)
-
-    def run(self):
-        if self._current_state == self.state_play:
-            requested_delay_ms = self._current_item.update()
-        else:
-            requested_delay_ms = 10
-
-        self.ui.concrete_ui.schedule_next(requested_delay_ms)
+        self.game.handle_input(command)
 
     def start(self):
-        # TODO: Remove references to concrete_ui
-        self.ui.concrete_ui.mainloop()
+
+        while True:
+            self.game.update()
+            self.ui.concrete_ui.update()
+            pygame.display.update()
+
+            self.clock.tick(FPS)
 
     def shutdown(self):
         self.ui.concrete_ui.shutdown()

@@ -1,5 +1,6 @@
-from liberty_bell.ui.menu_display import Menu_Display
+import pygame
 
+WIN_SIZE = (800, 480)
 
 class Liberty_Bell_UI(object):
 
@@ -10,6 +11,12 @@ class Liberty_Bell_UI(object):
         concrete_ui.initialize(callback=self.notify)
 
         self.concrete_ui = concrete_ui
+
+        screen = pygame.display.set_mode(WIN_SIZE)
+        screen.fill(pygame.Color(255,255,255))
+
+        pygame.display.init()
+        pygame.display.update()
 
         self.spin_button = concrete_ui.spin_button
         self.up_button = concrete_ui.up_button

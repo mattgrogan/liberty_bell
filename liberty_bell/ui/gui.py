@@ -1,20 +1,15 @@
 import os
 import platform
 
-
-import pygame
 import Tkinter as tk
 
 import PIL.Image as Image
 import PIL.ImageTk as ImageTk
 
-from liberty_bell.components.gui_1306 import GUI_1306
-from liberty_bell.components.gui_1351 import GUI_1351
 from liberty_bell.components.gui_button import GUI_Button
 from liberty_bell.components.gui_buzzer import GUI_Buzzer
 from liberty_bell.components.gui_numeric_display import GUI_Numeric_Display
 
-WIN_SIZE = (800, 480)
 
 class Gui(tk.Tk):
 
@@ -28,19 +23,13 @@ class Gui(tk.Tk):
         frame = tk.Frame(self, pady=10)
         frame.grid(row=0, column=0, sticky=tk.E)
 
-        pygame_embed = tk.Frame(frame, width = 800, height = 480)
-        pygame_embed.grid(row=0, column=0, sticky=tk.E)
+        embed = tk.Frame(frame, width = 800, height = 480)
+        embed.grid(row=0, column=0, sticky=tk.E)
 
-        os.environ['SDL_WINDOWID'] = str(pygame_embed.winfo_id())
+        os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
         if platform.system == "Windows":
             os.environ['SDL_VIDEODRIVER'] = 'windib'
 
-        screen = pygame.display.set_mode(WIN_SIZE)
-
-        screen.fill(pygame.Color(255,255,255))
-
-        pygame.display.init()
-        pygame.display.update()
 
         led_frame = tk.Frame(self, padx=10, pady=10)
         led_frame.grid(row=0, column=1, sticky=tk.E)
@@ -64,23 +53,8 @@ class Gui(tk.Tk):
         self.bind("<Up>", lambda: self.handle_input("UP"))
         self.bind("<Down>", lambda: self.handle_input("DOWN"))
 
-        # self.blank_image = Image.new(
-        #    "RGB", (128, 128), color="#000000")
-        # self.blank_image = ImageTk.PhotoImage(self.blank_image)
-
         disp_frame = tk.Frame(self, padx=10, pady=10)
         disp_frame.grid(row=1, column=0)
-
-        # self.display_1 = GUI_1351(frame)
-        # self.display_2 = GUI_1351(frame)
-        # self.display_3 = GUI_1351(frame)
-        #
-        # reel_displays = [self.display_1, self.display_2, self.display_3]
-
-        #for i, disp in enumerate(reel_displays):
-        #    disp.grid(row=0, column=i)
-
-        #self.menu_display_driver = GUI_1306(frame)
 
         self.spin_button = GUI_Button(
             "Spin", disp_frame, text="Spin", command=lambda: self.callback("SPIN"))
@@ -102,7 +76,6 @@ class Gui(tk.Tk):
         self.up_button.grid(row=2, column=2)
         self.down_button.grid(row=2, column=1)
         self.menu_button.grid(row=2, column=0)
-        #self.menu_display_driver.grid(row=0, column=0)
 
         self.reel1_button.grid(row=1, column=0)
         self.reel2_button.grid(row=1, column=1)

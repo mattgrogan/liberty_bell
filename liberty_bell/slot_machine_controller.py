@@ -122,7 +122,7 @@ class SpinningState(object):
             try:
                 line = reel.next_line()
                 self.active = True
-                self.ui.reel_displays[i].write_line(line)
+                #self.ui.reel_displays[i].write_line(line)
             except StopIteration:
                 pass
 

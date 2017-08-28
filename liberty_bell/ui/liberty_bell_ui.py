@@ -20,10 +20,10 @@ class Liberty_Bell_UI(object):
         self.reel2_button = concrete_ui.reel2_button
         self.reel3_button = concrete_ui.reel3_button
 
-        self.display_1 = concrete_ui.display_1
-        self.display_2 = concrete_ui.display_2
-        self.display_3 = concrete_ui.display_3
-        self.reel_displays = [self.display_1, self.display_2, self.display_3]
+        #self.display_1 = concrete_ui.display_1
+        #self.display_2 = concrete_ui.display_2
+        #self.display_3 = concrete_ui.display_3
+        #self.reel_displays = [self.display_1, self.display_2, self.display_3]
 
         self.credits_led = concrete_ui.credits_led
         self.winner_paid_led = concrete_ui.winner_paid_led

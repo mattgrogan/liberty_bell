@@ -71,11 +71,11 @@ class Gui(tk.Tk):
         disp_frame = tk.Frame(self, padx=10, pady=10)
         disp_frame.grid(row=1, column=0)
 
-        self.display_1 = GUI_1351(frame)
-        self.display_2 = GUI_1351(frame)
-        self.display_3 = GUI_1351(frame)
-
-        reel_displays = [self.display_1, self.display_2, self.display_3]
+        # self.display_1 = GUI_1351(frame)
+        # self.display_2 = GUI_1351(frame)
+        # self.display_3 = GUI_1351(frame)
+        #
+        # reel_displays = [self.display_1, self.display_2, self.display_3]
 
         #for i, disp in enumerate(reel_displays):
         #    disp.grid(row=0, column=i)

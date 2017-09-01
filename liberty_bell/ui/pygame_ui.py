@@ -100,7 +100,6 @@ class Reel(object):
         self.image.blit(self.orig_image, (0, self.orig_h))
 
         self.row_rate = self.orig_h / (60 / RPM) / FPS
-        #self.row_rate = 1
         self.reel_stepper = ReelStepper(total_steps=self.orig_h)
         print self.row_rate
 

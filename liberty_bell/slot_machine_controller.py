@@ -4,10 +4,9 @@ import copy
 import pygame
 from pygame.locals import *
 
-from liberty_bell.ui.pygame_ui import Reel
+#from liberty_bell.ui.pygame_ui import Reel
 
 view_size = (128, 300)
-win_size = (800, 480)
 
 reel1_loc = (100, 100)
 reel2_loc = (258, 100)
@@ -39,14 +38,19 @@ class SpinningState(object):
 
         self.slot_machine = slot_machine
         self.ui = ui
+        #
+        # self.r1 = Reel(self.slot_machine.reels[0].get_image(), self.ui.screen, reel1_loc, view_size)
+        # self.r2 = Reel(self.slot_machine.reels[1].get_image(), self.ui.screen, reel2_loc, view_size)
+        # self.r3 = Reel(self.slot_machine.reels[2].get_image(), self.ui.screen, reel3_loc, view_size)
+        #
+        # self.r1.blit()
+        # self.r2.blit()
+        # self.r3.blit()
 
-        self.r1 = Reel(self.slot_machine.reels[0].get_image(), self.ui.screen, reel1_loc, view_size)
-        self.r2 = Reel(self.slot_machine.reels[1].get_image(), self.ui.screen, reel2_loc, view_size)
-        self.r3 = Reel(self.slot_machine.reels[2].get_image(), self.ui.screen, reel3_loc, view_size)
-
-        self.r1.blit()
-        self.r2.blit()
-        self.r3.blit()
+        # Add the reels
+        self.r1 = self.ui.screen.add_reel(self.slot_machine.reels[0].get_image(), reel1_loc, view_size)
+        self.r2 = self.ui.screen.add_reel(self.slot_machine.reels[1].get_image(), reel2_loc, view_size)
+        self.r3 = self.ui.screen.add_reel(self.slot_machine.reels[2].get_image(), reel3_loc, view_size)
 
         pygame.display.flip()
 

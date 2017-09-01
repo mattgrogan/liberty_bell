@@ -1,6 +1,4 @@
-import pygame
-
-WIN_SIZE = (800, 480)
+from screen import Liberty_Bell_Screen
 
 class Liberty_Bell_UI(object):
 
@@ -12,11 +10,7 @@ class Liberty_Bell_UI(object):
 
         self.concrete_ui = concrete_ui
 
-        self.screen = pygame.display.set_mode(WIN_SIZE)
-        self.screen.fill(pygame.Color(255,255,255))
-
-        pygame.display.init()
-        pygame.display.flip()
+        self.screen = Liberty_Bell_Screen()
 
         self.spin_button = concrete_ui.spin_button
         self.up_button = concrete_ui.up_button

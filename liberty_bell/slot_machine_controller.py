@@ -1,19 +1,6 @@
 import time
 import copy
 
-import pygame
-from pygame.locals import *
-
-#from liberty_bell.ui.pygame_ui import Reel
-
-view_size = (128, 300)
-
-reel1_loc = (100, 100)
-reel2_loc = (258, 100)
-reel3_loc = (416, 100)
-
-background_color = Color('white')
-
 class PayoutAnimation(object):
     """ Tick up the amounts paid """
 
@@ -38,33 +25,22 @@ class SpinningState(object):
 
         self.slot_machine = slot_machine
         self.ui = ui
-        #
-        # self.r1 = Reel(self.slot_machine.reels[0].get_image(), self.ui.screen, reel1_loc, view_size)
-        # self.r2 = Reel(self.slot_machine.reels[1].get_image(), self.ui.screen, reel2_loc, view_size)
-        # self.r3 = Reel(self.slot_machine.reels[2].get_image(), self.ui.screen, reel3_loc, view_size)
-        #
-        # self.r1.blit()
-        # self.r2.blit()
-        # self.r3.blit()
 
-        # Add the reels
-        self.r1 = self.ui.screen.add_reel(self.slot_machine.reels[0].get_image(), reel1_loc, view_size)
-        self.r2 = self.ui.screen.add_reel(self.slot_machine.reels[1].get_image(), reel2_loc, view_size)
-        self.r3 = self.ui.screen.add_reel(self.slot_machine.reels[2].get_image(), reel3_loc, view_size)
+        self.r1 = self.ui.screen.reels[0]
+        self.r2 = self.ui.screen.reels[1]
+        self.r3 = self.ui.screen.reels[2]
 
-        pygame.display.flip()
+        self.ui.screen.flip()
 
         self.ui.buzzer.button_tone()
 
+        # Spin the machine
         self.slot_machine.spin()
 
-        import random
-        self.r1.spin(3, self.slot_machine.reels[0].winning_stop)
-        self.r2.spin(4, self.slot_machine.reels[1].winning_stop)
-        self.r3.spin(5, self.slot_machine.reels[2].winning_stop)
-
-
-        print "end init"
+        # Start the reels spinning
+        revs = [3, 4, 5]
+        for i, reel in enumerate(self.slot_machine.reels):
+            self.ui.screen.reels[i].spin(revs[i], reel.winning_stop)
 
     def update(self):
         """ Animate the reels.
@@ -83,17 +59,11 @@ class SpinningState(object):
         self.ui.reel2_button.enabled = False
         self.ui.reel3_button.enabled = False
 
-        dirty_rects = []
+        self.ui.screen.update_reels()
 
-        dirty_rects.append(self.r1.update())
-        dirty_rects.append(self.r2.update())
-        dirty_rects.append(self.r3.update())
-        pygame.display.update(dirty_rects)
-
-        if self.r1.is_spinning or self.r2.is_spinning or self.r3.is_spinning:
+        if self.ui.screen.is_spinning:
             next_state = self
         else:
-            print "finished spinning"
 
             winner = self.slot_machine.eval_spin()
 
@@ -152,6 +122,11 @@ class Slot_Machine_Controller(object):
         self.slot_machine = slot_machine
         self.options = {}
         self.options["AUTOPLAY"] = False
+
+        # Add the reels
+        for i, reel in enumerate(self.slot_machine.reels):
+            self.ui.screen.set_reel_image(i, reel.get_image())
+
 
         self.state = ReadyState(self.slot_machine, self.ui)
 

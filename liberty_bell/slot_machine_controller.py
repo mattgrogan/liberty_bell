@@ -39,6 +39,7 @@ class SpinningState(object):
 
         # Start the reels spinning
         revs = [3, 4, 5]
+        #revs = [0, 0, 0]
         for i, reel in enumerate(self.slot_machine.reels):
             self.ui.screen.reels[i].spin(revs[i], reel.winning_stop)
 

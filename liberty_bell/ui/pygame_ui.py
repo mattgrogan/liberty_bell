@@ -10,6 +10,10 @@ main_dir = os.path.dirname(os.path.abspath(__file__))
 RPM = 90
 FPS = 60
 
+
+MYOFFSET = 86 # TODO: Fix this. This just centers the payline in the Window
+# offset = (window height - single symbol image height) / 2
+
 class ReelStepper(object):
 
     def __init__(self, total_steps):
@@ -30,11 +34,9 @@ class ReelStepper(object):
 
         self.steps_remaining = revs * (self.total_steps) + offset
 
-        print "sr=%i pos=%i tgt=%i revs=%i" % (self.steps_remaining, pos, tgt, revs)
+        #print "sr=%i pos=%i tgt=%i revs=%i" % (self.steps_remaining, pos, tgt, revs)
 
     def step(self, steps):
-
-        steps = steps
 
         if self.steps_remaining <= 0:
             raise ValueError("Steps remaining cannot be negative")
@@ -45,7 +47,38 @@ class ReelStepper(object):
 
         return steps # Actual steps taken
 
+class ReverseReelStepper(object):
 
+    def __init__(self, total_steps):
+        self.total_steps = total_steps
+        self.steps_remaining = 0
+
+    def set_target(self, pos, tgt, revs=0):
+
+        if tgt == pos:
+            # Target is the same as current position
+            offset = self.total_steps
+        elif tgt < pos:
+            # Target is after the current position
+            offset = pos - tgt
+        elif tgt > pos:
+            # Target is after next revolution
+            offset = (self.total_steps - tgt) + pos
+
+        self.steps_remaining = revs * (self.total_steps) + offset  + MYOFFSET
+
+        #print "sr=%i pos=%i tgt=%i revs=%i offset=%i" % (self.steps_remaining, pos, tgt, revs, offset)
+
+    def step(self, steps):
+
+        if self.steps_remaining <= 0:
+            raise ValueError("Steps remaining cannot be negative")
+        elif self.steps_remaining < steps:
+            steps = self.steps_remaining
+
+        self.steps_remaining -= steps
+
+        return steps # Actual steps taken
 
 class Reel(object):
     def __init__(self, reel_image, screen, screen_loc, view_size):
@@ -67,7 +100,7 @@ class Reel(object):
         self.is_spinning = False
 
 
-        self.rect = Rect((0, 0), self.view_size)
+        self.rect = Rect((0, 1280), self.view_size)
         self.screen_rect = Rect(screen_loc, self.view_size)
         self.screen_surface = self.screen.subsurface(self.screen_rect)
 
@@ -92,7 +125,7 @@ class Reel(object):
         # Determine the size of the image
         self.orig_w, self.orig_h = self.orig_image.get_size()
 
-        # Create surface twice as large
+        # Create surface with twice the height
         self.image = pygame.Surface((self.orig_w, self.orig_h * 2))
 
         # Repeat the image
@@ -100,9 +133,8 @@ class Reel(object):
         self.image.blit(self.orig_image, (0, self.orig_h))
 
         self.row_rate = self.orig_h / (60 / RPM) / FPS
-        self.reel_stepper = ReelStepper(total_steps=self.orig_h)
-        print self.row_rate
-
+        #self.row_rate = 1
+        self.reel_stepper = ReverseReelStepper(total_steps=self.orig_h)
 
     def get_view(self):
 
@@ -113,6 +145,24 @@ class Reel(object):
         if self.rect.top + dy > self.orig_h:
             y = (self.rect.top + dy) - self.orig_h
             self.rect.topleft = (0, y) # Reset to top
+        else:
+            self.rect.move_ip(0, dy)
+
+        self.blit()
+        return self.screen_rect
+
+    def reverse_scroll(self, dy=1):
+
+        dy = -dy
+
+        # Are we going over the top?
+        if self.rect.top + dy == 0:
+            y = self.orig_h
+            self.rect.topleft = (0, y)
+        elif self.rect.top + dy < 0:
+            y = self.orig_h + (self.rect.top + dy)
+            self.rect.topleft = (0, y)
+
         else:
             self.rect.move_ip(0, dy)
 
@@ -136,8 +186,8 @@ class Reel(object):
             try:
                 rows = self.reel_stepper.step(self.row_rate)
             except ValueError:
-                print "stopping at %i" % self.rect.top
                 self.is_spinning = False
                 return None
 
-            return self.scroll(dy=rows)
+            #return self.scroll(dy=rows)
+            return self.reverse_scroll(dy=rows)

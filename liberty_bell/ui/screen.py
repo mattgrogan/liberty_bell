@@ -7,7 +7,7 @@ WIN_SIZE = (500, 400)
 REEL_SIZE = (128, 300)
 REEL_POS = (1, 1)
 NUMBER_REELS = 3
-REEL_MARGIN = 20
+REEL_MARGIN = 1
 
 class Liberty_Bell_Screen(object):
 

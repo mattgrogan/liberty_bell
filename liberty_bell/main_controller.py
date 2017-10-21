@@ -63,9 +63,24 @@ class MainController(object):
 
     def start(self):
 
-        while True:
+        done = False
+
+        while not done:
+
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        done = True
+                        break
+                elif event.type == pygame.QUIT:
+                    done = True
+                    break
+            if done:
+                break
+
             self.game.update()
-            self.ui.concrete_ui.update()
+            # Comment for rpi ui
+            #self.ui.concrete_ui.update()
             pygame.display.update()
 
             self.clock.tick(FPS)

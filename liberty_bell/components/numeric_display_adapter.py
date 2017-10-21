@@ -26,15 +26,17 @@ class Numeric_Display_Adapter(object):
   def clear(self):
     """ Clear the display """
 
-    self._led.clear()
-    self._led.write_display()
+    if self._initialized:
+        self._led.clear()
+        self._led.write_display()
 
   def display(self, val):
     """ Display value """
 
-    self._led.clear()
-    self._led.print_float(val, decimal_digits=0)
-    self._led.write_display()
+    if self._initialized:
+        self._led.clear()
+        self._led.print_float(val, decimal_digits=0)
+        self._led.write_display()
 
   def test(self):
     """ Show a test pattern on the display """

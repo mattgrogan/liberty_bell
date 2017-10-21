@@ -1,6 +1,8 @@
 from __future__ import division
 
 import time
+import pygame
+from pygame.locals import *
 
 import RPi.GPIO as gpio
 from liberty_bell.components.button import Button
@@ -33,42 +35,7 @@ class Rpi_UI(object):
         self.amount_bet_led = Numeric_Display_Adapter(
             name="Amount Bet", address=config.amount_bet_i2c)
 
-        self.menu_display_driver = SSD1306_Display_Adapter(
-            "Menu Display",
-            config.menu_display_width,
-            config.menu_display_height,
-            config.menu_display_reset,
-            config.menu_display_i2c)
 
-        # Set up the OLED screens
-        self.display_1 = SSD1351_Display_Adapter("Reel 1",
-                                                 config.display_1["width"],
-                                                 config.display_1["height"],
-                                                 config.display_1["reset"],
-                                                 config.display_1["dc"],
-                                                 config.display_1["spi_port"],
-                                                 config.display_1["spi_device"])
-
-        self.display_2 = SSD1351_Display_Adapter("Reel 2",
-                                                 config.display_2["width"],
-                                                 config.display_2["height"],
-                                                 config.display_2["reset"],
-                                                 config.display_2["dc"],
-                                                 config.display_2["spi_port"],
-                                                 config.display_2["spi_device"])
-
-        self.display_3 = SSD1351_Display_Adapter("Reel 3",
-                                                 config.display_3["width"],
-                                                 config.display_3["height"],
-                                                 config.display_3["reset"],
-                                                 config.display_3["dc"],
-                                                 config.display_3["spi_port"],
-                                                 config.display_3["spi_device"])
-
-        self.reel_displays = []
-        self.reel_displays.append(self.display_1)
-        self.reel_displays.append(self.display_2)
-        self.reel_displays.append(self.display_3)
 
         self.spin_button = Button("Spin", config.spin_pin, config.spin_led)
         self.up_button = Button("Up", config.up_pin, config.up_led)
@@ -131,6 +98,10 @@ class Rpi_UI(object):
         while True:
             self.detect_event()
             self.run_callback()
+
+            for event in pygame.ecent.get():
+                if event.type == QUIT:
+                    pygame.quit()
             #time.sleep(0.01)
             #requested_delay_ms = self.controller.run()
             # TODO: There should be a way to communicate sleep time, to prevent 100% cpu utilization

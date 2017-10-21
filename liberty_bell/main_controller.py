@@ -72,6 +72,8 @@ class MainController(object):
                     if event.key == pygame.K_ESCAPE:
                         done = True
                         break
+                    if event.key == pygame.K_RETURN:
+                        self.handle_input("SPIN")
                 elif event.type == pygame.QUIT:
                     done = True
                     break
@@ -80,7 +82,7 @@ class MainController(object):
 
             self.game.update()
             # Comment for rpi ui
-            #self.ui.concrete_ui.update()
+            self.ui.update()
             pygame.display.update()
 
             self.clock.tick(FPS)

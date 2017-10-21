@@ -2,7 +2,7 @@ import pygame
 
 from liberty_bell.ui.pygame_ui import Reel
 
-WIN_SIZE = (500, 400)
+WIN_SIZE = (800, 480)
 
 REEL_SIZE = (128, 300)
 REEL_POS = (1, 1)

@@ -47,9 +47,6 @@ class Gui(tk.Tk):
         self.credits_led.grid(row=3, column=0)
         self.amount_bet_led.grid(row=5, column=0)
 
-        self.bind("<Up>", lambda: self.handle_input("UP"))
-        self.bind("<Down>", lambda: self.handle_input("DOWN"))
-
         disp_frame = tk.Frame(self, padx=10, pady=10)
         disp_frame.grid(row=1, column=0)
 

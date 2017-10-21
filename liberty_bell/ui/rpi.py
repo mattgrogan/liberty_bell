@@ -1,6 +1,5 @@
 from __future__ import division
 
-import time
 import pygame
 from pygame.locals import *
 
@@ -9,10 +8,6 @@ from liberty_bell.components.button import Button
 from liberty_bell.components.buzzer import Buzzer
 from liberty_bell.components.numeric_display_adapter import \
     Numeric_Display_Adapter
-from liberty_bell.components.ssd1306_display_adapter import \
-    SSD1306_Display_Adapter
-from liberty_bell.components.ssd1351_display_adapter import \
-    SSD1351_Display_Adapter
 from liberty_bell.config import Config
 
 
@@ -93,17 +88,5 @@ class Rpi_UI(object):
         self.detect_event()
         #self.run_callback()
 
-    def mainloop(self):
-
-        while True:
-            self.detect_event()
-            self.run_callback()
-
-            for event in pygame.ecent.get():
-                if event.type == QUIT:
-                    pygame.quit()
-            #time.sleep(0.01)
-            #requested_delay_ms = self.controller.run()
-            # TODO: There should be a way to communicate sleep time, to prevent 100% cpu utilization
-            #time.sleep(requested_delay_ms / 1000.0)
-            # time.sleep(0.001)
+    def update(self):
+        pass

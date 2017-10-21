@@ -61,3 +61,7 @@ class Liberty_Bell_UI(object):
     def ready(self):
         # This is a hack and needs to be removed
         self.concrete_ui.ready()
+
+    def update(self):
+        self.concrete_ui.update()
+        #self.screen.update()

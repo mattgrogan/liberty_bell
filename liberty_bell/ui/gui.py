@@ -17,10 +17,10 @@ class Gui(tk.Tk):
     def initialize(self, callback):
         self.callback = callback
 
-        frame = tk.Frame(self, pady=10)
+        frame = tk.Frame(self, pady=0)
         frame.grid(row=0, column=0, sticky=tk.E)
 
-        embed = tk.Frame(frame, width = 800, height = 480)
+        embed = tk.Frame(frame, width = 500, height = 300)
         embed.grid(row=0, column=0, sticky=tk.E)
 
         os.environ['SDL_WINDOWID'] = str(embed.winfo_id())
@@ -28,7 +28,7 @@ class Gui(tk.Tk):
             os.environ['SDL_VIDEODRIVER'] = 'windib'
 
 
-        led_frame = tk.Frame(self, padx=10, pady=10)
+        led_frame = tk.Frame(self, padx=1, pady=1)
         led_frame.grid(row=0, column=1, sticky=tk.E)
 
         wp_label = tk.Label(led_frame, text="Winner Paid:")
